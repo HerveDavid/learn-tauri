@@ -1,6 +1,5 @@
 import { memo } from "react";
-import Table from "./features/table";
-import "./App.css";
+import Table from "@/features/table";
 
 const App = memo(() => (
   <main>

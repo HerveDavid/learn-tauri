@@ -83,9 +83,12 @@ export default function Component() {
               <TableHead>Message</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="[&_td:first-child]:rounded-l-lg [&_td:last-child]:rounded-r-lg">
             {events.map((item) => (
-              <TableRow key={item.timestamp}>
+              <TableRow
+                key={item.timestamp}
+                className="border-none odd:bg-muted/50 hover:bg-transparent odd:hover:bg-muted/50"
+              >
                 <TableCell className="font-medium">{item.timestamp}</TableCell>
                 <TableCell>{item.id}</TableCell>
                 <TableCell>{item.value}</TableCell>

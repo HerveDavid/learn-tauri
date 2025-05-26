@@ -1,5 +1,8 @@
+// Project imports
 import { type LiveRuntimeContext } from "@/services/live-layer";
 import { useRuntime } from "@/services/runtime/use-runtime";
+
+// Tanstack imports
 import {
   type GetNextPageParamFunction,
   type GetPreviousPageParamFunction,
@@ -17,12 +20,16 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from "@tanstack/react-query";
+
+// Effect imports
 import * as Cause from "effect/Cause";
 import * as Data from "effect/Data";
 import * as Duration from "effect/Duration";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Predicate from "effect/Predicate";
+
+// Visual imports
 import * as React from "react";
 import { toast } from "sonner";
 

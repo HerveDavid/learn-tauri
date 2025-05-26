@@ -5,7 +5,7 @@ use tauri::{ipc::Channel, State};
 use thiserror::Error;
 use tokio::time::{sleep, Duration};
 
-use crate::{state::Tasks, utils::tasks::CancellableTask};
+use crate::utils::tasks::{state::Tasks, CancellableTask};
 
 #[derive(Debug, Serialize, Error)]
 pub enum Error {}

@@ -1,8 +1,6 @@
 mod commands;
-mod state;
 mod utils;
 
-use state::Tasks;
 use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -13,7 +11,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![commands::start, commands::stop])
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
-                app.manage(Tasks::default());
+                app.manage(utils::tasks::state::Tasks::default());
             });
             Ok(())
         })

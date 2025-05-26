@@ -1,4 +1,6 @@
 import React from "react";
+
+// Effect imports
 import * as Duration from "effect/Duration";
 import * as Layer from "effect/Layer";
 import * as Logger from "effect/Logger";
@@ -9,16 +11,17 @@ import {
   QueryClient as TanstackQueryClient,
 } from "@tanstack/react-query";
 
-import { LiveManagedRuntime } from "./services/live-layer";
-import { WorkerClient } from "./services/worker/worker-client";
-import { RuntimeProvider } from "./services/runtime/runtime-provider";
+// Project layers
+import { LiveManagedRuntime } from "@/services/live-layer";
+import { WorkerClient } from "@/services/worker/worker-client";
+import { RuntimeProvider } from "@/services/runtime/runtime-provider";
 import { LogLevel } from "effect";
-import { QueryClient } from "./services/common/query-client";
+import { QueryClient } from "@/services/common/query-client";
 
 const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const queryClient = React.useMemo(
+  const queryClient: TanstackQueryClient = React.useMemo(
     () =>
       new TanstackQueryClient({
         defaultOptions: {

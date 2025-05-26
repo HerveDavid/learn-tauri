@@ -1,6 +1,10 @@
-use super::{Error, Result};
 use std::future::Future;
 use tokio_util::sync::CancellationToken;
+
+pub mod error;
+pub mod state;
+
+use error::{Error, Result};
 
 pub struct CancellableTask<T> {
     handle: Option<tokio::task::JoinHandle<T>>,
@@ -89,7 +93,6 @@ mod tests {
             }
         });
 
-        // La tâche est déjà démarrée, on l'annule
         task.cancel();
 
         let result = timeout(Duration::from_millis(100), task.join()).await;
@@ -107,7 +110,6 @@ mod tests {
             }
         });
 
-        // Plusieurs annulations successives ne posent pas de problème
         task.cancel();
         task.cancel();
         task.cancel();
@@ -131,7 +133,6 @@ mod tests {
     async fn test_cancel_after_completion() {
         let mut task = CancellableTask::new(|_token| async { 42 });
 
-        // Attend que la tâche se termine
         sleep(Duration::from_millis(10)).await;
 
         let result = task.join().await.unwrap();
@@ -147,15 +148,12 @@ mod tests {
             }
         });
 
-        // Vérifie que la tâche n'est pas encore terminée
         assert!(!task.is_finished());
         assert!(!task.is_cancelled());
 
-        // Annule la tâche
         task.cancel();
         assert!(task.is_cancelled());
 
-        // Attend le résultat
         let result = task.join().await.unwrap();
         assert_eq!(result, 0);
     }
@@ -174,10 +172,8 @@ mod tests {
             }
         });
 
-        // Attend un peu pour que la tâche se démarre
         sleep(Duration::from_millis(10)).await;
 
-        // Vérifie que la tâche a bien démarré
         assert!(started.load(Ordering::Relaxed));
 
         let result = task.join().await.unwrap();
