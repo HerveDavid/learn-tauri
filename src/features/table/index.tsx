@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { addEventAtom, eventsAtom } from "./primitive";
 import { Event } from "../../shared/event";
 import { Button } from "@/components/ui/button";
@@ -40,21 +39,26 @@ const pause = (id: string) =>
     });
   });
 
-const ID = "1";
-const HANDLER_ID = "event-handler";
+const CHANNEL_ID = "event-stream-1"; // ID du canal
+const HANDLER_ID = "event-handler"; // ID du handler
 
 export default function Component() {
   const [isStreaming, setIsStreaming] = useState(false);
-
   const events = useAtomValue(eventsAtom);
   const addEvent = useSetAtom(addEventAtom);
 
+  // Handler pour les événements reçus
   const handleEvent = useCallback(
-    (event: Event) => addEvent(event),
+    (event: Event) => {
+      console.log("Event received:", event);
+      addEvent(event);
+    },
     [addEvent]
   );
 
+  // Utilisation du hook avec channelId et handler
   const { setChannel } = useChannel<Event>({
+    channelId: CHANNEL_ID,
     handlerId: HANDLER_ID,
     handler: handleEvent,
   });
@@ -63,27 +67,32 @@ export default function Component() {
     try {
       setIsStreaming(true);
 
+      // Créer un nouveau canal
       const newChannel = new Channel<Event>();
+
+      // Enregistrer le canal dans le service (ceci va automatiquement
+      // connecter le handler via le hook useChannel)
       setChannel(newChannel);
 
-      newChannel.onmessage = (event: Event) => {
-        addEvent(event);
-      };
-      await Effect.runPromise(register(ID, newChannel));
-      await Effect.runPromise(start(ID));
+      // Enregistrer le canal côté backend
+      await Effect.runPromise(register("1", newChannel));
 
-      console.log("started");
+      // Démarrer le streaming
+      await Effect.runPromise(start("1"));
+
+      console.log("Streaming started");
     } catch (error) {
       console.error("Erreur lors du démarrage:", error);
       setIsStreaming(false);
     }
-  }, []);
+  }, [setChannel]);
 
   const stopClick = useCallback(async () => {
     try {
-      await Effect.runPromise(pause(ID));
+      await Effect.runPromise(pause("1"));
+
       setIsStreaming(false);
-      console.log("stopped");
+      console.log("Streaming stopped");
     } catch (error) {
       console.error("Erreur lors de l'arrêt:", error);
     }
@@ -92,11 +101,14 @@ export default function Component() {
   return (
     <div className="bg-background">
       <div className="space-x-2 flex items-center p-2">
-        <Button onClick={startClick}>Start</Button>
-        <Button onClick={stopClick} variant="secondary">
+        <Button onClick={startClick} disabled={isStreaming}>
+          Start
+        </Button>
+        <Button onClick={stopClick} variant="secondary" disabled={!isStreaming}>
           Stop
         </Button>
-        <p>{(isStreaming && "🔴 Live") || "🟢 No Record"}</p>
+        <p>{isStreaming ? "🔴 Live" : "🟢 No Record"}</p>
+        <p className="text-sm text-muted-foreground">Events: {events.length}</p>
       </div>
 
       <div className="[&>div]:max-h-96 border-t">
@@ -109,9 +121,9 @@ export default function Component() {
             </TableRow>
           </TableHeader>
           <TableBody className="[&_td:first-child]:rounded-l-lg [&_td:last-child]:rounded-r-lg">
-            {events.map((item) => (
+            {events.map((item, index) => (
               <TableRow
-                key={item.timestamp}
+                key={`${item.timestamp}-${index}`} // Clé plus robuste
                 className="border-none odd:bg-muted/50 hover:bg-transparent odd:hover:bg-muted/50"
               >
                 <TableCell className="font-medium">{item.timestamp}</TableCell>
