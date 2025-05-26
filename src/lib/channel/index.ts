@@ -2,85 +2,48 @@ import { ChannelClient } from "@/services/common/channel-client";
 import { useRuntime } from "@/services/runtime/use-runtime";
 import { Channel } from "@tauri-apps/api/core";
 import { Effect } from "effect";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 
 export interface ChannelProps<T> {
   channelId: string;
   handlerId?: string;
   handler?: (data: T) => void;
+  autoConnect?: boolean; // Nouvelle option pour contrôler la création automatique
 }
 
 export const useChannel = <T>({
   channelId,
   handlerId,
   handler,
+  autoConnect = false, // Par défaut, ne pas auto-connecter
 }: ChannelProps<T>) => {
   const runtime = useRuntime();
   const [channel, setChannelState] = useState<Channel<T> | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const handlerRef = useRef(handler);
 
+  // Garder une référence stable du handler
   useEffect(() => {
+    handlerRef.current = handler;
+  }, [handler]);
+
+  const syncChannel = useCallback(() => {
     const syncChannelEffect = Effect.gen(function* () {
       const channelClient = yield* ChannelClient;
       const currentChannel = yield* channelClient.getChannel<T>(channelId);
       return currentChannel;
     });
-
     runtime.runPromise(syncChannelEffect).then(setChannelState);
   }, [runtime, channelId]);
 
-  const setChannel = useCallback(
-    (newChannel: Channel<T>) => {
-      const effect = Effect.gen(function* () {
-        const channelClient = yield* ChannelClient;
-        yield* channelClient.setChannel(channelId, newChannel);
-      });
-
-      runtime
-        .runPromise(effect)
-        .then(() => {
-          setChannelState(newChannel);
-        })
-        .catch((error) => {
-          console.error(`Failed to set channel ${channelId}:`, error);
-        });
-    },
-    [runtime, channelId]
-  );
-
-  const getChannel = useCallback(async (): Promise<Channel<T> | null> => {
-    const effect = Effect.gen(function* () {
-      const channelClient = yield* ChannelClient;
-      return yield* channelClient.getChannel<T>(channelId);
-    });
-
-    const result = await runtime.runPromise(effect);
-    setChannelState(result);
-    return result;
-  }, [runtime, channelId]);
-
-  const removeChannel = useCallback(() => {
-    const effect = Effect.gen(function* () {
-      const channelClient = yield* ChannelClient;
-      yield* channelClient.removeChannel(channelId);
-    });
-
-    runtime
-      .runPromise(effect)
-      .then(() => {
-        setChannelState(null);
-      })
-      .catch((error) => {
-        console.error(`Failed to remove channel ${channelId}:`, error);
-      });
-  }, [runtime, channelId]);
-
-  useEffect(() => {
-    if (!handlerId || !handler) return;
+  // Fonction pour connecter manuellement
+  const connect = useCallback(async () => {
+    if (!handlerId || !handlerRef.current || isConnected) return;
 
     const handleEffect = (data: T) =>
       Effect.sync(() => {
         try {
-          handler(data);
+          handlerRef.current?.(data);
         } catch (error) {
           console.error(
             `Error in handler ${handlerId} for channel ${channelId}:`,
@@ -98,41 +61,74 @@ export const useChannel = <T>({
       );
     });
 
+    try {
+      await runtime.runPromise(registerEffect);
+      setIsConnected(true);
+      syncChannel();
+      console.log(
+        `Connected to channel ${channelId} with handler ${handlerId}`
+      );
+    } catch (error) {
+      console.error(
+        `Failed to register handler ${handlerId} for channel ${channelId}:`,
+        error
+      );
+    }
+  }, [channelId, handlerId, runtime, syncChannel, isConnected]);
+
+  // Fonction pour déconnecter manuellement
+  const disconnect = useCallback(async () => {
+    if (!handlerId || !isConnected) return;
+
     const unregisterEffect = Effect.gen(function* () {
       const channelClient = yield* ChannelClient;
       yield* channelClient.unregisterHandler(channelId, handlerId);
     });
 
-    let isRegistered = false;
-    runtime
-      .runPromise(registerEffect)
-      .then(() => {
-        isRegistered = true;
-      })
-      .catch((error) => {
-        console.error(
-          `Failed to register handler ${handlerId} for channel ${channelId}:`,
-          error
-        );
-      });
+    try {
+      await runtime.runPromise(unregisterEffect);
+      setIsConnected(false);
+      syncChannel();
+      console.log(
+        `Disconnected from channel ${channelId} handler ${handlerId}`
+      );
+    } catch (error) {
+      console.error(
+        `Failed to unregister handler ${handlerId} from channel ${channelId}:`,
+        error
+      );
+    }
+  }, [channelId, handlerId, runtime, syncChannel, isConnected]);
+
+  // Auto-connection seulement si autoConnect est true
+  useEffect(() => {
+    if (autoConnect && handlerId && handler && !isConnected) {
+      connect();
+    }
 
     return () => {
-      if (isRegistered) {
-        runtime.runPromise(unregisterEffect).catch((error) => {
-          console.error(
-            `Failed to unregister handler ${handlerId} from channel ${channelId}:`,
-            error
-          );
-        });
+      if (isConnected) {
+        disconnect();
       }
     };
-  }, [channelId, handlerId, handler, runtime]);
+  }, [autoConnect, handlerId, handler, isConnected, connect, disconnect]);
+
+  const getChannel = useCallback(async (): Promise<Channel<T> | null> => {
+    const effect = Effect.gen(function* () {
+      const channelClient = yield* ChannelClient;
+      return yield* channelClient.getChannel<T>(channelId);
+    });
+    const result = await runtime.runPromise(effect);
+    setChannelState(result);
+    return result;
+  }, [runtime, channelId]);
 
   return {
     channel,
-    setChannel,
     getChannel,
-    removeChannel,
     channelId,
+    isConnected,
+    connect,
+    disconnect,
   };
 };
