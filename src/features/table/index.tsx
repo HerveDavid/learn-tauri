@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { Effect } from "effect";
 import { useAtomValue, useSetAtom } from "jotai";
 import { invoke } from "@tauri-apps/api/core";
@@ -31,11 +31,10 @@ const pause = (id: string) =>
     });
   });
 
-const CHANNEL_ID = "event-stream-1";
+const CHANNEL_ID = "events-log";
 const HANDLER_ID = "event-handler";
 
 export default function Component() {
-  const [isStreaming, setIsStreaming] = useState(false);
   const events = useAtomValue(eventsAtom);
   const addEvent = useSetAtom(addEventAtom);
 
@@ -60,11 +59,9 @@ export default function Component() {
 
       await Effect.runPromise(start(CHANNEL_ID));
 
-      setIsStreaming(true);
       console.log("Streaming started");
     } catch (error) {
       console.error("Erreur lors du démarrage:", error);
-      setIsStreaming(false);
     }
   }, [connect]);
 
@@ -74,7 +71,6 @@ export default function Component() {
 
       await disconnect();
 
-      setIsStreaming(false);
       console.log("Streaming stopped");
     } catch (error) {
       console.error("Erreur lors de l'arrêt:", error);
@@ -84,17 +80,13 @@ export default function Component() {
   return (
     <div className="bg-background">
       <div className="space-x-2 flex items-center p-2">
-        <Button onClick={startClick} disabled={isStreaming}>
+        <Button onClick={startClick} disabled={isConnected}>
           Start
         </Button>
-        <Button onClick={stopClick} variant="secondary" disabled={!isStreaming}>
+        <Button onClick={stopClick} variant="secondary" disabled={!isConnected}>
           Stop
         </Button>
-        <p>{isStreaming ? "🔴 Live" : "🟢 No Record"}</p>
-        <p className="text-sm text-muted-foreground">
-          Channel: {isConnected ? "Connected" : "Disconnected"}
-        </p>
-        <p className="text-sm text-muted-foreground">Events: {events.length}</p>
+        <p>{isConnected ? "🔴 Live" : "🟢 No Record"}</p>
       </div>
       <div className="[&>div]:max-h-96 border-t">
         <Table className="border-separate border-spacing-0 [&_td]:border-border [&_tfoot_td]:border-t [&_th]:border-b [&_th]:border-border [&_tr:not(:last-child)_td]:border-b [&_tr]:border-none">

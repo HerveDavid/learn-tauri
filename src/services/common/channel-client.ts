@@ -46,7 +46,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
         channelData.handlerArray = Array.from(channelData.handlers.values());
       };
 
-      const createOptimizedMessageHandler =
+      const createMessageHandler =
         (channelId: string) => (data: any) => {
           Effect.runFork(
             Effect.gen(function* () {
@@ -92,7 +92,6 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
           );
         };
 
-      // ✨ AUTO-CREATE CHANNEL: Créer automatiquement un canal si nécessaire
       const ensureChannel = <T>(channelId: string) =>
         Effect.gen(function* () {
           const channels = yield* Ref.get(channelsRef);
@@ -102,7 +101,6 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             return existingChannelData.channel as Channel<T>;
           }
 
-          // Créer un nouveau canal
           const newChannel = new Channel<T>();
           const channelData: ChannelData = {
             channel: newChannel as Channel<any>,
@@ -110,7 +108,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             handlerArray: [],
           };
 
-          newChannel.onmessage = createOptimizedMessageHandler(channelId);
+          newChannel.onmessage = createMessageHandler(channelId);
 
           yield* Ref.set(
             channelsRef,
@@ -121,7 +119,6 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
           return newChannel;
         });
 
-      // ✨ AUTO-DESTROY CHANNEL: Détruire automatiquement si plus de handlers
       const cleanupChannelIfEmpty = (channelId: string) =>
         Effect.gen(function* () {
           const channels = yield* Ref.get(channelsRef);
@@ -131,10 +128,8 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             return;
           }
 
-          // Plus de handlers, nettoyer le canal
           cleanupChannel(channelData);
 
-          // Désenregistrer côté backend
           yield* Effect.tryPromise({
             try: () => invoke("unregister", { id: channelId }),
             catch: (error) =>

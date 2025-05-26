@@ -8,21 +8,20 @@ export interface ChannelProps<T> {
   channelId: string;
   handlerId?: string;
   handler?: (data: T) => void;
-  autoConnect?: boolean; // Nouvelle option pour contrôler la création automatique
+  autoConnect?: boolean;
 }
 
 export const useChannel = <T>({
   channelId,
   handlerId,
   handler,
-  autoConnect = false, // Par défaut, ne pas auto-connecter
+  autoConnect = false,
 }: ChannelProps<T>) => {
   const runtime = useRuntime();
   const [channel, setChannelState] = useState<Channel<T> | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const handlerRef = useRef(handler);
 
-  // Garder une référence stable du handler
   useEffect(() => {
     handlerRef.current = handler;
   }, [handler]);
@@ -36,7 +35,6 @@ export const useChannel = <T>({
     runtime.runPromise(syncChannelEffect).then(setChannelState);
   }, [runtime, channelId]);
 
-  // Fonction pour connecter manuellement
   const connect = useCallback(async () => {
     if (!handlerId || !handlerRef.current || isConnected) return;
 
@@ -76,7 +74,6 @@ export const useChannel = <T>({
     }
   }, [channelId, handlerId, runtime, syncChannel, isConnected]);
 
-  // Fonction pour déconnecter manuellement
   const disconnect = useCallback(async () => {
     if (!handlerId || !isConnected) return;
 
@@ -100,7 +97,6 @@ export const useChannel = <T>({
     }
   }, [channelId, handlerId, runtime, syncChannel, isConnected]);
 
-  // Auto-connection seulement si autoConnect est true
   useEffect(() => {
     if (autoConnect && handlerId && handler && !isConnected) {
       connect();
