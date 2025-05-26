@@ -4,13 +4,12 @@ import { Channel } from "@tauri-apps/api/core";
 import { Effect } from "effect";
 import { useCallback, useEffect, useState } from "react";
 
-export const useChannel = <T>({
-  handlerId,
-  handler,
-}: {
+export interface ChannelProps<T> {
   handlerId?: string;
   handler?: (data: T) => void;
-}) => {
+}
+
+export const useChannel = <T>({ handlerId, handler }: ChannelProps<T>) => {
   const runtime = useRuntime();
   const [channel, setChannelState] = useState<Channel<T> | null>(null);
 
