@@ -3,10 +3,10 @@ import type * as ManagedRuntime from "effect/ManagedRuntime";
 
 import { WorkerClient } from "./worker/worker-client";
 import { QueryClient } from "./common/query-client";
-import { ChannelService } from "./common/channel-client";
+import { ChannelClient } from "./common/channel-client";
 
 export type LiveLayerType = Layer.Layer<
-  WorkerClient | QueryClient | ChannelService
+  WorkerClient | QueryClient | ChannelClient
 >;
 export type LiveManagedRuntime = ManagedRuntime.ManagedRuntime<
   Layer.Layer.Success<LiveLayerType>,

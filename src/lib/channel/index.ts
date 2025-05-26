@@ -17,8 +17,8 @@ export const useChannel = <T>({
   const setChannel = useCallback(
     (newChannel: Channel<T>) => {
       const effect = Effect.gen(function* () {
-        const channelService = yield* ChannelClient;
-        yield* channelService.setChannel(newChannel);
+        const channelClient = yield* ChannelClient;
+        yield* channelClient.setChannel(newChannel);
       });
 
       runtime.runPromise(effect);
@@ -29,8 +29,8 @@ export const useChannel = <T>({
 
   const getChannel = useCallback(async (): Promise<Channel<T> | null> => {
     const effect = Effect.gen(function* () {
-      const channelService = yield* ChannelClient;
-      return yield* channelService.getChannel<T>();
+      const channelClient = yield* ChannelClient;
+      return yield* channelClient.getChannel<T>();
     });
 
     return runtime.runPromise(effect);
@@ -42,13 +42,13 @@ export const useChannel = <T>({
     const handleEffect = (data: T) => Effect.sync(() => handler(data));
 
     const registerEffect = Effect.gen(function* () {
-      const channelService = yield* ChannelClient;
-      return yield* channelService.registerHandler(handlerId, handleEffect);
+      const channelClient = yield* ChannelClient;
+      return yield* channelClient.registerHandler(handlerId, handleEffect);
     });
 
     const unregisterEffect = Effect.gen(function* () {
-      const channelService = yield* ChannelClient;
-      yield* channelService.unregisterHandler(handlerId);
+      const channelClient = yield* ChannelClient;
+      yield* channelClient.unregisterHandler(handlerId);
     });
 
     runtime.runPromise(registerEffect);

@@ -46,7 +46,7 @@ const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
         Layer.mergeAll(
           WorkerClient.Default,
           QueryClient.make(queryClient),
-          ChannelClient.make(),
+          ChannelClient.Default,
           Logger.minimumLogLevel(LogLevel.Debug)
         ).pipe(Layer.provide(Logger.pretty))
       ),
