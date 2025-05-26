@@ -128,8 +128,10 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             return;
           }
 
+          // Plus de handlers, nettoyer le canal
           cleanupChannel(channelData);
 
+          // Désenregistrer côté backend
           yield* Effect.tryPromise({
             try: () => invoke("unregister", { id: channelId }),
             catch: (error) =>
