@@ -16,18 +16,26 @@ import { Event } from "../../shared/event";
 import { Button } from "@/components/ui/button";
 import { useChannel } from "@/lib/channel";
 
-const start = (id: string, channel: Channel<Event>) =>
+const register = (id: string, channel: Channel<Event>) =>
   Effect.gen(function* () {
     return yield* Effect.tryPromise({
-      try: () => invoke("start", { id, channel }),
+      try: () => invoke("register", { id, channel }),
       catch: console.error,
     });
   });
 
-const stop = (id: string) =>
+const start = (id: string) =>
   Effect.gen(function* () {
     return yield* Effect.tryPromise({
-      try: () => invoke("stop", { id }),
+      try: () => invoke("start", { id }),
+      catch: console.error,
+    });
+  });
+
+const pause = (id: string) =>
+  Effect.gen(function* () {
+    return yield* Effect.tryPromise({
+      try: () => invoke("pause", { id }),
       catch: console.error,
     });
   });
@@ -42,10 +50,7 @@ export default function Component() {
   const addEvent = useSetAtom(addEventAtom);
 
   const handleEvent = useCallback(
-    (event: Event) =>
-      Effect.gen(function* () {
-        addEvent(event);
-      }),
+    (event: Event) => addEvent(event),
     [addEvent]
   );
 
@@ -64,8 +69,8 @@ export default function Component() {
       newChannel.onmessage = (event: Event) => {
         addEvent(event);
       };
-
-      await Effect.runPromise(start(ID, newChannel));
+      await Effect.runPromise(register(ID, newChannel));
+      await Effect.runPromise(start(ID));
 
       console.log("started");
     } catch (error) {
@@ -76,7 +81,7 @@ export default function Component() {
 
   const stopClick = useCallback(async () => {
     try {
-      await Effect.runPromise(stop(ID));
+      await Effect.runPromise(pause(ID));
       setIsStreaming(false);
       console.log("stopped");
     } catch (error) {
