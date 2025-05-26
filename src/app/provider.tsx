@@ -17,6 +17,7 @@ import { WorkerClient } from "@/services/worker/worker-client";
 import { RuntimeProvider } from "@/services/runtime/runtime-provider";
 import { LogLevel } from "effect";
 import { QueryClient } from "@/services/common/query-client";
+import { ChannelClient } from "@/services/common/channel-client";
 
 const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -45,6 +46,7 @@ const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
         Layer.mergeAll(
           WorkerClient.Default,
           QueryClient.make(queryClient),
+          ChannelClient.make(),
           Logger.minimumLogLevel(LogLevel.Debug)
         ).pipe(Layer.provide(Logger.pretty))
       ),
@@ -58,7 +60,7 @@ const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const GlobalProviders: React.FC<{ children: React.ReactNode }> = ({
+export const Providers: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   return <InnerProviders>{children}</InnerProviders>;

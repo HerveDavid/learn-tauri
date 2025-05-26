@@ -1,10 +1,10 @@
-import { GlobalProviders } from "./provider";
+import { Providers } from "./provider";
 import { AppRouter } from "./router";
 
 export const App = () => {
   return (
-    <GlobalProviders>
+    <Providers>
       <AppRouter />
-    </GlobalProviders>
+    </Providers>
   );
 };

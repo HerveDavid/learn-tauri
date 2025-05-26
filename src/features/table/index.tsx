@@ -14,15 +14,12 @@ import {
 import { addEventAtom, eventsAtom } from "./primitive";
 import { Event } from "../../shared/event";
 import { Button } from "@/components/ui/button";
+import { useChannel, useChannelHandler } from "@/lib/channel";
 
-const start = (id: string, handler: (event: Event) => void) =>
+const start = (id: string, channel: Channel<Event>) =>
   Effect.gen(function* () {
     return yield* Effect.tryPromise({
-      try: () => {
-        const channel = new Channel<Event>();
-        channel.onmessage = handler;
-        return invoke("start", { id, channel });
-      },
+      try: () => invoke("start", { id, channel }),
       catch: console.error,
     });
   });
@@ -36,6 +33,7 @@ const stop = (id: string) =>
   });
 
 const ID = "1";
+const HANDLER_ID = "event-handler";
 
 export default function Component() {
   const [isStreaming, setIsStreaming] = useState(false);
@@ -43,10 +41,31 @@ export default function Component() {
   const events = useAtomValue(eventsAtom);
   const addEvent = useSetAtom(addEventAtom);
 
+  const { setChannel } = useChannel<Event>();
+
+  const handleEvent = useCallback(
+    (event: Event) =>
+      Effect.gen(function* () {
+        addEvent(event);
+      }),
+    [addEvent]
+  );
+
+  useChannelHandler(HANDLER_ID, handleEvent);
+
   const startClick = useCallback(async () => {
     try {
       setIsStreaming(true);
-      await Effect.runPromise(start(ID, addEvent));
+
+      const newChannel = new Channel<Event>();
+      setChannel(newChannel);
+
+      newChannel.onmessage = (event: Event) => {
+        addEvent(event);
+      };
+
+      await Effect.runPromise(start(ID, newChannel));
+
       console.log("started");
     } catch (error) {
       console.error("Erreur lors du démarrage:", error);
