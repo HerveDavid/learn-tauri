@@ -14,7 +14,7 @@ import {
 import { addEventAtom, eventsAtom } from "./primitive";
 import { Event } from "../../shared/event";
 import { Button } from "@/components/ui/button";
-import { useChannel, useChannelHandler } from "@/lib/channel";
+import { useChannel } from "@/lib/channel";
 
 const start = (id: string, channel: Channel<Event>) =>
   Effect.gen(function* () {
@@ -41,8 +41,6 @@ export default function Component() {
   const events = useAtomValue(eventsAtom);
   const addEvent = useSetAtom(addEventAtom);
 
-  const { setChannel } = useChannel<Event>();
-
   const handleEvent = useCallback(
     (event: Event) =>
       Effect.gen(function* () {
@@ -51,7 +49,10 @@ export default function Component() {
     [addEvent]
   );
 
-  useChannelHandler(HANDLER_ID, handleEvent);
+  const { setChannel } = useChannel<Event>({
+    handlerId: HANDLER_ID,
+    handler: handleEvent,
+  });
 
   const startClick = useCallback(async () => {
     try {

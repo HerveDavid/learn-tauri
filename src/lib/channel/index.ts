@@ -4,7 +4,13 @@ import { Channel } from "@tauri-apps/api/core";
 import { Effect } from "effect";
 import { useCallback, useEffect, useState } from "react";
 
-export const useChannel = <T>() => {
+export const useChannel = <T>({
+  handlerId,
+  handler,
+}: {
+  handlerId?: string;
+  handler?: (data: T) => void;
+}) => {
   const runtime = useRuntime();
   const [channel, setChannelState] = useState<Channel<T> | null>(null);
 
@@ -30,23 +36,14 @@ export const useChannel = <T>() => {
     return runtime.runPromise(effect);
   }, [runtime]);
 
-  return {
-    channel,
-    setChannel,
-    getChannel,
-  };
-};
-
-export const useChannelHandler = <T>(
-  handlerId: string,
-  handler: (data: T) => Effect.Effect<void>
-) => {
-  const runtime = useRuntime();
-
   useEffect(() => {
+    if (!handlerId || !handler) return;
+
+    const handleEffect = (data: T) => Effect.sync(() => handler(data));
+
     const registerEffect = Effect.gen(function* () {
       const channelService = yield* ChannelClient;
-      return yield* channelService.registerHandler(handlerId, handler);
+      return yield* channelService.registerHandler(handlerId, handleEffect);
     });
 
     const unregisterEffect = Effect.gen(function* () {
@@ -60,4 +57,10 @@ export const useChannelHandler = <T>(
       runtime.runPromise(unregisterEffect);
     };
   }, [handlerId, handler, runtime]);
+
+  return {
+    channel,
+    setChannel,
+    getChannel,
+  };
 };
