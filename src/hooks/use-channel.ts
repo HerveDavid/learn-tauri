@@ -120,6 +120,7 @@ export const useChannel = <T>({
       startEffect.pipe(
         Effect.tap(() => {
           setIsStarted(true);
+          syncChannel();
         }),
         Effect.tap(() => {
           Effect.log(`Started to channel ${channelId}`);
@@ -143,6 +144,7 @@ export const useChannel = <T>({
       pauseChannel.pipe(
         Effect.tap(() => {
           setIsStarted(false);
+          syncChannel();
         }),
         Effect.tap(() => {
           Effect.log(`Pause to channel ${channelId}`);
