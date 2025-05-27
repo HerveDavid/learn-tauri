@@ -2,8 +2,8 @@ import { invoke, Channel } from '@tauri-apps/api/core';
 import * as Effect from 'effect/Effect';
 import * as Ref from 'effect/Ref';
 
-import { ChannelData, ChannelService } from './type';
 import { ChannelNotFoundError, HandlerAlreadyExistsError } from './error';
+import { ChannelData, ChannelService } from './type';
 
 export class ChannelClient extends Effect.Service<ChannelClient>()(
   '@/common/ChannelClient',

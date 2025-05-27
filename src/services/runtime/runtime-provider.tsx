@@ -1,7 +1,9 @@
-import { type LiveManagedRuntime } from "@/services/live-layer";
-import { constVoid } from "effect/Function";
-import React from "react";
-import { RuntimeContext } from "./runtime-context";
+import { constVoid } from 'effect/Function';
+import React from 'react';
+
+import { type LiveManagedRuntime } from '@/services/live-layer';
+
+import { RuntimeContext } from './runtime-context';
 
 export const RuntimeProvider: React.FC<{
   children: React.ReactNode;

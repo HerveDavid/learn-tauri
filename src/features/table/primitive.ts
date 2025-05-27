@@ -1,5 +1,6 @@
-import { atom } from "jotai";
-import { Event } from "../../types/event";
+import { atom } from 'jotai';
+
+import { Event } from '../../types/event';
 
 // Settings
 const MAX_EVENTS = 100;
@@ -61,7 +62,7 @@ export const addEventAtom = atom(null, (get, set, newEvent: Event) => {
       clearTimeout(batchTimeoutId);
     }
 
-    if ("requestIdleCallback" in window) {
+    if ('requestIdleCallback' in window) {
       (window as any).requestIdleCallback(flushBuffer, { timeout: 50 });
     } else {
       setTimeout(flushBuffer, 0);
@@ -74,7 +75,7 @@ export const addEventAtom = atom(null, (get, set, newEvent: Event) => {
       timeSinceLastFlush < 100 ? MAX_BATCH_DELAY * 2 : MAX_BATCH_DELAY;
     batchTimeoutId = setTimeout(
       flushBuffer,
-      adaptiveDelay
+      adaptiveDelay,
     ) as unknown as number;
   }
 });

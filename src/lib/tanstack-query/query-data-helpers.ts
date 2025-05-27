@@ -1,13 +1,15 @@
-import { QueryClient } from "@/services/common/query-client";
-import * as Effect from "effect/Effect";
-import * as mutative from "mutative";
-import { type QueryVariables } from "./effect-query";
+import * as Effect from 'effect/Effect';
+import * as mutative from 'mutative';
+
+import { QueryClient } from '@/services/common/query-client';
+
+import { type QueryVariables } from './effect-query';
 
 export type QueryDataUpdater<TData> = (draft: mutative.Draft<TData>) => void;
 
 type QueryKey<
   Key extends string,
-  Variables extends QueryVariables | void = void
+  Variables extends QueryVariables | void = void,
 > = Variables extends void ? readonly [Key] : readonly [Key, Variables];
 
 /**
@@ -32,7 +34,7 @@ type QueryKey<
  */
 export function makeQueryKey<
   Key extends string,
-  Variables extends QueryVariables | void = void
+  Variables extends QueryVariables | void = void,
 >(key: Key) {
   return ((variables?: Variables) =>
     variables === undefined
@@ -82,7 +84,7 @@ export function makeQueryKey<
 export function makeHelpers<Data, Variables = void>(
   queryKey: Variables extends void
     ? () => readonly [string]
-    : (variables: Variables) => readonly [string, ...Array<unknown>]
+    : (variables: Variables) => readonly [string, ...Array<unknown>],
 ) {
   const namespaceKey = (queryKey as () => readonly [string])()[0];
 
@@ -100,10 +102,10 @@ export function makeHelpers<Data, Variables = void>(
             ? (queryKey as () => readonly [string])()
             : (
                 queryKey as (
-                  v: Variables
+                  v: Variables,
                 ) => readonly [string, ...Array<unknown>]
-              )(variables[0])
-        )
+              )(variables[0]),
+        ),
       ),
     removeQuery: (...variables: QueryParams) =>
       Effect.andThen(QueryClient, (client) => {
@@ -113,7 +115,7 @@ export function makeHelpers<Data, Variables = void>(
               ? (queryKey as () => readonly [string])()
               : (
                   queryKey as (
-                    v: Variables
+                    v: Variables,
                   ) => readonly [string, ...Array<unknown>]
                 )(variables[0]),
         });
@@ -129,7 +131,7 @@ export function makeHelpers<Data, Variables = void>(
             ? (queryKey as () => readonly [string])()
             : (
                 queryKey as (
-                  v: Variables
+                  v: Variables,
                 ) => readonly [string, ...Array<unknown>]
               )(params[0]),
           (oldData) => {
@@ -143,10 +145,10 @@ export function makeHelpers<Data, Variables = void>(
                   return result;
                 }
               },
-              {}
+              {},
             ) as Data;
-          }
-        )
+          },
+        ),
       ),
     invalidateQuery: (...variables: QueryParams) =>
       Effect.andThen(QueryClient, (client) =>
@@ -156,14 +158,14 @@ export function makeHelpers<Data, Variables = void>(
               ? (queryKey as () => readonly [string])()
               : (
                   queryKey as (
-                    v: Variables
+                    v: Variables,
                   ) => readonly [string, ...Array<unknown>]
                 )(variables[0]),
-        })
+        }),
       ).pipe(Effect.orDie),
     invalidateAllQueries: () =>
       Effect.andThen(QueryClient, (client) =>
-        client.invalidateQueries({ queryKey: [namespaceKey], exact: false })
+        client.invalidateQueries({ queryKey: [namespaceKey], exact: false }),
       ).pipe(Effect.orDie),
     refetchQuery: (...variables: QueryParams) =>
       Effect.andThen(QueryClient, (client) =>
@@ -173,14 +175,14 @@ export function makeHelpers<Data, Variables = void>(
               ? (queryKey as () => readonly [string])()
               : (
                   queryKey as (
-                    v: Variables
+                    v: Variables,
                   ) => readonly [string, ...Array<unknown>]
                 )(variables[0]),
-        })
+        }),
       ).pipe(Effect.orDie),
     refetchAllQueries: () =>
       Effect.andThen(QueryClient, (client) =>
-        client.refetchQueries({ queryKey: [namespaceKey], exact: false })
+        client.refetchQueries({ queryKey: [namespaceKey], exact: false }),
       ).pipe(Effect.orDie),
   };
 }

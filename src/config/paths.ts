@@ -1,6 +1,6 @@
 export const paths = {
   home: {
-    path: "/",
-    getHref: () => "/",
+    path: '/',
+    getHref: () => '/',
   },
 } as const;

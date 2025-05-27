@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState, useRef } from 'react';
-import { ChannelClient } from '@/services/common/channel-client';
-import { useRuntime } from '@/services/runtime/use-runtime';
 import { Channel } from '@tauri-apps/api/core';
 import { Effect } from 'effect';
+import { useCallback, useEffect, useState, useRef } from 'react';
+
+import { ChannelClient } from '@/services/common/channel-client';
+import { useRuntime } from '@/services/runtime/use-runtime';
 
 export interface ChannelProps<T> {
   channelId: string;

@@ -1,6 +1,4 @@
 // Project imports
-import { type LiveRuntimeContext } from "@/services/live-layer";
-import { useRuntime } from "@/services/runtime/use-runtime";
 
 // Tanstack imports
 import {
@@ -19,37 +17,40 @@ import {
   useQuery,
   type UseQueryOptions,
   type UseQueryResult,
-} from "@tanstack/react-query";
+} from '@tanstack/react-query';
 
 // Effect imports
-import * as Cause from "effect/Cause";
-import * as Data from "effect/Data";
-import * as Duration from "effect/Duration";
-import * as Effect from "effect/Effect";
-import * as Exit from "effect/Exit";
-import * as Predicate from "effect/Predicate";
+import * as Cause from 'effect/Cause';
+import * as Data from 'effect/Data';
+import * as Duration from 'effect/Duration';
+import * as Effect from 'effect/Effect';
+import * as Exit from 'effect/Exit';
+import * as Predicate from 'effect/Predicate';
 
 // Visual imports
-import * as React from "react";
-import { toast } from "sonner";
+import * as React from 'react';
+import { toast } from 'sonner';
 
-export class QueryDefect extends Data.TaggedError("QueryDefect")<{
+import { type LiveRuntimeContext } from '@/services/live-layer';
+import { useRuntime } from '@/services/runtime/use-runtime';
+
+export class QueryDefect extends Data.TaggedError('QueryDefect')<{
   cause: unknown;
 }> {}
 
 const hasStringMessage = Predicate.compose(
   Predicate.isRecord,
   Predicate.compose(
-    Predicate.hasProperty("message"),
-    Predicate.struct({ message: Predicate.isString })
-  )
+    Predicate.hasProperty('message'),
+    Predicate.struct({ message: Predicate.isString }),
+  ),
 );
 
 type EffectfulError<Tag extends string = string> = { _tag: Tag };
 type ToastifyErrorsConfig<E extends EffectfulError> = {
-  [K in E["_tag"]]?: (error: Extract<E, EffectfulError<K>>) => string;
+  [K in E['_tag']]?: (error: Extract<E, EffectfulError<K>>) => string;
 } & {
-  orElse?: boolean | string | "extractMessage";
+  orElse?: boolean | string | 'extractMessage';
 };
 
 type UseRunnerOpts<A, E extends EffectfulError> = {
@@ -58,8 +59,8 @@ type UseRunnerOpts<A, E extends EffectfulError> = {
   toastifySuccess?: (result: A) => string;
 };
 
-const DEFAULT_ERROR_MESSAGE = "Something went wrong";
-const DEFAULT_DEFECT_MESSAGE = "An unexpected error occurred";
+const DEFAULT_ERROR_MESSAGE = 'Something went wrong';
+const DEFAULT_DEFECT_MESSAGE = 'An unexpected error occurred';
 
 /**
  * @internal
@@ -69,7 +70,7 @@ const useRunner = <A, E extends EffectfulError, R extends LiveRuntimeContext>({
   toastifyErrors = {},
   toastifySuccess,
 }: UseRunnerOpts<NoInfer<A>, NoInfer<E>> = {}): ((
-  span: string
+  span: string,
 ) => (self: Effect.Effect<A, E, R>) => Promise<A>) => {
   const runtime = useRuntime();
 
@@ -91,16 +92,16 @@ const useRunner = <A, E extends EffectfulError, R extends LiveRuntimeContext>({
                   toast.error(message);
                   return;
                 } else if (orElse !== false) {
-                  if (orElse === "extractMessage" && hasStringMessage(error)) {
+                  if (orElse === 'extractMessage' && hasStringMessage(error)) {
                     toast.error(error.message);
-                  } else if (typeof orElse === "string") {
+                  } else if (typeof orElse === 'string') {
                     toast.error(orElse);
                   } else {
                     // orElse === true, use default message
                     toast.error(DEFAULT_ERROR_MESSAGE);
                   }
                 }
-              })
+              }),
             ),
             Effect.tap((result) => {
               if (toastifySuccess !== undefined) {
@@ -109,7 +110,7 @@ const useRunner = <A, E extends EffectfulError, R extends LiveRuntimeContext>({
             }),
             Effect.tapErrorCause(Effect.logError),
             Effect.withSpan(span),
-            runtime.runPromiseExit
+            runtime.runPromiseExit,
           )
           .then(
             Exit.match({
@@ -121,7 +122,7 @@ const useRunner = <A, E extends EffectfulError, R extends LiveRuntimeContext>({
 
                 if (toastifyDefects !== false) {
                   const defectMessage =
-                    typeof toastifyDefects === "string"
+                    typeof toastifyDefects === 'string'
                       ? toastifyDefects
                       : DEFAULT_DEFECT_MESSAGE;
                   toast.error(defectMessage);
@@ -129,10 +130,10 @@ const useRunner = <A, E extends EffectfulError, R extends LiveRuntimeContext>({
 
                 throw new QueryDefect({ cause: Cause.squash(cause) });
               },
-            })
+            }),
           );
       },
-    [runtime.runPromiseExit, toastifyDefects, toastifyErrors, toastifySuccess]
+    [runtime.runPromiseExit, toastifyDefects, toastifyErrors, toastifySuccess],
   );
 };
 
@@ -147,16 +148,16 @@ type EffectfulMutationOptions<
   A,
   E extends EffectfulError,
   Variables,
-  R extends LiveRuntimeContext
+  R extends LiveRuntimeContext,
 > = Omit<
   UseMutationOptions<A, E | QueryDefect, Variables>,
-  | "mutationFn"
-  | "onSuccess"
-  | "onError"
-  | "onSettled"
-  | "onMutate"
-  | "retry"
-  | "retryDelay"
+  | 'mutationFn'
+  | 'onSuccess'
+  | 'onError'
+  | 'onSettled'
+  | 'onMutate'
+  | 'retry'
+  | 'retryDelay'
 > & {
   mutationKey: QueryKey;
   mutationFn: (variables: Variables) => Effect.Effect<A, E, R>;
@@ -166,9 +167,9 @@ export function useEffectMutation<
   A,
   E extends EffectfulError,
   Variables,
-  R extends LiveRuntimeContext
+  R extends LiveRuntimeContext,
 >(
-  options: EffectfulMutationOptions<A, E, Variables, R>
+  options: EffectfulMutationOptions<A, E, Variables, R>,
 ): UseMutationResult<A, E | QueryDefect, Variables> {
   const effectRunner = useRunner<A, E, R>(options);
   const [spanName] = options.mutationKey;
@@ -178,7 +179,7 @@ export function useEffectMutation<
       const effect = options.mutationFn(variables);
       return effect.pipe(effectRunner(spanName));
     },
-    [effectRunner, spanName, options]
+    [effectRunner, spanName, options],
   );
 
   return useMutation<A, E | QueryDefect, Variables>({
@@ -197,9 +198,9 @@ type EffectfulQueryFunction<
   E extends EffectfulError,
   R extends LiveRuntimeContext,
   QueryKeyType extends QueryKey = QueryKey,
-  PageParam = never
+  PageParam = never,
 > = (
-  context: QueryFunctionContext<QueryKeyType, PageParam>
+  context: QueryFunctionContext<QueryKeyType, PageParam>,
 ) => Effect.Effect<A, E, R>;
 
 type EffectfulQueryOptions<
@@ -207,10 +208,10 @@ type EffectfulQueryOptions<
   E extends EffectfulError,
   R extends LiveRuntimeContext,
   QueryKeyType extends QueryKey = QueryKey,
-  PageParam = never
+  PageParam = never,
 > = Omit<
   UseQueryOptions<A, E | QueryDefect, A, QueryKeyType>,
-  "queryKey" | "queryFn" | "retry" | "retryDelay" | "staleTime" | "gcTime"
+  'queryKey' | 'queryFn' | 'retry' | 'retryDelay' | 'staleTime' | 'gcTime'
 > & {
   queryKey: QueryKeyType;
   queryFn:
@@ -224,7 +225,7 @@ export function useEffectQuery<
   A,
   E extends EffectfulError,
   R extends LiveRuntimeContext,
-  QueryKeyType extends QueryKey = QueryKey
+  QueryKeyType extends QueryKey = QueryKey,
 >({
   gcTime,
   staleTime,
@@ -243,7 +244,7 @@ export function useEffectQuery<
       )(context);
       return effect.pipe(effectRunner(spanName));
     },
-    [effectRunner, spanName, options]
+    [effectRunner, spanName, options],
   );
 
   return useQuery<A, E | QueryDefect, A, QueryKeyType>({
@@ -258,14 +259,14 @@ export function useEffectQuery<
 export type UseQueryResultSuccess<TData> = UseQueryResult<
   TData,
   unknown
->["data"];
+>['data'];
 
 export type EffectfulInfiniteQueryOptions<
   A,
   E extends EffectfulError,
   R extends LiveRuntimeContext,
   QueryKeyType extends QueryKey = QueryKey,
-  PageParam = unknown
+  PageParam = unknown,
 > = Omit<
   UseInfiniteQueryOptions<
     A,
@@ -275,7 +276,7 @@ export type EffectfulInfiniteQueryOptions<
     QueryKeyType,
     PageParam
   >,
-  "queryFn" | "retry" | "retryDelay" | "staleTime" | "gcTime"
+  'queryFn' | 'retry' | 'retryDelay' | 'staleTime' | 'gcTime'
 > & {
   queryKey: QueryKeyType;
   queryFn:
@@ -297,7 +298,7 @@ export function useEffectInfiniteQuery<
   E extends EffectfulError,
   R extends LiveRuntimeContext,
   QueryKeyType extends QueryKey = QueryKey,
-  PageParam = unknown
+  PageParam = unknown,
 >({
   gcTime,
   getNextPageParam,
@@ -330,7 +331,7 @@ export function useEffectInfiniteQuery<
       )(context);
       return effect.pipe(effectRunner(spanName));
     },
-    [effectRunner, spanName, effectfulQueryFn]
+    [effectRunner, spanName, effectfulQueryFn],
   );
 
   return useInfiniteQuery<

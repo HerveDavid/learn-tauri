@@ -1,4 +1,7 @@
-import { type LiveManagedRuntime } from "@/services/live-layer";
-import React from "react";
+import React from 'react';
 
-export const RuntimeContext = React.createContext<LiveManagedRuntime | null>(null);
+import { type LiveManagedRuntime } from '@/services/live-layer';
+
+export const RuntimeContext = React.createContext<LiveManagedRuntime | null>(
+  null,
+);

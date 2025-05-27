@@ -1,1 +1,1 @@
-export const IndexPage = () => {}
+export const IndexPage = () => {};
