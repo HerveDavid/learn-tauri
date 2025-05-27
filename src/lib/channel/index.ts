@@ -57,19 +57,25 @@ export const useChannel = <T>({
       );
     });
 
-    try {
-      await runtime.runPromise(registerEffect);
-      setIsConnected(true);
-      syncChannel();
-      console.log(
-        `Connected to channel ${channelId} with handler ${handlerId}`
-      );
-    } catch (error) {
-      console.error(
-        `Failed to register handler ${handlerId} for channel ${channelId}:`,
-        error
-      );
-    }
+    await runtime.runPromise(
+      registerEffect.pipe(
+        Effect.tap(() => {
+          setIsConnected(true);
+          syncChannel();
+        }),
+        Effect.tap(() => {
+          Effect.log(
+            `Connected to channel ${channelId} with handler ${handlerId}`
+          );
+        }),
+        Effect.catchAll((error) =>
+          Effect.logError(
+            `Failed to register handler ${handlerId} for channel ${channelId}:`,
+            error
+          )
+        )
+      )
+    );
   }, [channelId, handlerId, runtime, syncChannel, isConnected]);
 
   const disconnect = useCallback(async () => {
@@ -80,19 +86,25 @@ export const useChannel = <T>({
       yield* channelClient.unregisterHandler(channelId, handlerId);
     });
 
-    try {
-      await runtime.runPromise(unregisterEffect);
-      setIsConnected(false);
-      syncChannel();
-      console.log(
-        `Disconnected from channel ${channelId} handler ${handlerId}`
-      );
-    } catch (error) {
-      console.error(
-        `Failed to unregister handler ${handlerId} from channel ${channelId}:`,
-        error
-      );
-    }
+    await runtime.runPromise(
+      unregisterEffect.pipe(
+        Effect.tap(() => {
+          setIsConnected(false);
+          syncChannel();
+        }),
+        Effect.tap(() =>
+          Effect.log(
+            `Disconnected from channel ${channelId} handler ${handlerId}`
+          )
+        ),
+        Effect.catchAll((error) =>
+          Effect.logError(
+            `Failed to unregister handler ${handlerId} from channel ${channelId}:`,
+            error
+          )
+        )
+      )
+    );
   }, [channelId, handlerId, runtime, syncChannel, isConnected]);
 
   useEffect(() => {
