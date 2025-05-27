@@ -131,7 +131,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             let channelData = channels.get(channelId);
 
             if (!channelData) {
-              const _ = yield* ensureChannel<T>(channelId);
+              yield* ensureChannel<T>(channelId);
               const newChannels = yield* Ref.get(channelsRef);
               channelData = newChannels.get(channelId)!;
             }

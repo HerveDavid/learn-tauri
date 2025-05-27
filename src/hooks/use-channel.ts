@@ -2,7 +2,10 @@ import { Channel } from '@tauri-apps/api/core';
 import { Effect } from 'effect';
 import { useCallback, useEffect, useState, useRef } from 'react';
 
-import { ChannelClient } from '@/services/common/channel-client';
+import {
+  ChannelClient,
+  ChannelNotFoundError,
+} from '@/services/common/channel-client';
 import { useRuntime } from '@/services/runtime/use-runtime';
 
 export interface ChannelProps<T> {
@@ -19,7 +22,9 @@ export const useChannel = <T>({
   autoConnect = false,
 }: ChannelProps<T>) => {
   const runtime = useRuntime();
-  const [channel, setChannelState] = useState<Channel<T> | null>(null);
+  const [channel, setChannelState] = useState<
+    Channel<T> | ChannelNotFoundError
+  >();
   const [isStarted, setIsStarted] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const handlerRef = useRef(handler);
@@ -169,7 +174,9 @@ export const useChannel = <T>({
     };
   }, [autoConnect, handlerId, handler, isConnected, connect, disconnect]);
 
-  const getChannel = useCallback(async (): Promise<Channel<T> | null> => {
+  const getChannel = useCallback(async (): Promise<
+    Channel<T> | ChannelNotFoundError
+  > => {
     const effect = Effect.gen(function* () {
       const channelClient = yield* ChannelClient;
       return yield* channelClient.getChannel<T>(channelId);
