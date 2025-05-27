@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -30,7 +30,7 @@ export default function Component() {
     [addEvent],
   );
 
-  const { start, pause, connect, disconnect, isConnected } = useChannel<Event>({
+  const { start, pause, connect, disconnect, isStarted } = useChannel<Event>({
     channelId: CHANNEL_ID,
     handlerId: HANDLER_ID,
     handler: handleEvent,
@@ -62,13 +62,13 @@ export default function Component() {
   return (
     <div className="bg-background">
       <div className="space-x-2 flex items-center p-2">
-        <Button onClick={startClick} disabled={isConnected}>
+        <Button onClick={startClick} disabled={isStarted}>
           Start
         </Button>
-        <Button onClick={stopClick} variant="secondary" disabled={!isConnected}>
+        <Button onClick={stopClick} variant="secondary" disabled={!isStarted}>
           Stop
         </Button>
-        <p>{isConnected ? '🔴 Live' : '🟢 Standby'}</p>
+        <p>{isStarted ? '🔴 Live' : '🟢 Standby'}</p>
       </div>
       <div className="[&>div]:max-h-96 border-t">
         <Table className="border-separate border-spacing-0 [&_td]:border-border [&_tfoot_td]:border-t [&_th]:border-b [&_th]:border-border [&_tr:not(:last-child)_td]:border-b [&_tr]:border-none">
