@@ -4,7 +4,6 @@ import {
 } from '@tanstack/react-query';
 import { LogLevel } from 'effect';
 import * as Duration from 'effect/Duration';
-
 // Effect imports
 import * as Layer from 'effect/Layer';
 import * as Logger from 'effect/Logger';

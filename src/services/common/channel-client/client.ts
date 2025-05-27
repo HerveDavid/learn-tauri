@@ -131,7 +131,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             let channelData = channels.get(channelId);
 
             if (!channelData) {
-              const {} = yield* ensureChannel<T>(channelId);
+              const _ = yield* ensureChannel<T>(channelId);
               const newChannels = yield* Ref.get(channelsRef);
               channelData = newChannels.get(channelId)!;
             }
@@ -230,18 +230,16 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
 
         startChannel: (channelId: string) =>
           Effect.gen(function* () {
-            return yield* Effect.tryPromise({
-              try: () => invoke('start', { id: channelId }),
-              catch: console.error,
-            });
+            return yield* Effect.tryPromise(() =>
+              invoke('start', { id: channelId }),
+            );
           }),
 
         pauseChannel: (channelId: string) =>
           Effect.gen(function* () {
-            return yield* Effect.tryPromise({
-              try: () => invoke('pause', { id: channelId }),
-              catch: console.error,
-            });
+            return yield* Effect.tryPromise(() =>
+              invoke('pause', { id: channelId }),
+            );
           }),
 
         getChannelIds: () =>

@@ -46,7 +46,7 @@ export default function Component() {
     } catch (error) {
       console.error('Erreur lors du démarrage:', error);
     }
-  }, [connect]);
+  }, [connect, start]);
 
   const stopClick = useCallback(async () => {
     try {
@@ -57,7 +57,7 @@ export default function Component() {
     } catch (error) {
       console.error("Erreur lors de l'arrêt:", error);
     }
-  }, [disconnect]);
+  }, [disconnect, pause]);
 
   return (
     <div className="bg-background">

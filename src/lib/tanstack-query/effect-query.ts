@@ -1,6 +1,3 @@
-// Project imports
-
-// Tanstack imports
 import {
   type GetNextPageParamFunction,
   type GetPreviousPageParamFunction,
@@ -18,16 +15,12 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from '@tanstack/react-query';
-
-// Effect imports
 import * as Cause from 'effect/Cause';
 import * as Data from 'effect/Data';
 import * as Duration from 'effect/Duration';
 import * as Effect from 'effect/Effect';
 import * as Exit from 'effect/Exit';
 import * as Predicate from 'effect/Predicate';
-
-// Visual imports
 import * as React from 'react';
 import { toast } from 'sonner';
 
@@ -87,7 +80,6 @@ const useRunner = <A, E extends EffectfulError, R extends LiveRuntimeContext>({
                 const tagHandler = tagConfigs[errorTag];
 
                 if (tagHandler !== undefined) {
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                   const message = tagHandler(error as any);
                   toast.error(message);
                   return;

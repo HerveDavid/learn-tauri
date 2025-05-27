@@ -8,7 +8,6 @@ import importPlugin from 'eslint-plugin-import';
 import prettier from 'eslint-plugin-prettier';
 import testingLibrary from 'eslint-plugin-testing-library';
 import jestDom from 'eslint-plugin-jest-dom';
-// import tailwindcss from 'eslint-plugin-tailwindcss'; // Disabled due to compatibility issues with Tailwind CSS v4
 import vitest from 'eslint-plugin-vitest';
 import checkFile from 'eslint-plugin-check-file';
 import globals from 'globals';
@@ -37,6 +36,16 @@ const config: Linter.Config[] = [
     },
     rules: {
       ...js.configs.recommended.rules,
+      // Configurer no-unused-vars pour ignorer les variables avec prefix _
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
     },
   },
 
@@ -60,14 +69,13 @@ const config: Linter.Config[] = [
       },
     },
     plugins: {
-      // '@typescript-eslint': typescript,
+      '@typescript-eslint': typescript as any,
       react,
       'react-hooks': reactHooks,
       'jsx-a11y': jsxA11y,
       import: importPlugin,
       prettier,
       'jest-dom': jestDom,
-      // tailwindcss, // Disabled due to compatibility issues with Tailwind CSS v4
       vitest,
       'check-file': checkFile,
     },
@@ -85,15 +93,17 @@ const config: Linter.Config[] = [
       // Base ESLint rules
       ...js.configs.recommended.rules,
 
-      // TypeScript rules (using specific rule sets instead of configs)
-      // '@typescript-eslint/no-unused-vars': ['error'],
-      // '@typescript-eslint/explicit-function-return-type': 'off',
-      // '@typescript-eslint/explicit-module-boundary-types': 'off',
-      // '@typescript-eslint/no-empty-function': 'off',
-      // '@typescript-eslint/no-explicit-any': 'off',
-      // '@typescript-eslint/no-inferrable-types': 'off',
-      // '@typescript-eslint/ban-ts-comment': 'warn',
-      // '@typescript-eslint/prefer-as-const': 'error',
+      // Configurer no-unused-vars pour ignorer les variables avec prefix _
+      'no-unused-vars': 'off', // Désactiver la règle de base
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
 
       // React rules
       'react/prop-types': 'off',
@@ -178,15 +188,6 @@ const config: Linter.Config[] = [
         },
       ],
 
-      // Tailwind CSS rules - Disabled due to compatibility issues with Tailwind CSS v4
-      // 'tailwindcss/classnames-order': 'warn',
-      // 'tailwindcss/no-custom-classname': 'off',
-
-      // Testing Library rules
-      // 'testing-library/await-async-query': 'error',
-      // 'testing-library/no-await-sync-query': 'error',
-      // 'testing-library/no-debugging-utils': 'warn',
-
       // Jest DOM rules
       'jest-dom/prefer-checked': 'error',
       'jest-dom/prefer-enabled-disabled': 'error',
@@ -242,6 +243,15 @@ const config: Linter.Config[] = [
     },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+        },
+      ],
       'testing-library/prefer-screen-queries': 'error',
       'testing-library/prefer-user-event': 'error',
     },
