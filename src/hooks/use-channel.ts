@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState, useRef } from "react";
-import { ChannelClient } from "@/services/common/channel-client";
-import { useRuntime } from "@/services/runtime/use-runtime";
-import { Channel } from "@tauri-apps/api/core";
-import { Effect } from "effect";
+import { useCallback, useEffect, useState, useRef } from 'react';
+import { ChannelClient } from '@/services/common/channel-client';
+import { useRuntime } from '@/services/runtime/use-runtime';
+import { Channel } from '@tauri-apps/api/core';
+import { Effect } from 'effect';
 
 export interface ChannelProps<T> {
   channelId: string;
@@ -19,6 +19,7 @@ export const useChannel = <T>({
 }: ChannelProps<T>) => {
   const runtime = useRuntime();
   const [channel, setChannelState] = useState<Channel<T> | null>(null);
+  const [isStarted, setIsStarted] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const handlerRef = useRef(handler);
 
@@ -43,9 +44,9 @@ export const useChannel = <T>({
         Effect.catchAll((error) =>
           Effect.logError(
             `Error in handler ${handlerId} for channel ${channelId}:`,
-            error
-          )
-        )
+            error,
+          ),
+        ),
       );
 
     const registerEffect = Effect.gen(function* () {
@@ -53,7 +54,7 @@ export const useChannel = <T>({
       return yield* channelClient.registerHandler(
         channelId,
         handlerId,
-        handleEffect
+        handleEffect,
       );
     });
 
@@ -65,16 +66,16 @@ export const useChannel = <T>({
         }),
         Effect.tap(() => {
           Effect.log(
-            `Connected to channel ${channelId} with handler ${handlerId}`
+            `Connected to channel ${channelId} with handler ${handlerId}`,
           );
         }),
         Effect.catchAll((error) =>
           Effect.logError(
             `Failed to register handler ${handlerId} for channel ${channelId}:`,
-            error
-          )
-        )
-      )
+            error,
+          ),
+        ),
+      ),
     );
   }, [channelId, handlerId, runtime, syncChannel, isConnected]);
 
@@ -94,18 +95,64 @@ export const useChannel = <T>({
         }),
         Effect.tap(() =>
           Effect.log(
-            `Disconnected from channel ${channelId} handler ${handlerId}`
-          )
+            `Disconnected from channel ${channelId} handler ${handlerId}`,
+          ),
         ),
         Effect.catchAll((error) =>
           Effect.logError(
             `Failed to unregister handler ${handlerId} from channel ${channelId}:`,
-            error
-          )
-        )
-      )
+            error,
+          ),
+        ),
+      ),
     );
   }, [channelId, handlerId, runtime, syncChannel, isConnected]);
+
+  const start = useCallback(async () => {
+    if (!channelId || isStarted) return;
+
+    const startEffect = Effect.gen(function* () {
+      const channelClient = yield* ChannelClient;
+      return yield* channelClient.startChannel(channelId);
+    });
+
+    await runtime.runPromise(
+      startEffect.pipe(
+        Effect.tap(() => {
+          setIsStarted(true);
+        }),
+        Effect.tap(() => {
+          Effect.log(`Started to channel ${channelId}`);
+        }),
+        Effect.catchAll((error) =>
+          Effect.logError(`Failed to start channel ${channelId}:`, error),
+        ),
+      ),
+    );
+  }, [channelId, runtime, syncChannel, isStarted]);
+
+  const pause = useCallback(async () => {
+    if (!channelId || !isStarted) return;
+
+    const pauseChannel = Effect.gen(function* () {
+      const channelClient = yield* ChannelClient;
+      return yield* channelClient.pauseChannel(channelId);
+    });
+
+    await runtime.runPromise(
+      pauseChannel.pipe(
+        Effect.tap(() => {
+          setIsStarted(false);
+        }),
+        Effect.tap(() => {
+          Effect.log(`Pause to channel ${channelId}`);
+        }),
+        Effect.catchAll((error) =>
+          Effect.logError(`Failed to pause channel ${channelId}:`, error),
+        ),
+      ),
+    );
+  }, [channelId, runtime, syncChannel, isStarted]);
 
   useEffect(() => {
     if (autoConnect && handlerId && handler && !isConnected) {
@@ -136,5 +183,8 @@ export const useChannel = <T>({
     isConnected,
     connect,
     disconnect,
+    isStarted,
+    start,
+    pause,
   };
 };

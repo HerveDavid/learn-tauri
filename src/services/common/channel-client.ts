@@ -1,23 +1,25 @@
-import { invoke, Channel } from "@tauri-apps/api/core";
-import * as Effect from "effect/Effect";
-import * as Ref from "effect/Ref";
+import { invoke, Channel } from '@tauri-apps/api/core';
+import * as Effect from 'effect/Effect';
+import * as Ref from 'effect/Ref';
 
 export interface ChannelService {
   readonly registerHandler: <T>(
     channelId: string,
     handlerId: string,
-    handler: (data: T) => Effect.Effect<void>
+    handler: (data: T) => Effect.Effect<void>,
   ) => Effect.Effect<string>;
   readonly unregisterHandler: (
     channelId: string,
-    handlerId: string
+    handlerId: string,
   ) => Effect.Effect<void>;
   readonly getChannel: <T>(
-    channelId: string
+    channelId: string,
   ) => Effect.Effect<Channel<T> | null>;
+  readonly startChannel: (channelId: string) => Effect.Effect<void>;
+  readonly pauseChannel: (channelId: string) => Effect.Effect<void>;
   readonly hasHandler: (
     channelId: string,
-    handlerId: string
+    handlerId: string,
   ) => Effect.Effect<boolean>;
   readonly getChannelIds: () => Effect.Effect<string[]>;
   readonly cleanup: () => Effect.Effect<void>;
@@ -30,7 +32,7 @@ interface ChannelData {
 }
 
 export class ChannelClient extends Effect.Service<ChannelClient>()(
-  "@/common/ChannelClient",
+  '@/common/ChannelClient',
   {
     dependencies: [],
     effect: Effect.gen(function* () {
@@ -63,9 +65,9 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
               yield* handlersArray[0](data).pipe(
                 Effect.catchAll((error) =>
                   Effect.logError(
-                    `Handler in channel ${channelId} failed: ${error}`
-                  )
-                )
+                    `Handler in channel ${channelId} failed: ${error}`,
+                  ),
+                ),
               );
             } else {
               yield* Effect.forEach(
@@ -74,20 +76,20 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
                   handler(data).pipe(
                     Effect.catchAll((error) =>
                       Effect.logError(
-                        `Handler in channel ${channelId} failed: ${error}`
-                      )
-                    )
+                        `Handler in channel ${channelId} failed: ${error}`,
+                      ),
+                    ),
                   ),
-                { concurrency: "unbounded", batching: true }
+                { concurrency: 'unbounded', batching: true },
               );
             }
           }).pipe(
             Effect.catchAll((error) =>
               Effect.logError(
-                `Message processing failed for channel ${channelId}: ${error}`
-              )
-            )
-          )
+                `Message processing failed for channel ${channelId}: ${error}`,
+              ),
+            ),
+          ),
         );
       };
 
@@ -111,7 +113,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
 
           yield* Ref.set(
             channelsRef,
-            new Map(channels).set(channelId, channelData)
+            new Map(channels).set(channelId, channelData),
           );
 
           yield* Effect.logDebug(`Auto-created channel ${channelId}`);
@@ -130,10 +132,10 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
           cleanupChannel(channelData);
 
           yield* Effect.tryPromise({
-            try: () => invoke("unregister", { id: channelId }),
+            try: () => invoke('unregister', { id: channelId }),
             catch: (error) =>
               Effect.logError(
-                `Backend cleanup failed for channel ${channelId}: ${error}`
+                `Backend cleanup failed for channel ${channelId}: ${error}`,
               ),
           });
 
@@ -148,7 +150,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
         registerHandler: <T>(
           channelId: string,
           handlerId: string,
-          handler: (data: T) => Effect.Effect<void>
+          handler: (data: T) => Effect.Effect<void>,
         ) =>
           Effect.gen(function* () {
             const channels = yield* Ref.get(channelsRef);
@@ -163,8 +165,8 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             if (channelData.handlers.has(handlerId)) {
               yield* Effect.fail(
                 new Error(
-                  `Handler '${handlerId}' already exists for channel '${channelId}'`
-                )
+                  `Handler '${handlerId}' already exists for channel '${channelId}'`,
+                ),
               );
             }
 
@@ -173,13 +175,13 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             if (isFirstHandler) {
               yield* Effect.tryPromise({
                 try: () =>
-                  invoke("register", {
+                  invoke('register', {
                     id: channelId,
                     channel: channelData.channel,
                   }),
                 catch: (error) =>
                   Effect.logError(
-                    `Tauri registration failed for channel ${channelId}: ${error}`
+                    `Tauri registration failed for channel ${channelId}: ${error}`,
                   ),
               });
             }
@@ -195,7 +197,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             yield* Ref.set(channelsRef, newChannels);
 
             yield* Effect.logDebug(
-              `Handler ${handlerId} registered for channel ${channelId} (total: ${newChannelData.handlersArray.length})`
+              `Handler ${handlerId} registered for channel ${channelId} (total: ${newChannelData.handlersArray.length})`,
             );
             return handlerId;
           }),
@@ -207,14 +209,14 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
 
             if (!channelData) {
               yield* Effect.logWarning(
-                `Channel ${channelId} not found for handler unregistration`
+                `Channel ${channelId} not found for handler unregistration`,
               );
               return;
             }
 
             if (!channelData.handlers.has(handlerId)) {
               yield* Effect.logWarning(
-                `Handler ${handlerId} not found in channel ${channelId}`
+                `Handler ${handlerId} not found in channel ${channelId}`,
               );
               return;
             }
@@ -229,7 +231,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             yield* Ref.set(channelsRef, newChannels);
 
             yield* Effect.logDebug(
-              `Handler ${handlerId} unregistered from channel ${channelId} (remaining: ${newChannelData.handlersArray.length})`
+              `Handler ${handlerId} unregistered from channel ${channelId} (remaining: ${newChannelData.handlersArray.length})`,
             );
 
             yield* cleanupChannelIfEmpty(channelId);
@@ -249,6 +251,22 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             return channelData?.handlers.has(handlerId) ?? false;
           }),
 
+        startChannel: (channelId: string) =>
+          Effect.gen(function* () {
+            return yield* Effect.tryPromise({
+              try: () => invoke('start', { id: channelId }),
+              catch: console.error,
+            });
+          }),
+
+        pauseChannel: (channelId: string) =>
+          Effect.gen(function* () {
+            return yield* Effect.tryPromise({
+              try: () => invoke('pause', { id: channelId }),
+              catch: console.error,
+            });
+          }),
+
         getChannelIds: () =>
           Effect.gen(function* () {
             const channels = yield* Ref.get(channelsRef);
@@ -262,15 +280,15 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             for (const [channelId, channelData] of channels.entries()) {
               cleanupChannel(channelData);
               yield* Effect.tryPromise({
-                try: () => invoke("unregister", { id: channelId }),
+                try: () => invoke('unregister', { id: channelId }),
                 catch: Effect.logError,
               });
             }
 
             yield* Ref.set(channelsRef, new Map());
-            yield* Effect.logDebug("All channels cleaned up");
+            yield* Effect.logDebug('All channels cleaned up');
           }),
       } as ChannelService;
     }),
-  }
+  },
 ) {}

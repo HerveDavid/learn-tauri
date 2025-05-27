@@ -1,7 +1,5 @@
-import { useCallback } from "react";
-import { Effect } from "effect";
-import { useAtomValue, useSetAtom } from "jotai";
-import { invoke } from "@tauri-apps/api/core";
+import { useCallback } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
 import {
   Table,
   TableBody,
@@ -9,30 +7,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { addEventAtom, eventsAtom } from "./primitive";
-import { Event } from "../../types/event";
-import { Button } from "@/components/ui/button";
-import { useChannel } from "@/hooks/use-channel";
+} from '@/components/ui/table';
+import { addEventAtom, eventsAtom } from './primitive';
+import { Event } from '../../types/event';
+import { Button } from '@/components/ui/button';
+import { useChannel } from '@/hooks/use-channel';
 
-const start = (id: string) =>
-  Effect.gen(function* () {
-    return yield* Effect.tryPromise({
-      try: () => invoke("start", { id }),
-      catch: console.error,
-    });
-  });
-
-const pause = (id: string) =>
-  Effect.gen(function* () {
-    return yield* Effect.tryPromise({
-      try: () => invoke("pause", { id }),
-      catch: console.error,
-    });
-  });
-
-const CHANNEL_ID = "events-log";
-const HANDLER_ID = "event-handler";
+const CHANNEL_ID = 'events-log';
+const HANDLER_ID = 'event-handler';
 
 export default function Component() {
   const events = useAtomValue(eventsAtom);
@@ -42,10 +24,10 @@ export default function Component() {
     (event: Event) => {
       addEvent(event);
     },
-    [addEvent]
+    [addEvent],
   );
 
-  const { connect, disconnect, isConnected } = useChannel<Event>({
+  const { start, pause, connect, disconnect, isConnected } = useChannel<Event>({
     channelId: CHANNEL_ID,
     handlerId: HANDLER_ID,
     handler: handleEvent,
@@ -55,22 +37,20 @@ export default function Component() {
   const startClick = useCallback(async () => {
     try {
       await connect();
+      await start();
 
-      await Effect.runPromise(start(CHANNEL_ID));
-
-      console.log("Streaming started");
+      console.log('Streaming started');
     } catch (error) {
-      console.error("Erreur lors du démarrage:", error);
+      console.error('Erreur lors du démarrage:', error);
     }
   }, [connect]);
 
   const stopClick = useCallback(async () => {
     try {
-      await Effect.runPromise(pause(CHANNEL_ID));
-
+      await pause();
       await disconnect();
 
-      console.log("Streaming stopped");
+      console.log('Streaming stopped');
     } catch (error) {
       console.error("Erreur lors de l'arrêt:", error);
     }
@@ -85,7 +65,7 @@ export default function Component() {
         <Button onClick={stopClick} variant="secondary" disabled={!isConnected}>
           Stop
         </Button>
-        <p>{isConnected ? "🔴 Live" : "🟢 No Record"}</p>
+        <p>{isConnected ? '🔴 Live' : '🟢 Standby'}</p>
       </div>
       <div className="[&>div]:max-h-96 border-t">
         <Table className="border-separate border-spacing-0 [&_td]:border-border [&_tfoot_td]:border-t [&_th]:border-b [&_th]:border-border [&_tr:not(:last-child)_td]:border-b [&_tr]:border-none">
