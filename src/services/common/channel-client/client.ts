@@ -3,7 +3,7 @@ import * as Effect from 'effect/Effect';
 import * as Ref from 'effect/Ref';
 
 import { ChannelNotFoundError, HandlerAlreadyExistsError } from './error';
-import { ChannelData, ChannelService } from './type';
+import { ChannelData, ChannelService, ChannelStatus } from './type';
 
 export class ChannelClient extends Effect.Service<ChannelClient>()(
   '@/common/ChannelClient',
@@ -156,6 +156,16 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
                     `Tauri registration failed for channel ${channelId}: ${error}`,
                   ),
               });
+
+              // After registering, the backend automatically starts the channel
+              // So we need to pause it to allow manual control
+              yield* Effect.tryPromise({
+                try: () => invoke('pause', { id: channelId }),
+                catch: (error) =>
+                  Effect.logDebug(
+                    `Could not pause newly registered channel ${channelId}: ${error}`,
+                  ),
+              });
             }
 
             const newChannels = new Map(yield* Ref.get(channelsRef));
@@ -228,18 +238,149 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             return channelData?.handlers.has(handlerId) ?? false;
           }),
 
+        // Enhanced status management methods
         startChannel: (channelId: string) =>
           Effect.gen(function* () {
-            return yield* Effect.tryPromise(() =>
-              invoke('start', { id: channelId }),
-            );
+            yield* Effect.logDebug(`Starting channel ${channelId}`);
+            return yield* Effect.tryPromise({
+              try: () => invoke('start', { id: channelId }),
+              catch: (error) =>
+                new Error(`Failed to start channel ${channelId}: ${error}`),
+            });
+          }),
+
+        stopChannel: (channelId: string) =>
+          Effect.gen(function* () {
+            yield* Effect.logDebug(`Stopping channel ${channelId}`);
+            return yield* Effect.tryPromise({
+              try: () => invoke('stop', { id: channelId }),
+              catch: (error) =>
+                new Error(`Failed to stop channel ${channelId}: ${error}`),
+            });
           }),
 
         pauseChannel: (channelId: string) =>
           Effect.gen(function* () {
-            return yield* Effect.tryPromise(() =>
-              invoke('pause', { id: channelId }),
-            );
+            yield* Effect.logDebug(`Pausing channel ${channelId}`);
+            return yield* Effect.tryPromise({
+              try: () => invoke('pause', { id: channelId }),
+              catch: (error) =>
+                new Error(`Failed to pause channel ${channelId}: ${error}`),
+            });
+          }),
+
+        // New status checking methods
+        getChannelStatus: (channelId: string) =>
+          Effect.gen(function* () {
+            yield* Effect.logDebug(`Getting status for channel ${channelId}`);
+            return yield* Effect.tryPromise({
+              try: () => invoke<ChannelStatus>('get_status', { id: channelId }),
+              catch: (error) =>
+                new Error(
+                  `Failed to get status for channel ${channelId}: ${error}`,
+                ),
+            });
+          }),
+
+        listAllChannelStatuses: () =>
+          Effect.gen(function* () {
+            yield* Effect.logDebug('Listing all channel statuses');
+            return yield* Effect.tryPromise({
+              try: () => invoke<ChannelStatus[]>('list_channels'),
+              catch: (error) =>
+                new Error(`Failed to list channel statuses: ${error}`),
+            });
+          }),
+
+        // Convenience method to check if channel is running
+        isChannelRunning: (channelId: string) =>
+          Effect.gen(function* () {
+            const status = yield* Effect.tryPromise({
+              try: () => invoke<ChannelStatus>('get_status', { id: channelId }),
+              catch: (error) =>
+                new Error(
+                  `Failed to check if channel ${channelId} is running: ${error}`,
+                ),
+            });
+            return status.exists && status.paused === false;
+          }),
+
+        // Convenience method to check if channel is paused
+        isChannelPaused: (channelId: string) =>
+          Effect.gen(function* () {
+            const status = yield* Effect.tryPromise({
+              try: () => invoke<ChannelStatus>('get_status', { id: channelId }),
+              catch: (error) =>
+                new Error(
+                  `Failed to check if channel ${channelId} is paused: ${error}`,
+                ),
+            });
+            return status.exists && status.paused === true;
+          }),
+
+        // Enhanced channel management with status awareness
+        ensureChannelRunning: (channelId: string) =>
+          Effect.gen(function* () {
+            const status = yield* Effect.tryPromise({
+              try: () => invoke<ChannelStatus>('get_status', { id: channelId }),
+              catch: (error) =>
+                new Error(
+                  `Failed to check channel ${channelId} status: ${error}`,
+                ),
+            });
+
+            if (!status.exists) {
+              yield* Effect.logWarning(
+                `Channel ${channelId} does not exist in backend`,
+              );
+              return false;
+            }
+
+            if (status.paused === true) {
+              yield* Effect.logDebug(
+                `Channel ${channelId} is paused, starting...`,
+              );
+              yield* Effect.tryPromise({
+                try: () => invoke('start', { id: channelId }),
+                catch: (error) =>
+                  new Error(`Failed to start channel ${channelId}: ${error}`),
+              });
+              return true;
+            }
+
+            if (status.paused === false) {
+              yield* Effect.logDebug(`Channel ${channelId} is already running`);
+              return true;
+            }
+
+            return false;
+          }),
+
+        // Get comprehensive channel info (frontend + backend status)
+        getChannelInfo: (channelId: string) =>
+          Effect.gen(function* () {
+            const channels = yield* Ref.get(channelsRef);
+            const localChannelData = channels.get(channelId);
+
+            const backendStatus = yield* Effect.tryPromise({
+              try: () => invoke<ChannelStatus>('get_status', { id: channelId }),
+              catch: (error) =>
+                new Error(
+                  `Failed to get backend status for channel ${channelId}: ${error}`,
+                ),
+            });
+
+            return {
+              channelId,
+              existsLocally: !!localChannelData,
+              handlerCount: localChannelData?.handlers.size ?? 0,
+              handlers: localChannelData
+                ? Array.from(localChannelData.handlers.keys())
+                : [],
+              backendStatus,
+              isRunning: backendStatus.exists && backendStatus.paused === false,
+              isPaused: backendStatus.exists && backendStatus.paused === true,
+            };
           }),
 
         getChannelIds: () =>

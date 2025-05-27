@@ -9,9 +9,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useChannel } from '@/hooks/use-channel';
-
 import { Event } from '../../types/event';
-
 import { addEventAtom, eventsAtom } from './primitive';
 import { channels } from '@/config/channels';
 import { Button } from '@/components/ui/button';
@@ -29,7 +27,16 @@ export default function EventsLog() {
     [addEvent],
   );
 
-  const { start, pause, connect, disconnect, isStarted } = useChannel<Event>({
+  const {
+    start,
+    pause,
+    connect,
+    disconnect,
+    isStarted,
+    exists,
+    backendPaused,
+    error,
+  } = useChannel<Event>({
     channelId: channels.log.events,
     handlerId: HANDLER_ID,
     handler: handleEvent,
@@ -46,6 +53,14 @@ export default function EventsLog() {
     await disconnect();
   }, [pause, disconnect]);
 
+  const getStatus = () => {
+    if (error) return '🔴 Error';
+    if (!exists) return '🟡 Missing';
+    if (backendPaused === true) return '🟠 Paused';
+    if (isStarted) return '🔴 Live';
+    return '🟢 Standby';
+  };
+
   return (
     <div>
       <div className="space-x-2 flex items-center p-2">
@@ -55,7 +70,8 @@ export default function EventsLog() {
         <Button onClick={stopClick} variant="secondary" disabled={!isStarted}>
           Stop
         </Button>
-        <p>{isStarted ? '🔴 Live' : '🟢 Standby'}</p>
+        <p>{getStatus()}</p>
+        {error && <span className="text-red-500 text-sm">{error}</span>}
       </div>
       <div className="[&>div]:max-h-96 border-t">
         <Table className="border-separate border-spacing-0 [&_td]:border-border [&_tfoot_td]:border-t [&_th]:border-b [&_th]:border-border [&_tr:not(:last-child)_td]:border-b [&_tr]:border-none">

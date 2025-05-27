@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState, useRef } from 'react';
 
 import {
   ChannelClient,
+  ChannelInfo,
   ChannelNotFoundError,
+  ChannelStatus,
 } from '@/services/common/channel-client';
 import { useRuntime } from '@/services/runtime/use-runtime';
 
@@ -13,6 +15,8 @@ export interface ChannelProps<T> {
   handlerId?: string;
   handler?: (data: T) => void;
   autoConnect?: boolean;
+  autoStart?: boolean; // New: automatically start channel when connected
+  statusPollingInterval?: number; // New: poll status every N milliseconds
 }
 
 export const useChannel = <T>({
@@ -20,6 +24,8 @@ export const useChannel = <T>({
   handlerId,
   handler,
   autoConnect = false,
+  autoStart = false,
+  statusPollingInterval,
 }: ChannelProps<T>) => {
   const runtime = useRuntime();
   const [channel, setChannelState] = useState<
@@ -27,23 +33,97 @@ export const useChannel = <T>({
   >();
   const [isStarted, setIsStarted] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+
+  // New status-related state
+  const [status, setStatus] = useState<ChannelStatus | null>(null);
+  const [channelInfo, setChannelInfo] = useState<ChannelInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const handlerRef = useRef(handler);
+  const statusPollingRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     handlerRef.current = handler;
   }, [handler]);
 
-  const syncChannel = useCallback(() => {
+  // Enhanced sync channel with status updates
+  const syncChannel = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
     const syncChannelEffect = Effect.gen(function* () {
       const channelClient = yield* ChannelClient;
-      const currentChannel = yield* channelClient.getChannel<T>(channelId);
-      return currentChannel;
+
+      // Get channel and status concurrently
+      const channelResult = yield* channelClient
+        .getChannel<T>(channelId)
+        .pipe(Effect.either);
+      const statusResult = yield* channelClient
+        .getChannelStatus(channelId)
+        .pipe(Effect.either);
+      const infoResult = yield* channelClient
+        .getChannelInfo(channelId)
+        .pipe(Effect.either);
+
+      return {
+        channel: channelResult,
+        status: statusResult,
+        info: infoResult,
+      };
     });
-    runtime.runPromise(syncChannelEffect).then(setChannelState);
+
+    try {
+      const result = await runtime.runPromise(syncChannelEffect);
+
+      // Update channel state
+      if (result.channel._tag === 'Right') {
+        setChannelState(result.channel.right);
+      } else {
+        setChannelState(result.channel.left);
+      }
+
+      // Update status
+      if (result.status._tag === 'Right') {
+        setStatus(result.status.right);
+        setIsStarted(
+          result.status.right.exists && result.status.right.paused === false,
+        );
+      }
+
+      // Update channel info
+      if (result.info._tag === 'Right') {
+        setChannelInfo(result.info.right);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setIsLoading(false);
+    }
   }, [runtime, channelId]);
+
+  // Start status polling
+  const startStatusPolling = useCallback(() => {
+    if (!statusPollingInterval || statusPollingRef.current) return;
+
+    statusPollingRef.current = setInterval(() => {
+      syncChannel();
+    }, statusPollingInterval);
+  }, [statusPollingInterval, syncChannel]);
+
+  // Stop status polling
+  const stopStatusPolling = useCallback(() => {
+    if (statusPollingRef.current) {
+      clearInterval(statusPollingRef.current);
+      statusPollingRef.current = null;
+    }
+  }, []);
 
   const connect = useCallback(async () => {
     if (!handlerId || !handlerRef.current || isConnected) return;
+
+    setIsLoading(true);
+    setError(null);
 
     const handleEffect = (data: T) =>
       Effect.sync(() => handlerRef.current?.(data)).pipe(
@@ -64,103 +144,258 @@ export const useChannel = <T>({
       );
     });
 
-    await runtime.runPromise(
-      registerEffect.pipe(
-        Effect.tap(() => {
-          setIsConnected(true);
-          syncChannel();
-        }),
-        Effect.tap(() => {
-          Effect.log(
-            `Connected to channel ${channelId} with handler ${handlerId}`,
-          );
-        }),
-        Effect.catchAll((error) =>
-          Effect.logError(
-            `Failed to register handler ${handlerId} for channel ${channelId}:`,
-            error,
+    try {
+      await runtime.runPromise(
+        registerEffect.pipe(
+          Effect.tap(() =>
+            Effect.sync(() => {
+              setIsConnected(true);
+              startStatusPolling();
+            }),
+          ),
+          Effect.tap(() =>
+            Effect.log(
+              `Connected to channel ${channelId} with handler ${handlerId}`,
+            ),
           ),
         ),
-      ),
-    );
-  }, [channelId, handlerId, runtime, syncChannel, isConnected]);
+      );
+
+      await syncChannel();
+
+      // Auto-start if enabled
+      if (autoStart) {
+        await start();
+      }
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to connect';
+      setError(errorMessage);
+      await runtime.runPromise(
+        Effect.logError(
+          `Failed to register handler ${handlerId} for channel ${channelId}:`,
+          err,
+        ),
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [
+    channelId,
+    handlerId,
+    runtime,
+    syncChannel,
+    isConnected,
+    autoStart,
+    startStatusPolling,
+  ]);
 
   const disconnect = useCallback(async () => {
     if (!handlerId || !isConnected) return;
+
+    setIsLoading(true);
+    setError(null);
 
     const unregisterEffect = Effect.gen(function* () {
       const channelClient = yield* ChannelClient;
       yield* channelClient.unregisterHandler(channelId, handlerId);
     });
 
-    await runtime.runPromise(
-      unregisterEffect.pipe(
-        Effect.tap(() => {
-          setIsConnected(false);
-          syncChannel();
-        }),
-        Effect.tap(() =>
-          Effect.log(
-            `Disconnected from channel ${channelId} handler ${handlerId}`,
+    try {
+      await runtime.runPromise(
+        unregisterEffect.pipe(
+          Effect.tap(() =>
+            Effect.sync(() => {
+              setIsConnected(false);
+              stopStatusPolling();
+            }),
+          ),
+          Effect.tap(() =>
+            Effect.log(
+              `Disconnected from channel ${channelId} handler ${handlerId}`,
+            ),
           ),
         ),
-        Effect.catchAll((error) =>
-          Effect.logError(
-            `Failed to unregister handler ${handlerId} from channel ${channelId}:`,
-            error,
-          ),
+      );
+
+      await syncChannel();
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to disconnect';
+      setError(errorMessage);
+      await runtime.runPromise(
+        Effect.logError(
+          `Failed to unregister handler ${handlerId} from channel ${channelId}:`,
+          err,
         ),
-      ),
-    );
-  }, [channelId, handlerId, runtime, syncChannel, isConnected]);
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [
+    channelId,
+    handlerId,
+    runtime,
+    syncChannel,
+    isConnected,
+    stopStatusPolling,
+  ]);
 
   const start = useCallback(async () => {
-    if (!channelId || isStarted) return;
+    if (!channelId) return;
+
+    setIsLoading(true);
+    setError(null);
 
     const startEffect = Effect.gen(function* () {
       const channelClient = yield* ChannelClient;
       return yield* channelClient.startChannel(channelId);
     });
 
-    await runtime.runPromise(
-      startEffect.pipe(
-        Effect.tap(() => {
-          setIsStarted(true);
-          syncChannel();
-        }),
-        Effect.tap(() => {
-          Effect.log(`Started to channel ${channelId}`);
-        }),
-        Effect.catchAll((error) =>
-          Effect.logError(`Failed to start channel ${channelId}:`, error),
+    try {
+      await runtime.runPromise(
+        startEffect.pipe(
+          Effect.tap(() => Effect.sync(() => setIsStarted(true))),
+          Effect.tap(() => Effect.log(`Started channel ${channelId}`)),
         ),
-      ),
-    );
-  }, [channelId, runtime, syncChannel, isStarted]);
+      );
+
+      await syncChannel();
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to start';
+      setError(errorMessage);
+      await runtime.runPromise(
+        Effect.logError(`Failed to start channel ${channelId}:`, err),
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [channelId, runtime, syncChannel]);
 
   const pause = useCallback(async () => {
-    if (!channelId || !isStarted) return;
+    if (!channelId) return;
+
+    setIsLoading(true);
+    setError(null);
 
     const pauseChannel = Effect.gen(function* () {
       const channelClient = yield* ChannelClient;
       return yield* channelClient.pauseChannel(channelId);
     });
 
-    await runtime.runPromise(
-      pauseChannel.pipe(
-        Effect.tap(() => {
-          setIsStarted(false);
-          syncChannel();
-        }),
-        Effect.tap(() => {
-          Effect.log(`Pause to channel ${channelId}`);
-        }),
-        Effect.catchAll((error) =>
-          Effect.logError(`Failed to pause channel ${channelId}:`, error),
+    try {
+      await runtime.runPromise(
+        pauseChannel.pipe(
+          Effect.tap(() => Effect.sync(() => setIsStarted(false))),
+          Effect.tap(() => Effect.log(`Paused channel ${channelId}`)),
         ),
-      ),
-    );
-  }, [channelId, runtime, syncChannel, isStarted]);
+      );
+
+      await syncChannel();
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to pause';
+      setError(errorMessage);
+      await runtime.runPromise(
+        Effect.logError(`Failed to pause channel ${channelId}:`, err),
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [channelId, runtime, syncChannel]);
+
+  // New: Stop channel completely
+  const stop = useCallback(async () => {
+    if (!channelId) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    const stopEffect = Effect.gen(function* () {
+      const channelClient = yield* ChannelClient;
+      return yield* channelClient.stopChannel(channelId);
+    });
+
+    try {
+      await runtime.runPromise(
+        stopEffect.pipe(
+          Effect.tap(() => Effect.sync(() => setIsStarted(false))),
+          Effect.tap(() => Effect.log(`Stopped channel ${channelId}`)),
+        ),
+      );
+
+      await syncChannel();
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to stop';
+      setError(errorMessage);
+      await runtime.runPromise(
+        Effect.logError(`Failed to stop channel ${channelId}:`, err),
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [channelId, runtime, syncChannel]);
+
+  // New: Ensure channel is running
+  const ensureRunning = useCallback(async () => {
+    if (!channelId) return false;
+
+    setIsLoading(true);
+    setError(null);
+
+    const ensureEffect = Effect.gen(function* () {
+      const channelClient = yield* ChannelClient;
+      return yield* channelClient.ensureChannelRunning(channelId);
+    });
+
+    try {
+      const result = await runtime.runPromise(ensureEffect);
+      await syncChannel();
+      return result;
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to ensure running';
+      setError(errorMessage);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [channelId, runtime, syncChannel]);
+
+  // New: Refresh status manually
+  const refreshStatus = useCallback(async () => {
+    await syncChannel();
+  }, [syncChannel]);
+
+  // New: Check if channel is running
+  const isRunning = useCallback(async (): Promise<boolean> => {
+    const checkEffect = Effect.gen(function* () {
+      const channelClient = yield* ChannelClient;
+      return yield* channelClient.isChannelRunning(channelId);
+    });
+
+    try {
+      return await runtime.runPromise(checkEffect);
+    } catch {
+      return false;
+    }
+  }, [channelId, runtime]);
+
+  // New: Check if channel is paused
+  const isPaused = useCallback(async (): Promise<boolean> => {
+    const checkEffect = Effect.gen(function* () {
+      const channelClient = yield* ChannelClient;
+      return yield* channelClient.isChannelPaused(channelId);
+    });
+
+    try {
+      return await runtime.runPromise(checkEffect);
+    } catch {
+      return false;
+    }
+  }, [channelId, runtime]);
 
   useEffect(() => {
     if (autoConnect && handlerId && handler && !isConnected) {
@@ -168,11 +403,25 @@ export const useChannel = <T>({
     }
 
     return () => {
+      stopStatusPolling();
       if (isConnected) {
         disconnect();
       }
     };
-  }, [autoConnect, handlerId, handler, isConnected, connect, disconnect]);
+  }, [
+    autoConnect,
+    handlerId,
+    handler,
+    isConnected,
+    connect,
+    disconnect,
+    stopStatusPolling,
+  ]);
+
+  // Initial sync on mount
+  useEffect(() => {
+    syncChannel();
+  }, [syncChannel]);
 
   const getChannel = useCallback(async (): Promise<
     Channel<T> | ChannelNotFoundError
@@ -187,6 +436,7 @@ export const useChannel = <T>({
   }, [runtime, channelId]);
 
   return {
+    // Original properties
     channel,
     getChannel,
     channelId,
@@ -196,5 +446,22 @@ export const useChannel = <T>({
     isStarted,
     start,
     pause,
+
+    // New status management properties
+    status,
+    channelInfo,
+    isLoading,
+    error,
+    stop,
+    ensureRunning,
+    refreshStatus,
+    isRunning,
+    isPaused,
+
+    // Computed properties for convenience
+    exists: status?.exists ?? false,
+    backendPaused: status?.paused,
+    handlerCount: channelInfo?.handlerCount ?? 0,
+    handlers: channelInfo?.handlers ?? [],
   };
 };
