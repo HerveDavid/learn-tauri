@@ -11,9 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { addEventAtom, eventsAtom } from "./primitive";
-import { Event } from "../../shared/event";
+import { Event } from "../../types/event";
 import { Button } from "@/components/ui/button";
-import { useChannel } from "@/lib/channel";
+import { useChannel } from "@/hooks/use-channel";
 
 const start = (id: string) =>
   Effect.gen(function* () {

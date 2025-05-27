@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { Event } from "../../shared/event";
+import { Event } from "../../types/event";
 
 // Settings
 const MAX_EVENTS = 100;
