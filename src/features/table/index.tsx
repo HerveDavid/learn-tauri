@@ -13,6 +13,7 @@ import { Event } from '../../types/event';
 import { addEventAtom, eventsAtom } from './primitive';
 import { channels } from '@/config/channels';
 import { Button } from '@/components/ui/button';
+import { Led } from '@/components/ui/led';
 
 const HANDLER_ID = 'event-handler';
 
@@ -54,11 +55,11 @@ export default function EventsLog() {
   }, [pause, disconnect]);
 
   const getStatus = () => {
-    if (error) return '🔴 Error';
-    if (!exists) return '🟡 Missing';
-    if (backendPaused === true) return '🟠 Paused';
-    if (isStarted) return '🔴 Live';
-    return '🟢 Standby';
+    if (error) return <Led color='black' />;
+    if (!exists) return <Led color='yellow' />;
+    if (backendPaused === true) return <Led color='orange' />;
+    if (isStarted) return <Led color='red' />;
+    return <Led color='green' />;
   };
 
   return (
@@ -70,7 +71,7 @@ export default function EventsLog() {
         <Button onClick={stopClick} variant="secondary" disabled={!isStarted}>
           Stop
         </Button>
-        <p>{getStatus()}</p>
+        {getStatus()}
         {error && <span className="text-red-500 text-sm">{error}</span>}
       </div>
       <div className="[&>div]:max-h-96 border-t">
