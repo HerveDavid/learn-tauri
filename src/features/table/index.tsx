@@ -1,7 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect } from 'react';
-
-import { Button } from '@/components/ui/button';
+import { useCallback } from 'react';
 import {
   Table,
   TableBody,
@@ -15,8 +13,9 @@ import { useChannel } from '@/hooks/use-channel';
 import { Event } from '../../types/event';
 
 import { addEventAtom, eventsAtom } from './primitive';
+import { channels } from '@/config/channels';
+import { Button } from '@/components/ui/button';
 
-const CHANNEL_ID = 'events-log';
 const HANDLER_ID = 'event-handler';
 
 export default function Component() {
@@ -31,33 +30,21 @@ export default function Component() {
   );
 
   const { start, pause, connect, disconnect, isStarted } = useChannel<Event>({
-    channelId: CHANNEL_ID,
+    channelId: channels.log.events,
     handlerId: HANDLER_ID,
     handler: handleEvent,
     autoConnect: false,
   });
 
   const startClick = useCallback(async () => {
-    try {
-      await connect();
-      await start();
-
-      console.log('Streaming started');
-    } catch (error) {
-      console.error('Erreur lors du démarrage:', error);
-    }
+    await connect();
+    await start();
   }, [connect, start]);
 
   const stopClick = useCallback(async () => {
-    try {
-      await pause();
-      await disconnect();
-
-      console.log('Streaming stopped');
-    } catch (error) {
-      console.error("Erreur lors de l'arrêt:", error);
-    }
-  }, [disconnect, pause]);
+    await pause();
+    await disconnect();
+  }, [pause, disconnect]);
 
   return (
     <div className="bg-background">

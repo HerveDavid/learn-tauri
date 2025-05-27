@@ -4,7 +4,9 @@ import Table from '@/features/table';
 
 const App = memo(() => (
   <main>
-    <Table />
+    <div className="bg-background">
+      <Table />
+    </div>
   </main>
 ));
 
