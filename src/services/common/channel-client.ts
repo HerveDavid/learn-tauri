@@ -26,7 +26,7 @@ export interface ChannelService {
 interface ChannelData {
   channel: Channel<any>;
   handlers: Map<string, (data: any) => Effect.Effect<void>>;
-  handlerArray: Array<(data: any) => Effect.Effect<void>>;
+  handlersArray: Array<(data: any) => Effect.Effect<void>>;
 }
 
 export class ChannelClient extends Effect.Service<ChannelClient>()(
@@ -43,54 +43,53 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
       };
 
       const updateHandlerCache = (channelData: ChannelData): void => {
-        channelData.handlerArray = Array.from(channelData.handlers.values());
+        channelData.handlersArray = Array.from(channelData.handlers.values());
       };
 
-      const createMessageHandler =
-        (channelId: string) => (data: any) => {
-          Effect.runFork(
-            Effect.gen(function* () {
-              const channels = yield* Ref.get(channelsRef);
-              const channelData = channels.get(channelId);
+      const createMessageHandler = (channelId: string) => (data: any) => {
+        Effect.runFork(
+          Effect.gen(function* () {
+            const channels = yield* Ref.get(channelsRef);
+            const channelData = channels.get(channelId);
 
-              if (!channelData || channelData.handlerArray.length === 0) {
-                return;
-              }
+            if (!channelData || channelData.handlersArray.length === 0) {
+              return;
+            }
 
-              const handlerArray = channelData.handlerArray;
-              const length = handlerArray.length;
+            const handlersArray = channelData.handlersArray;
+            const length = handlersArray.length;
 
-              if (length === 1) {
-                yield* handlerArray[0](data).pipe(
-                  Effect.catchAll((error) =>
-                    Effect.logError(
-                      `Handler in channel ${channelId} failed: ${error}`
-                    )
+            if (length === 1) {
+              yield* handlersArray[0](data).pipe(
+                Effect.catchAll((error) =>
+                  Effect.logError(
+                    `Handler in channel ${channelId} failed: ${error}`
                   )
-                );
-              } else {
-                yield* Effect.forEach(
-                  handlerArray,
-                  (handler) =>
-                    handler(data).pipe(
-                      Effect.catchAll((error) =>
-                        Effect.logError(
-                          `Handler in channel ${channelId} failed: ${error}`
-                        )
-                      )
-                    ),
-                  { concurrency: "unbounded", batching: true }
-                );
-              }
-            }).pipe(
-              Effect.catchAll((error) =>
-                Effect.logError(
-                  `Message processing failed for channel ${channelId}: ${error}`
                 )
+              );
+            } else {
+              yield* Effect.forEach(
+                handlersArray,
+                (handler) =>
+                  handler(data).pipe(
+                    Effect.catchAll((error) =>
+                      Effect.logError(
+                        `Handler in channel ${channelId} failed: ${error}`
+                      )
+                    )
+                  ),
+                { concurrency: "unbounded", batching: true }
+              );
+            }
+          }).pipe(
+            Effect.catchAll((error) =>
+              Effect.logError(
+                `Message processing failed for channel ${channelId}: ${error}`
               )
             )
-          );
-        };
+          )
+        );
+      };
 
       const ensureChannel = <T>(channelId: string) =>
         Effect.gen(function* () {
@@ -105,7 +104,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
           const channelData: ChannelData = {
             channel: newChannel as Channel<any>,
             handlers: new Map(),
-            handlerArray: [],
+            handlersArray: [],
           };
 
           newChannel.onmessage = createMessageHandler(channelId);
@@ -128,10 +127,8 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             return;
           }
 
-          // Plus de handlers, nettoyer le canal
           cleanupChannel(channelData);
 
-          // Désenregistrer côté backend
           yield* Effect.tryPromise({
             try: () => invoke("unregister", { id: channelId }),
             catch: (error) =>
@@ -182,7 +179,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
                   }),
                 catch: (error) =>
                   Effect.logError(
-                    `Backend registration failed for channel ${channelId}: ${error}`
+                    `Tauri registration failed for channel ${channelId}: ${error}`
                   ),
               });
             }
@@ -198,7 +195,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             yield* Ref.set(channelsRef, newChannels);
 
             yield* Effect.logDebug(
-              `Handler ${handlerId} registered for channel ${channelId} (total: ${newChannelData.handlerArray.length})`
+              `Handler ${handlerId} registered for channel ${channelId} (total: ${newChannelData.handlersArray.length})`
             );
             return handlerId;
           }),
@@ -232,7 +229,7 @@ export class ChannelClient extends Effect.Service<ChannelClient>()(
             yield* Ref.set(channelsRef, newChannels);
 
             yield* Effect.logDebug(
-              `Handler ${handlerId} unregistered from channel ${channelId} (remaining: ${newChannelData.handlerArray.length})`
+              `Handler ${handlerId} unregistered from channel ${channelId} (remaining: ${newChannelData.handlersArray.length})`
             );
 
             yield* cleanupChannelIfEmpty(channelId);

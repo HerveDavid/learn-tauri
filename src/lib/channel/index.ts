@@ -1,8 +1,8 @@
+import { useCallback, useEffect, useState, useRef } from "react";
 import { ChannelClient } from "@/services/common/channel-client";
 import { useRuntime } from "@/services/runtime/use-runtime";
 import { Channel } from "@tauri-apps/api/core";
 import { Effect } from "effect";
-import { useCallback, useEffect, useState, useRef } from "react";
 
 export interface ChannelProps<T> {
   channelId: string;
@@ -39,16 +39,14 @@ export const useChannel = <T>({
     if (!handlerId || !handlerRef.current || isConnected) return;
 
     const handleEffect = (data: T) =>
-      Effect.sync(() => {
-        try {
-          handlerRef.current?.(data);
-        } catch (error) {
-          console.error(
+      Effect.sync(() => handlerRef.current?.(data)).pipe(
+        Effect.catchAll((error) =>
+          Effect.logError(
             `Error in handler ${handlerId} for channel ${channelId}:`,
             error
-          );
-        }
-      });
+          )
+        )
+      );
 
     const registerEffect = Effect.gen(function* () {
       const channelClient = yield* ChannelClient;

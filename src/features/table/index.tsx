@@ -40,7 +40,6 @@ export default function Component() {
 
   const handleEvent = useCallback(
     (event: Event) => {
-      console.log("Event received:", event);
       addEvent(event);
     },
     [addEvent]
