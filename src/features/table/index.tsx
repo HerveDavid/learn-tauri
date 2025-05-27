@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 
 const HANDLER_ID = 'event-handler';
 
-export default function Component() {
+export default function EventsLog() {
   const events = useAtomValue(eventsAtom);
   const addEvent = useSetAtom(addEventAtom);
 
@@ -47,7 +47,7 @@ export default function Component() {
   }, [pause, disconnect]);
 
   return (
-    <div className="bg-background">
+    <div>
       <div className="space-x-2 flex items-center p-2">
         <Button onClick={startClick} disabled={isStarted}>
           Start

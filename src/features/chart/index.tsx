@@ -1,189 +1,141 @@
-// import { useState, useMemo, useCallback, useEffect, useRef, memo } from "react";
-// import { QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
-// import { invoke, Channel } from "@tauri-apps/api/core";
-// import { Effect } from "effect";
-// import UplotReact from 'uplot-react';
-// import 'uplot/dist/uPlot.min.css';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { useCallback, useMemo, memo } from 'react';
+import { useChannel } from '@/hooks/use-channel';
+import { Event } from '../../types/event';
+import { addEventAtom, eventsAtom } from './primitive';
+import { channels } from '@/config/channels';
+import { Button } from '@/components/ui/button';
+import UplotReact from 'uplot-react';
+import 'uplot/dist/uPlot.min.css';
 
-// interface Event {
-//   id: string;
-//   value: number;
-//   timestamp: string;
-// }
+const HANDLER_ID = 'chart-handler';
 
-// export const queryClient = new QueryClient({
-//   defaultOptions: {
-//     queries: {
-//       staleTime: Infinity,
-//       gcTime: Infinity,
-//       refetchOnWindowFocus: false,
-//       refetchOnMount: false,
-//       refetchOnReconnect: false,
-//     },
-//   },
-// });
+const MemoizedChart = memo(({ options, data }: { options: any; data: any }) => (
+  <UplotReact options={options} data={data} />
+));
 
-// const MAX_EVENTS = 100;
-// const BATCH_DELAY = 8;
-// const ID = "1";
-// const QUERY_KEY = ['events', ID];
+const options = {
+  width: 800,
+  height: 400,
+  scales: {
+    x: { time: true },
+    y: {
+      range: (_u: any, dataMin: number, dataMax: number) => {
+        if (dataMin === dataMax) {
+          return [dataMin - 1, dataMax + 1];
+        }
+        return [dataMin * 0.9, dataMax * 1.1];
+      },
+    },
+  },
+  axes: [
+    {
+      label: 'Time',
+      values: (_u: any, vals: number[]) =>
+        vals.map((v) =>
+          new Date(v * 1000).toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          }),
+        ),
+      space: 80,
+      size: 50,
+    },
+    {
+      label: 'Value',
+      size: 60,
+      space: 40,
+    },
+  ],
+  series: [
+    { label: 'Time' },
+    {
+      label: 'Value',
+      stroke: 'oklch(0.6180 0.0778 65.5444)',
+      width: 2,
+      points: { show: false },
+    },
+  ],
+  cursor: {
+    show: true,
+    x: true,
+    y: true,
+  },
+};
 
-// const start = (id: string, handler: (event: Event) => void) => Effect.gen(function*() {
-//   return yield* Effect.tryPromise({
-//     try: () => {
-//       const channel = new Channel<Event>();
-//       channel.onmessage = handler;
-//       return invoke('start', { id, channel });
-//     },
-//     catch: console.error,
-//   });
-// });
+export default function ChartComponent() {
+  const events = useAtomValue(eventsAtom);
+  const addEvent = useSetAtom(addEventAtom);
 
-// const stop = (id: string) => Effect.gen(function*() {
-//   return yield* Effect.tryPromise({
-//     try: () => invoke('stop', { id }),
-//     catch: console.error,
-//   });
-// });
+  const handleEvent = useCallback(
+    (event: Event) => {
+      addEvent(event);
+    },
+    [addEvent],
+  );
 
-// const MemoizedChart = memo(({ options, data }: { options: any; data: any }) => (
-//   <UplotReact
-//     options={options}
-//     data={data}
-//     onCreate={(chart) => console.log("Chart created", chart)}
-//     onDelete={(chart) => console.log("Chart deleted", chart)}
-//   />
-// ));
+  const { start, pause, connect, disconnect, isStarted } = useChannel<Event>({
+    channelId: channels.log.events,
+    handlerId: HANDLER_ID,
+    handler: handleEvent,
+    autoConnect: false,
+  });
 
-// export default function Chart() {
-//   const [isStreaming, setIsStreaming] = useState(false);
-//   const queryClient = useQueryClient();
-//   const pendingEvents = useRef<Event[]>([]);
-//   const flushTimeout = useRef<ReturnType<typeof setTimeout>>();
+  const plotData = useMemo(() => {
+    if (!events.length) return [[], []];
 
-//   const { data: events = [] } = useQuery({
-//     queryKey: QUERY_KEY,
-//     queryFn: () => [],
-//     initialData: [],
-//   });
+    const len = events.length;
+    const timestamps = new Array(len);
+    const values = new Array(len);
 
-//   const flushEvents = useCallback(() => {
-//     if (!pendingEvents.current.length) return;
+    for (let i = 0; i < len; i++) {
+      timestamps[i] = new Date(events[i].timestamp).getTime() / 1000;
+      values[i] = events[i].value;
+    }
 
-//     const eventsToAdd = [...pendingEvents.current];
-//     pendingEvents.current.length = 0;
+    return [timestamps, values];
+  }, [events]);
 
-//     queryClient.setQueryData(QUERY_KEY, (oldEvents: Event[] = []) => {
-//       const updated = [...oldEvents, ...eventsToAdd];
-//       return updated.length > MAX_EVENTS ? updated.slice(-MAX_EVENTS) : updated;
-//     });
-//   }, [queryClient]);
+  const startClick = useCallback(async () => {
+    await connect();
+    await start();
+  }, [connect, start]);
 
-//   const updateEvents = useCallback((newEvent: Event) => {
-//     pendingEvents.current.push(newEvent);
+  const stopClick = useCallback(async () => {
+    await pause();
+    await disconnect();
+  }, [pause, disconnect]);
 
-//     if (!flushTimeout.current) {
-//       flushTimeout.current = setTimeout(() => {
-//         flushTimeout.current = undefined;
-//         flushEvents();
-//       }, BATCH_DELAY);
-//     }
-//   }, [flushEvents]);
+  return (
+    <div>
+      <div className="space-x-2 flex items-center p-2 border-b">
+        <Button onClick={startClick} disabled={isStarted}>
+          Start
+        </Button>
+        <Button onClick={stopClick} variant="secondary" disabled={!isStarted}>
+          Stop
+        </Button>
+        <p>{isStarted ? '🔴 Live' : '🟢 Standby'}</p>
+        <span className="text-sm text-muted-foreground ml-4">
+          {events.length} events
+        </span>
+      </div>
 
-//   const plotData = useMemo(() => {
-//     if (!events.length) return [[], []];
-
-//     const len = events.length;
-//     const timestamps = new Array(len);
-//     const values = new Array(len);
-
-//     for (let i = 0; i < len; i++) {
-//       timestamps[i] = new Date(events[i].timestamp).getTime() / 1000;
-//       values[i] = events[i].value;
-//     }
-
-//     return [timestamps, values];
-//   }, [events]);
-
-//   const options = useMemo(() => ({
-//     width: 600,
-//     height: 400,
-//     scales: {
-//       x: { time: true },
-//       y: { range: (u: any, dataMin: number, dataMax: number) => [dataMin * 0.9, dataMax * 1.1] },
-//     },
-//     axes: [
-//       {
-//         label: "Time",
-//         values: (u: any, vals: number[]) => vals.map(v =>
-//           new Date(v * 1000).toLocaleTimeString('fr-FR', {
-//             hour: '2-digit',
-//             minute: '2-digit',
-//             second: '2-digit'
-//           })
-//         ),
-//         space: 80,
-//         size: 50,
-//       },
-//       { label: "Value", size: 60 }
-//     ],
-//     series: [
-//       { label: "Time" },
-//       {
-//         label: "Value",
-//         stroke: 'blue',
-//         width: 1,
-//         points: { show: false },
-//       },
-//     ],
-//   }), []);
-
-//   const startClick = useCallback(async () => {
-//     try {
-//       setIsStreaming(true);
-//       await Effect.runPromise(start(ID, updateEvents));
-//       console.log("started");
-//     } catch (error) {
-//       console.error("Erreur lors du démarrage:", error);
-//       setIsStreaming(false);
-//     }
-//   }, [updateEvents]);
-
-//   const stopClick = useCallback(async () => {
-//     try {
-//       if (flushTimeout.current) {
-//         clearTimeout(flushTimeout.current);
-//         flushEvents();
-//       }
-
-//       await Effect.runPromise(stop(ID));
-//       setIsStreaming(false);
-//       console.log("stopped");
-//     } catch (error) {
-//       console.error("Erreur lors de l'arrêt:", error);
-//     }
-//   }, [flushEvents]);
-
-//   useEffect(() => {
-//     return () => {
-//       if (flushTimeout.current) {
-//         clearTimeout(flushTimeout.current);
-//       }
-//       if (isStreaming) {
-//         Effect.runPromise(stop(ID)).catch(console.error);
-//       }
-//     };
-//   }, [isStreaming]);
-
-//   return (
-//     <div>
-//       <div>
-//         <button onClick={startClick} disabled={isStreaming}>Start</button>
-//         <button onClick={stopClick} disabled={!isStreaming}>Stop</button>
-//       </div>
-//       <div>
-//         <MemoizedChart options={options} data={plotData} />
-//       </div>
-//     </div>
-//   );
-// }
+      <div className="p-4">
+        <div className="w-full">
+          {events.length > 0 ? (
+            <MemoizedChart options={options} data={plotData} />
+          ) : (
+            <div className="flex items-center justify-center h-96 border border-dashed border-muted-foreground/25 rounded-lg text-muted-foreground">
+              <div className="text-center">
+                <p className="text-lg font-medium">No data available</p>
+                <p className="text-sm">Start streaming to see real-time data</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
