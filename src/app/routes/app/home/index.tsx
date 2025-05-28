@@ -1,10 +1,10 @@
 import { memo } from 'react';
 
-import Table from '@/features/table';
+import { Example } from './example';
 
 const App = memo(() => (
-  <main className="bg-background flex">
-    <Table />
+  <main className="bg-background">
+    <Example></Example>
   </main>
 ));
 
