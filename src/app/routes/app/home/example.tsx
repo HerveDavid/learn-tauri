@@ -3,9 +3,11 @@ import {
   DockviewReadyEvent,
   IDockviewPanelProps,
   DockviewTheme,
+  IDockviewPanelHeaderProps,
 } from 'dockview';
 import 'dockview/dist/styles/dockview.css';
-import "./example.css"
+import { EventsLog } from '@/features/events-log';
+import './example.css';
 
 // Custom theme using your Tailwind CSS variables
 const customTailwindTheme: DockviewTheme = {
@@ -14,6 +16,12 @@ const customTailwindTheme: DockviewTheme = {
   gap: 4,
   dndOverlayMounting: 'absolute',
   dndPanelOverlay: 'content',
+};
+
+const tabComponent = {
+  default: (props: IDockviewPanelHeaderProps) => {
+    return <span>{props.api.title}</span>;
+  },
 };
 
 // Inner Dockview Component
@@ -43,6 +51,7 @@ const InnerDockview = () => {
     <div className="h-full w-full">
       <DockviewReact
         onReady={onReady}
+        tabComponents={tabComponent}
         components={innerComponents}
         theme={customTailwindTheme}
       />
@@ -104,6 +113,7 @@ const components = {
     );
   },
   innerDockview: InnerDockview,
+  eventsLog: EventsLog,
 };
 
 export const Example = () => {
@@ -111,6 +121,7 @@ export const Example = () => {
     event.api.addPanel({
       id: 'panel_1',
       component: 'default',
+      tabComponent: 'default',
       title: 'Main Panel 1',
       params: { title: 'Main Panel 1' },
     });
@@ -118,15 +129,18 @@ export const Example = () => {
     event.api.addPanel({
       id: 'panel_2',
       component: 'default',
+      tabComponent: 'default',
       title: 'Main Panel 2',
       params: { title: 'Main Panel 2' },
     });
 
     event.api.addPanel({
       id: 'panel_3',
-      component: 'innerDockview',
-      title: 'Nested Dockview',
-      position: { referencePanel: 'panel_2', direction: 'right' },
+      component: 'eventsLog',
+      tabComponent: 'default',
+
+      title: 'Logs',
+      position: { referencePanel: 'panel_2', direction: 'below' },
     });
   };
 
@@ -134,6 +148,7 @@ export const Example = () => {
     <div className="h-screen w-screen bg-background">
       <DockviewReact
         onReady={onReady}
+        tabComponents={tabComponent}
         components={components}
         theme={customTailwindTheme}
       />

@@ -5,7 +5,7 @@
 
     /* Tab container styling */
     --dv-tabs-and-actions-container-background-color: var(--color-muted);
-    --dv-tabs-and-actions-container-height: 1.5em;
+    --dv-tabs-and-actions-container-height: 2em;
     --dv-tabs-and-actions-container-font-size: 0.8em;
 
     /* Active group tab colors */

@@ -17,7 +17,7 @@ import { Led } from '@/components/ui/led';
 
 const HANDLER_ID = 'event-handler';
 
-export default function EventsLog() {
+export function EventsLog() {
   const events = useAtomValue(eventsAtom);
   const addEvent = useSetAtom(addEventAtom);
 
