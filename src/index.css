@@ -137,7 +137,7 @@
   --dv-background-color: var(--background);
   --dv-paneview-active-outline-color: var(--primary);
   --dv-tabs-and-actions-container-font-size: 13px;
-  --dv-tabs-and-actions-container-height: 35px;
+  --dv-tabs-and-actions-container-height: 28px;
   --dv-tab-close-icon: '×';
   --dv-drag-over-background-color: color-mix(
     in oklch,
@@ -240,7 +240,7 @@
   --dv-background-color: var(--background);
   --dv-paneview-active-outline-color: var(--primary);
   --dv-tabs-and-actions-container-font-size: 13px;
-  --dv-tabs-and-actions-container-height: 35px;
+  --dv-tabs-and-actions-container-height: 28px;
   --dv-tab-close-icon: '×';
   --dv-drag-over-background-color: color-mix(
     in oklch,
