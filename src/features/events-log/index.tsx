@@ -55,11 +55,11 @@ export function EventsLog() {
   }, [pause, disconnect]);
 
   const getStatus = () => {
-    if (error) return <Led color='black' />;
-    if (!exists) return <Led color='yellow' />;
-    if (backendPaused === true) return <Led color='orange' />;
-    if (isStarted) return <Led color='red' />;
-    return <Led color='green' />;
+    if (error) return <Led color="black" />;
+    if (!exists) return <Led color="yellow" />;
+    if (backendPaused === true) return <Led color="orange" />;
+    if (isStarted) return <Led color="red" />;
+    return <Led color="green" />;
   };
 
   return (

@@ -145,7 +145,7 @@ export const Example = () => {
   };
 
   return (
-    <div className="h-screen w-screen bg-background">
+    <div className="h-full w-full bg-background">
       <DockviewReact
         onReady={onReady}
         tabComponents={tabComponent}
