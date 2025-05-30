@@ -7,7 +7,7 @@ import {
 } from 'dockview';
 import 'dockview/dist/styles/dockview.css';
 import { EventsLog } from '@/features/events-log';
-import './example.css';
+// import './example.css';
 
 // Custom theme using your Tailwind CSS variables
 const customTailwindTheme: DockviewTheme = {
@@ -63,7 +63,7 @@ const InnerDockview = () => {
 const innerComponents = {
   default: (props: IDockviewPanelProps<{ title: string }>) => {
     return (
-      <div className="h-full p-6 bg-card text-card-foreground flex flex-col items-center justify-center space-y-4 border border-border rounded-lg">
+      <div className="h-full p-6 bg-card text-card-foreground flex flex-col items-center justify-center space-y-4 border border-border rounded-none">
         <h3 className="text-lg font-semibold text-primary">
           {props.params?.title || 'Default Panel'}
         </h3>
@@ -71,9 +71,9 @@ const innerComponents = {
           This panel uses your custom Tailwind theme with CSS variables
         </p>
         <div className="flex space-x-2">
-          <div className="w-4 h-4 bg-chart-1 rounded"></div>
-          <div className="w-4 h-4 bg-chart-2 rounded"></div>
-          <div className="w-4 h-4 bg-chart-3 rounded"></div>
+          <div className="w-4 h-4 bg-chart-1 rounded-none"></div>
+          <div className="w-4 h-4 bg-chart-2 rounded-none"></div>
+          <div className="w-4 h-4 bg-chart-3 rounded-none"></div>
         </div>
       </div>
     );
@@ -85,7 +85,7 @@ const components = {
   default: (props: IDockviewPanelProps<{ title: string }>) => {
     return (
       <div className="h-full p-6 bg-background text-foreground flex flex-col items-center justify-center space-y-4">
-        <div className="bg-card text-card-foreground p-6 rounded-lg border border-border shadow-lg w-full max-w-md">
+        <div className="bg-card text-card-foreground p-6 border border-border shadow-lg w-full max-w-md rounded-none">
           <h2 className="text-xl font-bold text-primary mb-4">
             {props.params?.title || 'Main Panel'}
           </h2>
@@ -94,19 +94,19 @@ const components = {
             Dockview.
           </p>
           <div className="flex space-x-2 mb-4">
-            <button className="bg-primary text-primary-foreground px-3 py-1 rounded text-sm hover:opacity-90 transition-opacity">
+            <button className="bg-primary text-primary-foreground px-3 py-1 text-sm hover:opacity-90 transition-opacity rounded-none">
               Primary
             </button>
-            <button className="bg-secondary text-secondary-foreground px-3 py-1 rounded text-sm hover:opacity-90 transition-opacity">
+            <button className="bg-secondary text-secondary-foreground px-3 py-1 text-sm hover:opacity-90 transition-opacity rounded-none">
               Secondary
             </button>
           </div>
           <div className="grid grid-cols-5 gap-2">
-            <div className="w-8 h-8 bg-chart-1 rounded"></div>
-            <div className="w-8 h-8 bg-chart-2 rounded"></div>
-            <div className="w-8 h-8 bg-chart-3 rounded"></div>
-            <div className="w-8 h-8 bg-chart-4 rounded"></div>
-            <div className="w-8 h-8 bg-chart-5 rounded"></div>
+            <div className="w-8 h-8 bg-chart-1 rounded-none"></div>
+            <div className="w-8 h-8 bg-chart-2 rounded-none"></div>
+            <div className="w-8 h-8 bg-chart-3 rounded-none"></div>
+            <div className="w-8 h-8 bg-chart-4 rounded-none"></div>
+            <div className="w-8 h-8 bg-chart-5 rounded-none"></div>
           </div>
         </div>
       </div>

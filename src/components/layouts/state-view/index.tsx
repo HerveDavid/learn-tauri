@@ -600,7 +600,7 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
   return (
     <div className="h-screen bg-background text-foreground flex flex-col">
       {/* Header */}
-      <div className="h-5 bg-card border-b border-border flex items-center px-4 flex-shrink-0">
+      <div className="h-5 border-b border-border flex items-center px-4 flex-shrink-0">
         <h1 className="text-lg font-semibold">JetBrains-Style IDE</h1>
       </div>
 
@@ -612,7 +612,7 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
         {/* Center Content */}
         <div className="flex-1 flex flex-col min-w-0" ref={contentRef}>
           {/* Editor Area */}
-          <div className="flex-1 p-6 bg-background overflow-hidden">
+          <div className="flex-1 bg-background overflow-hidden">
             <div className="h-full w-full">{children}</div>
           </div>
         </div>

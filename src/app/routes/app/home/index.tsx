@@ -5,7 +5,7 @@ import { memo } from 'react';
 const App = memo(() => {
   return (
     <StateView>
-      <div className="h-full w-full bg-card border border-border rounded-lg overflow-hidden">
+      <div className="h-full w-full bg-card border border-border overflow-hidden">
         <Example />
       </div>
     </StateView>
