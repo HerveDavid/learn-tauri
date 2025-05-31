@@ -13,9 +13,9 @@ import { EventsLog } from '@/features/events-log';
 const customTailwindTheme: DockviewTheme = {
   name: 'tailwind-custom',
   className: 'dockview-theme-tailwind-custom',
-  gap: 4,
+  gap: 0,
   dndOverlayMounting: 'absolute',
-  dndPanelOverlay: 'content',
+  dndPanelOverlay: 'group',
 };
 
 const tabComponent = {
@@ -84,7 +84,7 @@ const innerComponents = {
 const components = {
   default: (props: IDockviewPanelProps<{ title: string }>) => {
     return (
-      <div className="h-full p-6 bg-background text-foreground flex flex-col items-center justify-center space-y-4">
+      <div className="h-full p-6 bg-card-background text-foreground flex flex-col items-center justify-center space-y-4">
         <div className="bg-card text-card-foreground p-6 border border-border shadow-lg w-full max-w-md rounded-none">
           <h2 className="text-xl font-bold text-primary mb-4">
             {props.params?.title || 'Main Panel'}

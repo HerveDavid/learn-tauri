@@ -169,6 +169,7 @@
   --dv-paneview-header-border-color: var(--border);
   --dv-icon-hover-background-color: var(--accent);
   --dv-floating-box-shadow: var(--shadow-lg);
+    --dv-sash-color: var(--border);
   --dv-active-sash-color: var(--primary);
 }
 
@@ -272,7 +273,14 @@
   --dv-paneview-header-border-color: var(--border);
   --dv-icon-hover-background-color: var(--accent);
   --dv-floating-box-shadow: var(--shadow-xl);
+  --dv-sash-color: var(--border);
   --dv-active-sash-color: var(--primary);
+  .dv-split-view-container.dv-vertical > .dv-sash-container > .dv-sash {
+    height: 2px;
+  }
+  .dv-split-view-container.dv-horizontal > .dv-sash-container > .dv-sash {
+    width: 2px;
+  }
 }
 
 @theme inline {
