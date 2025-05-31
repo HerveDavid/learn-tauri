@@ -130,15 +130,15 @@ const FileTreeItem = ({ item, level = 0 }: { item: any; level?: number }) => {
               <ChevronRight className="w-3 h-3 mr-1" />
             )}
             {expanded ? (
-              <FolderOpen className="w-4 h-4 mr-2 text-blue-500" />
+              <FolderOpen className="size-4 mr-2 text-blue-500" />
             ) : (
-              <Folder className="w-4 h-4 mr-2 text-blue-500" />
+              <Folder className="size-4 mr-2 text-blue-500" />
             )}
           </>
         ) : (
           <>
-            <div className="w-4 h-4 mr-2" />
-            <File className="w-4 h-4 mr-2 text-gray-500" />
+            <div className="size-4 mr-2" />
+            <File className="size-4 mr-2 text-gray-500" />
           </>
         )}
         <span className="truncate">{item.name}</span>
@@ -383,7 +383,7 @@ const ToolsPanel = ({ activePanel }: { activePanel: string | null }) => {
       case 'terminal':
         return (
           <div className="p-4 h-full">
-            <div className="bg-black text-green-400 font-mono text-sm p-3 rounded h-full overflow-auto">
+            <div className="bg-background text-green-400 font-mono text-sm p-3 rounded h-full overflow-auto">
               <div>$ npm start</div>
               <div className="text-gray-400">
                 Starting development server...
@@ -454,7 +454,7 @@ const LeftSidebar = () => {
   return (
     <div className="flex">
       {/* Icon Bar */}
-      <div className="w-12 bg-sidebar border-r border-sidebar-border flex flex-col items-center py-2 space-y-1">
+      <div className="w-8 bg-sidebar border-r border-sidebar-border flex flex-col items-center py-2 space-y-3">
         {leftSidebarItems.map((item) => {
           const Icon = item.icon;
           const isActive = activePanel === item.content;
@@ -463,14 +463,14 @@ const LeftSidebar = () => {
             <button
               key={item.id}
               onClick={() => handleIconClick(item.content)}
-              className={`w-8 h-8 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
+              className={`size-6 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
                 isActive
                   ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                   : 'text-sidebar-foreground'
               }`}
               title={item.label}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="size-4" />
               {/* Tooltip */}
               <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                 {item.label}
@@ -503,7 +503,7 @@ const RightSidebar = () => {
       <RightSidebarPanel activePanel={activePanel} />
 
       {/* Icon Bar */}
-      <div className="w-12 bg-sidebar border-l border-sidebar-border flex flex-col items-center py-2 space-y-1">
+      <div className="w-8 bg-sidebar border-l border-sidebar-border flex flex-col items-center py-2 space-y-3">
         {rightSidebarItems.map((item) => {
           const Icon = item.icon;
           const isActive = activePanel === item.content;
@@ -512,14 +512,14 @@ const RightSidebar = () => {
             <button
               key={item.id}
               onClick={() => handleIconClick(item.content)}
-              className={`w-8 h-8 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
+              className={`size-6 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
                 isActive
                   ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                   : 'text-sidebar-foreground'
               }`}
               title={item.label}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="size-4" />
               {/* Tooltip */}
               <div className="absolute right-full mr-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                 {item.label}
@@ -600,8 +600,9 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
   return (
     <div className="h-screen bg-background text-foreground flex flex-col">
       {/* Header */}
-      <div className="h-5 border-b border-border flex items-center px-4 flex-shrink-0">
-        <h1 className="text-lg font-semibold">JetBrains-Style IDE</h1>
+      <div className="h-5 border-b border-border flex items-center flex-shrink-0 gap-x-2">
+        <h1 className="text-sm">File</h1>
+        <h1 className="text-sm">View</h1>
       </div>
 
       {/* Main Content Area */}
