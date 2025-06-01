@@ -5,6 +5,7 @@ import {
   DockviewReadyEvent,
   DockviewTheme,
   IDockviewPanelProps,
+  IWatermarkPanelProps,
   positionToDirection,
 } from 'dockview';
 import React from 'react';
@@ -46,6 +47,52 @@ const tabComponent = {
       </div>
     );
   },
+};
+
+const Watermark = (props: IWatermarkPanelProps) => {
+  const isGroup = props.containerApi.groups.length > 0;
+
+  const addPanel = () => {
+    props.containerApi.addPanel({
+      id: Date.now().toString(),
+      component: 'default',
+    });
+  };
+
+  return (
+    <div
+      style={{
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: 'white',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <span>Empty</span>
+        <span>
+          <Button onClick={addPanel}>Add New Panel</Button>
+        </span>
+        {isGroup && (
+          <span>
+            <Button
+              onClick={() => {
+                props.group?.api.close();
+              }}
+            >
+              Close Group
+            </Button>
+          </span>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export const Example = () => {
@@ -99,6 +146,7 @@ export const Example = () => {
   return (
     <div className="h-full flex flex-col">
       <DockviewReact
+        watermarkComponent={Watermark}
         components={dockviewComponents}
         onReady={onReady}
         tabComponents={tabComponent}

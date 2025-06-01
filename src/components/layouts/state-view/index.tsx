@@ -45,7 +45,7 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel>{children}</ResizablePanel>
             <ResizableHandle />
-            <ResizablePanel>
+            <ResizablePanel defaultSize={20}>
               <Tools />
             </ResizablePanel>
           </ResizablePanelGroup>
