@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { RightSidebarPanel } from './right-sidebar-panel';
+
 import { rightSidebarItems } from '@/config/layout';
+
+import { RightSidebarPanel } from './right-sidebar-panel';
 
 export const RightSidebar = () => {
   const [activePanel, setActivePanel] = useState<string | null>('widgets');

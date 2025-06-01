@@ -1,6 +1,7 @@
+import { Minus } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { leftSidebarItems } from '@/config/layout';
-import { Minus } from 'lucide-react';
 
 export const LeftSidebarPanel = ({
   activePanel,
@@ -31,7 +32,7 @@ export const LeftSidebarPanel = ({
         <h3 className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground/70">
           {activeItem.label}
         </h3>
-        <Button variant="ghost" className='size-1' onClick={closePanel}>
+        <Button variant="ghost" className="size-1" onClick={closePanel}>
           <Minus />
         </Button>
       </div>

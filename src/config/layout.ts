@@ -1,7 +1,9 @@
-import { Layers, Folder } from 'lucide-react';
+import { Layers, Folder, Terminal as TerminalIcon } from 'lucide-react';
+
 import EquipmentExplorer from '@/features/equipment-explorer';
-import { SidebarItem } from '@/types/sidebar-item';
+import Terminal from '@/features/terminal';
 import Widgets from '@/features/widgets';
+import { SidebarItem } from '@/types/sidebar-item';
 
 export const leftSidebarItems: SidebarItem[] = [
   {
@@ -14,4 +16,8 @@ export const leftSidebarItems: SidebarItem[] = [
 
 export const rightSidebarItems: SidebarItem[] = [
   { id: 'widgets', icon: Layers, label: 'Widgets', content: Widgets },
+] as const;
+
+export const toolsItems: SidebarItem[] = [
+  { id: 'terminal', icon: TerminalIcon, label: 'Terminal', content: Terminal },
 ] as const;

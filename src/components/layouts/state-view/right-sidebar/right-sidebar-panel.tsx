@@ -1,6 +1,7 @@
+import { Minus } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { rightSidebarItems } from '@/config/layout';
-import { Minus } from 'lucide-react';
 
 export const RightSidebarPanel = ({
   activePanel,
