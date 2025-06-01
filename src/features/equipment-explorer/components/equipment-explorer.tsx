@@ -1,53 +1,29 @@
-import { FileTreeItem } from './file-tree-item';
+import React from 'react';
+import DraggableItem from './draggable-item';
 
-const fileStructure = [
-  {
-    name: 'src',
-    type: 'folder',
-    expanded: true,
-    children: [
-      {
-        name: 'components',
-        type: 'folder',
-        expanded: true,
-        children: [
-          { name: 'Button.tsx', type: 'file' },
-          { name: 'Sidebar.tsx', type: 'file' },
-          { name: 'Modal.tsx', type: 'file' },
-        ],
-      },
-      {
-        name: 'hooks',
-        type: 'folder',
-        expanded: false,
-        children: [
-          { name: 'useAuth.ts', type: 'file' },
-          { name: 'useApi.ts', type: 'file' },
-        ],
-      },
-      { name: 'App.tsx', type: 'file' },
-      { name: 'index.tsx', type: 'file' },
-    ],
-  },
-  {
-    name: 'public',
-    type: 'folder',
-    expanded: false,
-    children: [
-      { name: 'index.html', type: 'file' },
-      { name: 'favicon.ico', type: 'file' },
-    ],
-  },
-  { name: 'package.json', type: 'file' },
-  { name: 'README.md', type: 'file' },
+interface FileItem {
+  name: string;
+}
+
+const fileStructure: FileItem[] = [
+  { name: 'src' },
+  { name: 'public' },
+  { name: 'package.json' },
+  { name: 'README.md' },
+  { name: 'components' },
+  { name: 'utils' },
+  { name: 'styles' },
+  { name: 'assets' },
 ];
 
-export const EquipmentExplorer = () => {
+export const EquipmentExplorer: React.FC = () => {
   return (
-    <div className="space-y-1">
-      {fileStructure.map((item, index) => (
-        <FileTreeItem key={index} item={item} />
-      ))}
+    <div className="h-full p-4 bg-card text-card-foreground">
+      <div className="space-y-2 flex flex-col mb-4">
+        {fileStructure.map((item, index) => (
+          <DraggableItem key={`${item.name}-${index}`} item={item} />
+        ))}
+      </div>
     </div>
   );
 };
