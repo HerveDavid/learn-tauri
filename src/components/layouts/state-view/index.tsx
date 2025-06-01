@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Search,
   GitBranch,
@@ -19,64 +19,8 @@ import {
   Network,
   Zap,
 } from 'lucide-react';
-
-// Mock data for file explorer
-const fileStructure = [
-  {
-    name: 'src',
-    type: 'folder',
-    expanded: true,
-    children: [
-      {
-        name: 'components',
-        type: 'folder',
-        expanded: true,
-        children: [
-          { name: 'Button.tsx', type: 'file' },
-          { name: 'Sidebar.tsx', type: 'file' },
-          { name: 'Modal.tsx', type: 'file' },
-        ],
-      },
-      {
-        name: 'hooks',
-        type: 'folder',
-        expanded: false,
-        children: [
-          { name: 'useAuth.ts', type: 'file' },
-          { name: 'useApi.ts', type: 'file' },
-        ],
-      },
-      { name: 'App.tsx', type: 'file' },
-      { name: 'index.tsx', type: 'file' },
-    ],
-  },
-  {
-    name: 'public',
-    type: 'folder',
-    expanded: false,
-    children: [
-      { name: 'index.html', type: 'file' },
-      { name: 'favicon.ico', type: 'file' },
-    ],
-  },
-  { name: 'package.json', type: 'file' },
-  { name: 'README.md', type: 'file' },
-];
-
-// Left sidebar configuration
-const leftSidebarItems = [
-  { id: 'explorer', icon: Folder, label: 'Explorer', content: 'file-explorer' },
-  { id: 'search', icon: Search, label: 'Search', content: 'search' },
-  { id: 'git', icon: GitBranch, label: 'Source Control', content: 'git' },
-  { id: 'debug', icon: Bug, label: 'Run and Debug', content: 'debug' },
-  {
-    id: 'extensions',
-    icon: Package,
-    label: 'Extensions',
-    content: 'extensions',
-  },
-  { id: 'database', icon: Database, label: 'Database', content: 'database' },
-];
+import { LeftSidebar } from './left-sidebar';
+import { Header } from './header';
 
 // Right sidebar configuration
 const rightSidebarItems = [
@@ -150,113 +94,6 @@ const FileTreeItem = ({ item, level = 0 }: { item: any; level?: number }) => {
           ))}
         </div>
       )}
-    </div>
-  );
-};
-
-const LeftSidebarPanel = ({ activePanel }: { activePanel: string | null }) => {
-  if (!activePanel) return null;
-
-  const renderContent = () => {
-    switch (activePanel) {
-      case 'file-explorer':
-        return (
-          <div className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-medium text-sm uppercase tracking-wide text-sidebar-foreground/70">
-                Explorer
-              </h3>
-            </div>
-            <div className="space-y-1">
-              {fileStructure.map((item, index) => (
-                <FileTreeItem key={index} item={item} />
-              ))}
-            </div>
-          </div>
-        );
-      case 'search':
-        return (
-          <div className="p-4">
-            <h3 className="font-medium text-sm uppercase tracking-wide text-sidebar-foreground/70 mb-4">
-              Search
-            </h3>
-            <div className="space-y-3">
-              <input
-                type="text"
-                placeholder="Search files..."
-                className="w-full px-3 py-2 bg-input border border-border rounded text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-              <input
-                type="text"
-                placeholder="Replace..."
-                className="w-full px-3 py-2 bg-input border border-border rounded text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-              <div className="flex gap-2">
-                <button className="px-3 py-1 bg-primary text-primary-foreground rounded text-sm hover:bg-primary/90">
-                  Search
-                </button>
-                <button className="px-3 py-1 bg-secondary text-secondary-foreground rounded text-sm hover:bg-secondary/90">
-                  Replace All
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-      case 'git':
-        return (
-          <div className="p-4">
-            <h3 className="font-medium text-sm uppercase tracking-wide text-sidebar-foreground/70 mb-4">
-              Source Control
-            </h3>
-            <div className="space-y-3">
-              <div className="text-sm">
-                <div className="font-medium mb-2">Changes (3)</div>
-                <div className="space-y-1 ml-2">
-                  <div className="flex items-center gap-2 py-1">
-                    <span className="text-green-500">M</span>
-                    <span className="text-sm">src/components/Button.tsx</span>
-                  </div>
-                  <div className="flex items-center gap-2 py-1">
-                    <span className="text-blue-500">A</span>
-                    <span className="text-sm">src/components/Modal.tsx</span>
-                  </div>
-                  <div className="flex items-center gap-2 py-1">
-                    <span className="text-red-500">D</span>
-                    <span className="text-sm">src/old-component.tsx</span>
-                  </div>
-                </div>
-              </div>
-              <textarea
-                placeholder="Commit message..."
-                className="w-full px-3 py-2 bg-input border border-border rounded text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-                rows={3}
-              />
-              <button className="w-full px-3 py-2 bg-primary text-primary-foreground rounded text-sm hover:bg-primary/90">
-                Commit & Push
-              </button>
-            </div>
-          </div>
-        );
-      default:
-        return (
-          <div className="p-4">
-            <h3 className="font-medium text-sm uppercase tracking-wide text-sidebar-foreground/70 mb-4">
-              {
-                leftSidebarItems.find((item) => item.content === activePanel)
-                  ?.label
-              }
-            </h3>
-            <div className="text-sm text-muted-foreground">
-              Content for {activePanel} panel would go here.
-            </div>
-          </div>
-        );
-    }
-  };
-
-  return (
-    <div className="w-64 bg-sidebar border-r border-sidebar-border overflow-auto">
-      {renderContent()}
     </div>
   );
 };
@@ -438,54 +275,6 @@ const ToolsPanel = ({ activePanel }: { activePanel: string | null }) => {
   );
 };
 
-const LeftSidebar = () => {
-  const [activePanel, setActivePanel] = useState<string | null>(
-    'file-explorer',
-  );
-
-  const handleIconClick = (content: string) => {
-    if (activePanel === content) {
-      setActivePanel(null);
-    } else {
-      setActivePanel(content);
-    }
-  };
-
-  return (
-    <div className="flex">
-      {/* Icon Bar */}
-      <div className="w-8 bg-sidebar border-r border-sidebar-border flex flex-col items-center py-2 space-y-3">
-        {leftSidebarItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activePanel === item.content;
-
-          return (
-            <button
-              key={item.id}
-              onClick={() => handleIconClick(item.content)}
-              className={`size-6 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
-                isActive
-                  ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                  : 'text-sidebar-foreground'
-              }`}
-              title={item.label}
-            >
-              <Icon className="size-4" />
-              {/* Tooltip */}
-              <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-                {item.label}
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Panel Content */}
-      <LeftSidebarPanel activePanel={activePanel} />
-    </div>
-  );
-};
-
 const RightSidebar = () => {
   const [activePanel, setActivePanel] = useState<string | null>('outline');
 
@@ -512,7 +301,7 @@ const RightSidebar = () => {
             <button
               key={item.id}
               onClick={() => handleIconClick(item.content)}
-              className={`size-6 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
+              className={`size-5 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
                 isActive
                   ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                   : 'text-sidebar-foreground'
@@ -574,7 +363,6 @@ const Tools = () => {
   );
 };
 
-// Main Layout Component
 export const StateView: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -582,10 +370,10 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
   const contentRef = React.useRef<HTMLDivElement>(null);
 
   // Use ResizeObserver to detect when the content area changes size
-  React.useEffect(() => {
+  useEffect(() => {
     if (!contentRef.current) return;
 
-    const resizeObserver = new ResizeObserver((entries) => {
+    const resizeObserver = new ResizeObserver((_entries) => {
       // Trigger a global resize event that Dockview will listen to
       window.dispatchEvent(new Event('resize'));
     });
@@ -599,15 +387,9 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <div className="h-screen bg-background text-foreground flex flex-col">
-      {/* Header */}
-      <div className="h-5 border-b border-border flex items-center flex-shrink-0 gap-x-2">
-        <h1 className="text-sm">File</h1>
-        <h1 className="text-sm">View</h1>
-      </div>
+      <Header />
 
-      {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Sidebar */}
         <LeftSidebar />
 
         {/* Center Content */}
