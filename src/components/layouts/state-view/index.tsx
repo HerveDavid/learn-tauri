@@ -1,4 +1,9 @@
 import React, { useEffect } from 'react';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable';
 
 import { Footer } from './footer';
 import { Header } from './header';
@@ -35,12 +40,15 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
       <div className="flex flex-1 overflow-hidden">
         <LeftSidebar />
 
+        
         <div className="flex-1 flex flex-col min-w-0" ref={contentRef}>
-          <div className="flex-1 bg-background overflow-hidden">
-            <div className="h-full w-full">{children}</div>
-          </div>
-
-          <Tools />
+          <ResizablePanelGroup direction="vertical">
+            <ResizablePanel>{children}</ResizablePanel>
+            <ResizableHandle />
+            <ResizablePanel>
+              <Tools />
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </div>
 
         <RightSidebar />
