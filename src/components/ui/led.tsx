@@ -13,7 +13,6 @@ export const Led = ({
   color = 'red',
   isOn = false,
   size = 'md',
-  variant = 'default',
   className = '',
 }) => {
   const sizeClasses: Record<LedSize, string> = {

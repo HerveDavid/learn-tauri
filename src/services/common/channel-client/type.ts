@@ -1,5 +1,6 @@
 import { Channel } from '@tauri-apps/api/core';
 import * as Effect from 'effect/Effect';
+
 import {
   ChannelNotFoundError,
   HandlerAlreadyExistsError,

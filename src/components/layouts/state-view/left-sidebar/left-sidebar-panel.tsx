@@ -1,5 +1,3 @@
-import { Folder } from 'lucide-react';
-import EquipmentExplorer from '@/features/equipment-explorer';
 import { leftSidebarItems } from '@/config/layout';
 
 export const LeftSidebarPanel = ({

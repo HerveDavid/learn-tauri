@@ -1,5 +1,8 @@
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { Led } from '@/components/ui/led';
 import {
   Table,
   TableBody,
@@ -8,12 +11,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useChannel } from '@/hooks/use-channel';
-import { Event } from '../../types/event';
-import { addEventAtom, eventsAtom } from './primitive';
 import { channels } from '@/config/channels';
-import { Button } from '@/components/ui/button';
-import { Led } from '@/components/ui/led';
+import { useChannel } from '@/hooks/use-channel';
+
+import { Event } from '../../types/event';
+
+import { addEventAtom, eventsAtom } from './primitive';
 
 const HANDLER_ID = 'event-handler';
 

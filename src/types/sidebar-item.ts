@@ -1,4 +1,5 @@
 import { LucideProps } from 'lucide-react';
+import React, { JSX } from 'react';
 
 export interface SidebarItem {
   id: string;

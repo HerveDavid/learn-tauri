@@ -3,8 +3,8 @@ import {
   DockviewReadyEvent,
   IDockviewPanelProps,
   DockviewTheme,
-  IDockviewPanelHeaderProps,
 } from 'dockview';
+
 import 'dockview/dist/styles/dockview.css';
 import { EventsLog } from '@/features/events-log';
 import './example.css';
@@ -17,12 +17,6 @@ const customTailwindTheme: DockviewTheme = {
   dndOverlayMounting: 'absolute',
   dndPanelOverlay: 'group',
 };
-
-// const tabComponent = {
-//   default: (props: IDockviewPanelHeaderProps) => {
-//     return <span>{props.api.title}</span>;
-//   },
-// };
 
 // Inner Dockview Component
 const InnerDockview = () => {

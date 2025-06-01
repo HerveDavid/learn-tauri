@@ -1,11 +1,15 @@
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useMemo, memo } from 'react';
-import { useChannel } from '@/hooks/use-channel';
-import { Event } from '../../types/event';
-import { addEventAtom, eventsAtom } from './primitive';
-import { channels } from '@/config/channels';
-import { Button } from '@/components/ui/button';
 import UplotReact from 'uplot-react';
+
+import { Button } from '@/components/ui/button';
+import { channels } from '@/config/channels';
+import { useChannel } from '@/hooks/use-channel';
+
+import { Event } from '../../types/event';
+
+import { addEventAtom, eventsAtom } from './primitive';
+
 import 'uplot/dist/uPlot.min.css';
 
 const HANDLER_ID = 'chart-handler';

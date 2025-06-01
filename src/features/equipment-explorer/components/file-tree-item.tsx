@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Folder,
   ChevronRight,
@@ -6,6 +5,7 @@ import {
   File,
   FolderOpen,
 } from 'lucide-react';
+import { useState } from 'react';
 
 export const FileTreeItem = ({
   item,
