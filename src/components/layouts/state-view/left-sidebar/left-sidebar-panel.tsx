@@ -36,7 +36,7 @@ export const LeftSidebarPanel = ({
           <Minus />
         </Button>
       </div>
-      <div className="p-4">{activeItem.content()}</div>
+      <div className="p-2">{activeItem.content()}</div>
     </div>
   );
 };

@@ -1,12 +1,18 @@
-import { AddPanelOptions, DockviewApi } from 'dockview';
 import { create } from 'zustand';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { AddPanelOptions, DockviewApi } from 'dockview';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
+
+import { paths } from '@/config/paths';
+import { Webview } from '@tauri-apps/api/webview';
 
 interface DashboardStore {
   api: DockviewApi | null;
 
   setApi: (api: DockviewApi) => void;
   addPanel: (panel: AddPanelOptions) => void;
+  detachPanel: (id: string) => void;
   removePanel: (id: string) => void;
 }
 
@@ -34,6 +40,16 @@ export const useDashboardStore = create<DashboardStore>()(
         if (panel) {
           api.removePanel(panel);
         }
+      },
+      detachPanel: (id) => {
+        const _webviewWindow = new WebviewWindow(id, {
+          url: paths.home.path,
+          title: id,
+          width: 800,
+          height: 600,
+          resizable: true,
+          focus: true,
+        });
       },
     })),
     { name: 'dashboard-store' },

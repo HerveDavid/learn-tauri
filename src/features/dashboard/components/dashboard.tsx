@@ -9,12 +9,11 @@ import React from 'react';
 
 import 'dockview/dist/styles/dockview.css';
 import './dashboard.css';
+
 import { DashboardComponents } from '@/config/dashboard';
 import { useDashboardStore } from '@/stores/dashboard.store';
-
 import { DraggedItem } from '../types/dragged-item.type';
 import { isDraggedItem } from '../utils';
-
 import { LeftHeaderActions } from './left-header-actions';
 import { RightHeaderActions } from './right-header-actions';
 import { TabComponent } from './tab-component';

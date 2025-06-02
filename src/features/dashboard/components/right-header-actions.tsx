@@ -1,10 +1,13 @@
+import React from 'react';
 import { IDockviewHeaderActionsProps } from 'dockview';
 import { Expand, ScreenShare, Shrink } from 'lucide-react';
-import React from 'react';
 
 import { Button } from '@/components/ui/button';
+import { useDashboardStore } from '@/stores/dashboard.store';
 
 export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
+  const { detachPanel } = useDashboardStore();
+
   const [maximized, setMaximized] = React.useState<boolean>(
     props.api.isMaximized(),
   );
@@ -45,6 +48,10 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
     }
   };
 
+  const handleDetachPanel = () => {
+    detachPanel(props.activePanel!.id);
+  };
+
   const showMaximizeButton = groupCount > 1;
 
   return (
@@ -52,8 +59,9 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
       <Button
         variant="ghost"
         size="sm"
+        onClick={handleDetachPanel}
         className="size-5 p-0 hover:bg-accent"
-        title={'Detach'}
+        title={'Detach group'}
       >
         <ScreenShare className="size-4" />
       </Button>
