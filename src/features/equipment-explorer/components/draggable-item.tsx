@@ -14,7 +14,7 @@ const DraggableItem: React.FC<DraggableItemProps> = ({ item }) => {
   return (
     <span
       draggable={true}
-      className="cursor-pointer text-xs text-muted-foreground hover:text-foreground block p-2 border border-border rounded bg-card hover:bg-accent transition-colors"
+      className="cursor-pointer text-xs text-muted-foreground block p-2 border border-border rounded hover:bg-sidebar-accent"
       onDragStart={handleDragStart}
       tabIndex={-1}
     >

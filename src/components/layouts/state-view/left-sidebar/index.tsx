@@ -19,7 +19,7 @@ export const LeftSidebar = () => {
 
   return (
     <div className="flex">
-      <div className="w-8 bg-sidebar border-r border-sidebar-border flex flex-col items-center py-2 space-y-3">
+      <div className="w-8 bg-sidebar border-r flex flex-col items-center py-2 space-y-3">
         {leftSidebarItems.map((item) => {
           const Icon = item.icon;
           const isActive = activePanel === item.id;

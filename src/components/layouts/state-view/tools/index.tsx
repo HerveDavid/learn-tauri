@@ -17,8 +17,8 @@ export const Tools = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex bg-sidebar border-t border-sidebar-border justify-between">
-        <div>
+      <div className="flex bg-sidebar border-t justify-between">
+        <div className='flex'>
           {toolsItems.map((item) => {
             const Icon = item.icon;
             const isActive = activePanel === item.id;
@@ -27,7 +27,7 @@ export const Tools = () => {
               <button
                 key={item.id}
                 onClick={() => handleTabClick(item.id)}
-                className={`flex items-center gap-2 px-2 text-sm border-r border-sidebar-border hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors ${
+                className={`flex items-center gap-2 px-2 text-sm border-r hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors ${
                   isActive
                     ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                     : 'text-sidebar-foreground'

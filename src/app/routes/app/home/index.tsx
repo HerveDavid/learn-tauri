@@ -1,12 +1,10 @@
-import { Example } from '@/components/layouts/example/example';
 import { StateView } from '@/components/layouts/state-view';
+import { Dashboard } from '@/features/dashboard-panel';
 
 const App = () => {
   return (
     <StateView>
-      <div className="h-full w-full bg-card border border-border overflow-hidden">
-        <Example />
-      </div>
+      <Dashboard />
     </StateView>
   );
 };

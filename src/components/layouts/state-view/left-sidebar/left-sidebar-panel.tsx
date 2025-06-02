@@ -16,7 +16,7 @@ export const LeftSidebarPanel = ({
 
   if (!activeItem || !activeItem.content) {
     return (
-      <div className="w-64 bg-sidebar border-r border-sidebar-border overflow-auto">
+      <div className="w-64 bg-sidebar border-r overflow-auto">
         <div className="p-4">
           <div className="text-sm text-muted-foreground">
             Panel not found: {activePanel}
@@ -27,7 +27,7 @@ export const LeftSidebarPanel = ({
   }
 
   return (
-    <div className="w-64 bg-sidebar border-r border-sidebar-border overflow-auto">
+    <div className="w-64 bg-sidebar border-r overflow-auto">
       <div className="flex items-center justify-between border-b py-2 px-2">
         <h3 className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground/70">
           {activeItem.label}

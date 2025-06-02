@@ -22,7 +22,7 @@ export const RightSidebar = () => {
         closePanel={() => setActivePanel(null)}
       />
 
-      <div className="w-8 bg-sidebar border-l border-sidebar-border flex flex-col items-center py-2 space-y-3">
+      <div className="w-8 bg-sidebar border-l flex flex-col items-center py-2 space-y-3">
         {rightSidebarItems.map((item) => {
           const Icon = item.icon;
           const isActive = activePanel === item.id;

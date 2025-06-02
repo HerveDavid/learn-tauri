@@ -7,7 +7,7 @@ export const ToolsPanel = ({ activePanel }: { activePanel: string | null }) => {
 
   if (!activeItem || !activeItem.content) {
     return (
-      <div className="bg-sidebar border-t border-sidebar-border overflow-auto">
+      <div className="bg-sidebar border-t overflow-auto">
         <div className="p-4">
           <div className="text-sm text-muted-foreground">
             Panel not found: {activePanel}

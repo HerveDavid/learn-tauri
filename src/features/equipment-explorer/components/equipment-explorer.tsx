@@ -1,4 +1,3 @@
-import React from 'react';
 import DraggableItem from './draggable-item';
 
 interface FileItem {
@@ -16,9 +15,9 @@ const fileStructure: FileItem[] = [
   { name: 'assets' },
 ];
 
-export const EquipmentExplorer: React.FC = () => {
+export const EquipmentExplorer = () => {
   return (
-    <div className="h-full p-4 bg-card text-card-foreground">
+    <div className="h-full p-4 text-card-foreground">
       <div className="space-y-2 flex flex-col mb-4">
         {fileStructure.map((item, index) => (
           <DraggableItem key={`${item.name}-${index}`} item={item} />

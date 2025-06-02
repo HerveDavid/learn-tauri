@@ -5,14 +5,14 @@ import {
   DockviewReadyEvent,
   DockviewTheme,
   IDockviewPanelProps,
-  IWatermarkPanelProps,
   positionToDirection,
 } from 'dockview';
 import React from 'react';
 import 'dockview/dist/styles/dockview.css';
-import './example.css';
+import './dashboard.css';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+import { Watermark } from './watermark';
 
 const customTailwindTheme: DockviewTheme = {
   name: 'tailwind-custom',
@@ -49,53 +49,7 @@ const tabComponent = {
   },
 };
 
-const Watermark = (props: IWatermarkPanelProps) => {
-  const isGroup = props.containerApi.groups.length > 0;
-
-  const addPanel = () => {
-    props.containerApi.addPanel({
-      id: Date.now().toString(),
-      component: 'default',
-    });
-  };
-
-  return (
-    <div
-      style={{
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: 'white',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <span>Empty</span>
-        <span>
-          <Button onClick={addPanel}>Add New Panel</Button>
-        </span>
-        {isGroup && (
-          <span>
-            <Button
-              onClick={() => {
-                props.group?.api.close();
-              }}
-            >
-              Close Group
-            </Button>
-          </span>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export const Example = () => {
+export const Dashboard = () => {
   const [api, setApi] = React.useState<DockviewApi>();
 
   React.useEffect(() => {
