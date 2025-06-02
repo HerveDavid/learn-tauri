@@ -6,14 +6,17 @@ import {
   positionToDirection,
 } from 'dockview';
 import React from 'react';
+
 import 'dockview/dist/styles/dockview.css';
 import './dashboard.css';
-import { Watermark } from './watermark';
+import { useDashboardStore } from '@/stores/dashboard.store';
+
+import { DraggedItem } from '../types/dragged-item.type';
+import { isDraggedItem } from '../utils';
+
 import { DockviewComponents } from './dockview-components';
 import { TabComponent } from './tab-component';
-import { useDashboardStore } from '../stores/dashboard.store';
-import { isDraggedItem } from '../utils';
-import { DraggedItem } from '../types/dragged-item.type';
+import { Watermark } from './watermark';
 
 const customTailwindTheme: DockviewTheme = {
   name: 'tailwind-custom',
@@ -45,12 +48,13 @@ export const Dashboard = () => {
   };
 
   const onDidDrop = (event: DockviewDidDropEvent) => {
-    const dragData = event.nativeEvent?.dataTransfer?.getData('application/json');
+    const dragData =
+      event.nativeEvent?.dataTransfer?.getData('application/json');
     if (!dragData) {
       console.warn('No drag data found');
       return;
     }
-  
+
     let parsedData: DraggedItem;
     try {
       parsedData = JSON.parse(dragData);
@@ -58,12 +62,12 @@ export const Dashboard = () => {
       console.error('Error parsing drag data:', error);
       return;
     }
-  
+
     if (!isDraggedItem(parsedData)) {
       console.warn('Invalid drag data structure:', parsedData);
       return;
     }
-  
+
     const title = parsedData.name;
     const panel = {
       id: title,
@@ -75,7 +79,7 @@ export const Dashboard = () => {
         referenceGroup: event.group,
       },
     };
-    
+
     addPanel(panel);
   };
 

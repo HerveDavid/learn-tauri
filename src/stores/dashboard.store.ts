@@ -1,6 +1,6 @@
+import { AddPanelOptions, DockviewApi } from 'dockview';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
-import { AddPanelOptions, DockviewApi } from 'dockview';
 
 interface DashboardStore {
   api: DockviewApi | null;

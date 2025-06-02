@@ -1,5 +1,6 @@
-import { useDashboardStore } from '@/features/dashboard-panel/stores/dashboard.store';
 import React from 'react';
+
+import { useDashboardStore } from '@/stores/dashboard.store';
 
 interface DraggableItemProps {
   item: { name: string };

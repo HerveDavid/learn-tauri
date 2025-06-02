@@ -1,8 +1,10 @@
-import { toolsItems } from '@/config/layout';
-import { useState } from 'react';
-import { ToolsPanel } from './tools-panel';
-import { Button } from '@/components/ui/button';
 import { Minus } from 'lucide-react';
+import { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { toolsItems } from '@/config/layout';
+
+import { ToolsPanel } from './tools-panel';
 
 export const Tools = () => {
   const [activePanel, setActivePanel] = useState<string | null>('terminal');
@@ -18,7 +20,7 @@ export const Tools = () => {
   return (
     <div className="flex flex-col">
       <div className="flex bg-sidebar border-t justify-between">
-        <div className='flex'>
+        <div className="flex">
           {toolsItems.map((item) => {
             const Icon = item.icon;
             const isActive = activePanel === item.id;

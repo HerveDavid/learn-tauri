@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+
 import {
   ResizableHandle,
   ResizablePanel,
@@ -40,7 +41,6 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
       <div className="flex flex-1 overflow-hidden">
         <LeftSidebar />
 
-        
         <div className="flex-1 flex flex-col min-w-0" ref={contentRef}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel>{children}</ResizablePanel>
