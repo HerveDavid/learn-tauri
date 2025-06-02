@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   DockviewDidDropEvent,
   DockviewReact,
@@ -5,7 +6,6 @@ import {
   DockviewTheme,
   positionToDirection,
 } from 'dockview';
-import React from 'react';
 
 import 'dockview/dist/styles/dockview.css';
 import './dashboard.css';
@@ -27,7 +27,11 @@ const customTailwindTheme: DockviewTheme = {
   dndPanelOverlay: 'group',
 };
 
-export const Dashboard = () => {
+export interface DashboardProps {
+  defaultPanels?: [{ id: string }];
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
   const { api, setApi, addPanel } = useDashboardStore();
 
   React.useEffect(() => {
@@ -44,6 +48,14 @@ export const Dashboard = () => {
 
   const onReady = (event: DockviewReadyEvent) => {
     setApi(event.api);
+    defaultPanels?.forEach(({ id }) =>
+      event.api.addPanel({
+        id: id,
+        component: 'sld',
+        tabComponent: 'default',
+        params: { title: id },
+      }),
+    );
   };
 
   const onDidDrop = (event: DockviewDidDropEvent) => {

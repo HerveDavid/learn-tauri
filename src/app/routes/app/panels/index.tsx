@@ -1,12 +1,12 @@
-import { Sld } from '@/features/single-line-diagram';
+import { Dashboard } from '@/features/dashboard';
 import { useParams } from 'react-router';
 
 const Panels = () => {
   const { id } = useParams();
 
   return (
-    <div className="">
-      <Sld id={id!} />
+    <div className="h-screen bg-background text-foreground flex flex-col">
+      <Dashboard defaultPanels={[{ id: id! }]} />
     </div>
   );
 };
