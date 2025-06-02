@@ -52,7 +52,7 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
       <Button
         variant="ghost"
         size="sm"
-        className="h-6 w-6 p-0 hover:bg-accent"
+        className="size-5 p-0 hover:bg-accent"
         title={'Detach'}
       >
         <ScreenShare className="size-4" />
@@ -62,7 +62,7 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
           variant="ghost"
           size="sm"
           onClick={handleMaximizeToggle}
-          className="h-6 w-6 p-0 hover:bg-accent"
+          className="size-5 p-0 hover:bg-accent"
           title={maximized ? 'Restore group' : 'Maximize group'}
         >
           {maximized ? (
