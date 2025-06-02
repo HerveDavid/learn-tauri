@@ -6,12 +6,17 @@ import {
   positionToDirection,
 } from 'dockview';
 import React from 'react';
+
 import 'dockview/dist/styles/dockview.css';
 import './dashboard.css';
+import { DashboardComponents } from '@/config/dashboard';
 import { useDashboardStore } from '@/stores/dashboard.store';
+
 import { DraggedItem } from '../types/dragged-item.type';
 import { isDraggedItem } from '../utils';
-import { DashboardComponents } from '@/config/dashboard';
+
+import { LeftHeaderActions } from './left-header-actions';
+import { RightHeaderActions } from './right-header-actions';
 import { TabComponent } from './tab-component';
 import { Watermark } from './watermark';
 
@@ -30,11 +35,9 @@ export const Dashboard = () => {
     if (!api) {
       return;
     }
-
     const disposable = api.onUnhandledDragOverEvent((event) => {
       event.accept();
     });
-
     return () => {
       disposable.dispose();
     };
@@ -51,7 +54,6 @@ export const Dashboard = () => {
       console.warn('No drag data found');
       return;
     }
-
     let parsedData: DraggedItem;
     try {
       parsedData = JSON.parse(dragData);
@@ -59,12 +61,10 @@ export const Dashboard = () => {
       console.error('Error parsing drag data:', error);
       return;
     }
-
     if (!isDraggedItem(parsedData)) {
       console.warn('Invalid drag data structure:', parsedData);
       return;
     }
-
     const title = parsedData.name;
     const panel = {
       id: title,
@@ -76,7 +76,6 @@ export const Dashboard = () => {
         referenceGroup: event.group,
       },
     };
-
     addPanel(panel);
   };
 
@@ -89,6 +88,8 @@ export const Dashboard = () => {
         tabComponents={TabComponent}
         theme={customTailwindTheme}
         onDidDrop={onDidDrop}
+        leftHeaderActionsComponent={LeftHeaderActions}
+        rightHeaderActionsComponent={RightHeaderActions}
         dndEdges={{
           size: { value: 100, type: 'pixels' },
           activationSize: { value: 5, type: 'percentage' },
