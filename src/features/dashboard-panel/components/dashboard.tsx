@@ -1,18 +1,17 @@
 import {
-  DockviewApi,
   DockviewDidDropEvent,
   DockviewReact,
   DockviewReadyEvent,
   DockviewTheme,
-  IDockviewPanelProps,
   positionToDirection,
 } from 'dockview';
 import React from 'react';
 import 'dockview/dist/styles/dockview.css';
 import './dashboard.css';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
 import { Watermark } from './watermark';
+import { DockviewComponents } from './dockview-components';
+import { TabComponent } from './tab-component';
+import { useDashboardStore } from '../stores/dashboard.store';
 
 const customTailwindTheme: DockviewTheme = {
   name: 'tailwind-custom',
@@ -22,35 +21,8 @@ const customTailwindTheme: DockviewTheme = {
   dndPanelOverlay: 'group',
 };
 
-const dockviewComponents = {
-  default: (props: IDockviewPanelProps<{ title: string }>) => {
-    return (
-      <div className="p-5">
-        <div>{props.params?.title || 'Default Panel'}</div>
-      </div>
-    );
-  },
-};
-
-const tabComponent = {
-  default: (props: IDockviewPanelProps<{ title: string }>) => {
-    return (
-      <div className="flex justify-between items-center space-x-3">
-        <h1>{props.api.title}</h1>
-        <Button
-          variant="ghost"
-          className="size-1"
-          onClick={() => props.api.close()}
-        >
-          <X />
-        </Button>
-      </div>
-    );
-  },
-};
-
 export const Dashboard = () => {
-  const [api, setApi] = React.useState<DockviewApi>();
+  const { api, setApi, addPanel } = useDashboardStore();
 
   React.useEffect(() => {
     if (!api) {
@@ -84,26 +56,28 @@ export const Dashboard = () => {
     }
 
     const title = draggedItem?.name || 'Dropped Item';
-
-    event.api.addPanel({
+    const panel = {
       id: title,
       component: 'default',
       tabComponent: 'default',
       params: { title },
       position: {
         direction: positionToDirection(event.position),
-        referenceGroup: event.group || undefined,
+        referenceGroup: event.group,
       },
-    });
+    };
+
+    event.api.addPanel(panel);
+    addPanel(panel);
   };
 
   return (
     <div className="h-full flex flex-col">
       <DockviewReact
         watermarkComponent={Watermark}
-        components={dockviewComponents}
+        components={DockviewComponents}
         onReady={onReady}
-        tabComponents={tabComponent}
+        tabComponents={TabComponent}
         theme={customTailwindTheme}
         onDidDrop={onDidDrop}
         dndEdges={{

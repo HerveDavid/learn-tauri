@@ -1,7 +1,5 @@
 import { useState } from 'react';
-
 import { leftSidebarItems } from '@/config/layout';
-
 import { LeftSidebarPanel } from './left-sidebar-panel';
 
 export const LeftSidebar = () => {
