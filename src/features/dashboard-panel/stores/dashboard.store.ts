@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
-import { AddPanelOptions, DockviewApi, SerializedDockview } from 'dockview';
+import { AddPanelOptions, DockviewApi } from 'dockview';
 
 interface DashboardStore {
   api: DockviewApi | null;
@@ -8,7 +8,6 @@ interface DashboardStore {
   setApi: (api: DockviewApi) => void;
   addPanel: (panel: AddPanelOptions) => void;
   removePanel: (id: string) => void;
-  toJson: () => SerializedDockview;
 }
 
 export const useDashboardStore = create<DashboardStore>()(
@@ -35,10 +34,6 @@ export const useDashboardStore = create<DashboardStore>()(
         if (panel) {
           api.removePanel(panel);
         }
-      },
-      toJson: () => {
-        const { api } = get();
-        return api!.toJSON();
       },
     })),
     { name: 'dashboard-store' },

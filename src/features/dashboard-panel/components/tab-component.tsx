@@ -6,9 +6,9 @@ import { useDashboardStore } from '../stores/dashboard.store';
 export const TabComponent = {
   default: (props: IDockviewPanelProps<{ title: string }>) => {
     const { removePanel } = useDashboardStore();
+    
     const handleClose = () => {
       removePanel(props.api.id);
-      props.api.close();
     };
 
     return (
