@@ -12,6 +12,8 @@ import { Watermark } from './watermark';
 import { DockviewComponents } from './dockview-components';
 import { TabComponent } from './tab-component';
 import { useDashboardStore } from '../stores/dashboard.store';
+import { isDraggedItem } from '../utils';
+import { DraggedItem } from '../types/dragged-item.type';
 
 const customTailwindTheme: DockviewTheme = {
   name: 'tailwind-custom',
@@ -43,19 +45,26 @@ export const Dashboard = () => {
   };
 
   const onDidDrop = (event: DockviewDidDropEvent) => {
-    let draggedItem = null;
-
+    const dragData = event.nativeEvent?.dataTransfer?.getData('application/json');
+    if (!dragData) {
+      console.warn('No drag data found');
+      return;
+    }
+  
+    let parsedData: DraggedItem;
     try {
-      const dragData =
-        event.nativeEvent?.dataTransfer?.getData('application/json');
-      if (dragData) {
-        draggedItem = JSON.parse(dragData);
-      }
+      parsedData = JSON.parse(dragData);
     } catch (error) {
       console.error('Error parsing drag data:', error);
+      return;
     }
-
-    const title = draggedItem?.name || 'Dropped Item';
+  
+    if (!isDraggedItem(parsedData)) {
+      console.warn('Invalid drag data structure:', parsedData);
+      return;
+    }
+  
+    const title = parsedData.name;
     const panel = {
       id: title,
       component: 'default',
@@ -66,8 +75,7 @@ export const Dashboard = () => {
         referenceGroup: event.group,
       },
     };
-
-    event.api.addPanel(panel);
+    
     addPanel(panel);
   };
 
