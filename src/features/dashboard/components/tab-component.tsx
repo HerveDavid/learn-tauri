@@ -13,7 +13,11 @@ const Default = (props: IDockviewPanelProps<{ title: string }>) => {
   return (
     <div className="flex justify-between items-center space-x-3">
       <h1>{props.api.title}</h1>
-      <Button variant="ghost" className="size-1" onClick={handleClose}>
+      <Button
+        variant="ghost"
+        className="size-1 hover:bg-destructive hover:text-destructive-foreground"
+        onClick={handleClose}
+      >
         <X />
       </Button>
     </div>

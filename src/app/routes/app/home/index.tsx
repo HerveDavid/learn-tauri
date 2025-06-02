@@ -1,5 +1,5 @@
 import { StateView } from '@/components/layouts/state-view';
-import { Dashboard } from '@/features/dashboard-panel';
+import { Dashboard } from '@/features/dashboard';
 
 const App = () => {
   return (

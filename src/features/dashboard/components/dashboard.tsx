@@ -6,15 +6,12 @@ import {
   positionToDirection,
 } from 'dockview';
 import React from 'react';
-
 import 'dockview/dist/styles/dockview.css';
 import './dashboard.css';
 import { useDashboardStore } from '@/stores/dashboard.store';
-
 import { DraggedItem } from '../types/dragged-item.type';
 import { isDraggedItem } from '../utils';
-
-import { DockviewComponents } from './dockview-components';
+import { DashboardComponents } from '@/config/dashboard';
 import { TabComponent } from './tab-component';
 import { Watermark } from './watermark';
 
@@ -71,7 +68,7 @@ export const Dashboard = () => {
     const title = parsedData.name;
     const panel = {
       id: title,
-      component: 'default',
+      component: 'sld',
       tabComponent: 'default',
       params: { title },
       position: {
@@ -87,7 +84,7 @@ export const Dashboard = () => {
     <div className="h-full flex flex-col">
       <DockviewReact
         watermarkComponent={Watermark}
-        components={DockviewComponents}
+        components={DashboardComponents}
         onReady={onReady}
         tabComponents={TabComponent}
         theme={customTailwindTheme}

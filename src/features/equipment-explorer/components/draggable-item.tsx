@@ -19,8 +19,8 @@ const DraggableItem: React.FC<DraggableItemProps> = ({ item }) => {
     const title = item.name;
     addPanel({
       id: title,
-      component: 'default',
       tabComponent: 'default',
+      component: 'sld',
       params: { title },
     });
   };
