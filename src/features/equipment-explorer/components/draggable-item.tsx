@@ -31,7 +31,7 @@ const DraggableItem: React.FC<DraggableItemProps> = ({ item }) => {
       className="cursor-pointer text-xs text-muted-foreground block p-2 border border-border rounded hover:bg-sidebar-accent"
       onDragStart={handleDragStart}
       onClick={handleClick}
-      tabIndex={-1}
+      tabIndex={1}
     >
       {item.name}
     </span>

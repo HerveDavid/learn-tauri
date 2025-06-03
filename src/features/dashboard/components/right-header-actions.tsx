@@ -1,6 +1,6 @@
 import React from 'react';
 import { IDockviewHeaderActionsProps } from 'dockview';
-import { Expand, ScreenShare, Shrink } from 'lucide-react';
+import { Expand, Maximize, Minimize, ScreenShare, Shrink } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { useDashboardStore } from '@/stores/dashboard.store';
@@ -74,9 +74,9 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
           title={maximized ? 'Restore group' : 'Maximize group'}
         >
           {maximized ? (
-            <Shrink className="size-4" />
+            <Minimize className="size-4" />
           ) : (
-            <Expand className="size-4" />
+            <Maximize className="size-4" />
           )}
         </Button>
       )}
