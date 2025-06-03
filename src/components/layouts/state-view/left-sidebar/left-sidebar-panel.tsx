@@ -28,7 +28,7 @@ export const LeftSidebarPanel = ({
 
   return (
     <div className="w-64 bg-sidebar border-r overflow-auto">
-      <div className="flex items-center justify-between border-b py-2 px-2">
+      <div className="flex items-center justify-between border-b py-1 px-2">
         <h3 className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground/70">
           {activeItem.label}
         </h3>

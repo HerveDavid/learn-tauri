@@ -5,14 +5,16 @@ interface FileItem {
 }
 
 const fileStructure: FileItem[] = [
-  { name: 'src' },
-  { name: 'public' },
-  { name: 'package.json' },
-  { name: 'README.md' },
-  { name: 'components' },
-  { name: 'utils' },
-  { name: 'styles' },
-  { name: 'assets' },
+  { name: 'substation1' },
+  { name: 'substation2' },
+  { name: 'substation3' },
+  { name: 'substation4' },
+  { name: 'substation5' },
+  { name: 'substation6' },
+  { name: 'substation7' },
+  { name: 'substation8' },
+  { name: 'substation9' },
+  { name: 'substation10' },
 ];
 
 export const EquipmentExplorer = () => {
