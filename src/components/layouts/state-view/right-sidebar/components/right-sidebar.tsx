@@ -1,10 +1,10 @@
-import { leftSidebarItems } from '@/config/layout';
-import { LeftSidebarPanel } from './left-sidebar-panel';
-import { useLeftSidebarStore } from '../stores/left-sidebar.store';
+import { rightSidebarItems } from '@/config/layout';
+import { RightSidebarPanel } from './right-sidebar-panel';
+import { useRightSidebarStore } from '../stores/right-sidebar.store';
 
-export const LeftSidebar = () => {
+export const RightSidebar = () => {
   const { activeItem, setActiveItem, isOpen, openPanel, closePanel } =
-    useLeftSidebarStore();
+    useRightSidebarStore();
 
   const handleIconClick = (itemId: string) => {
     setActiveItem(itemId);
@@ -13,36 +13,34 @@ export const LeftSidebar = () => {
 
   return (
     <div className="flex">
-      <div className="w-8 bg-sidebar border-r flex flex-col items-center py-2 space-y-3">
-        {leftSidebarItems.map((item) => {
+      {isOpen && <RightSidebarPanel />}
+
+      <div className="w-8 bg-sidebar border-l flex flex-col items-center py-2 space-y-3">
+        {rightSidebarItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeItem.id === item.id;
           const handleClick = isOpen
             ? () => (isActive ? closePanel() : handleIconClick(item.id))
             : () => handleIconClick(item.id);
-
           return (
             <button
               key={item.id}
               onClick={handleClick}
               className={`size-5 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
-                isActive ? 'bg-muted' : 'text-sidebar-foreground'
+                isActive
+                  ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                  : 'text-sidebar-foreground'
               }`}
               title={item.label}
             >
-              {/* {isActive && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
-              )} */}
               <Icon className="size-4" />
-              <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+              <div className="absolute right-full mr-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                 {item.label}
               </div>
             </button>
           );
         })}
       </div>
-
-      {isOpen && <LeftSidebarPanel />}
     </div>
   );
 };

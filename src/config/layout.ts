@@ -13,16 +13,11 @@ export const leftSidebarItems: SidebarItem[] = [
     label: 'Explorer',
     content: EquipmentExplorer,
   },
-  {
-    id: 'equipment-explorer2',
-    icon: Folder,
-    label: 'Explorer2',
-    content: EquipmentExplorer,
-  },
 ] as const;
 
 export const rightSidebarItems: SidebarItem[] = [
   { id: 'widgets', icon: Layers, label: 'Widgets', content: Widgets },
+
 ] as const;
 
 export const toolsItems: SidebarItem[] = [

@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
-import { leftSidebarItems } from '@/config/layout';
+import { rightSidebarItems } from '@/config/layout';
 import { SidebarItem } from '@/types/sidebar-item';
 
-interface LeftSidebarStore {
+interface RightSidebarStore {
   isOpen: boolean;
   activeItem: SidebarItem;
 
@@ -13,24 +13,24 @@ interface LeftSidebarStore {
   setActiveItem: (panelId: string) => void;
 }
 
-export const useLeftSidebarStore = create<LeftSidebarStore>()(
+export const useRightSidebarStore = create<RightSidebarStore>()(
   devtools(
     subscribeWithSelector((set) => ({
       isOpen: false,
-      activeItem: leftSidebarItems[0],
+      activeItem: rightSidebarItems[0],
       closePanel: () => set({ isOpen: false }),
       openPanel: () => set({ isOpen: true }),
       setActiveItem: (panelId) => {
-        const activeItem = leftSidebarItems.find(
+        const activeItem = rightSidebarItems.find(
           (item) => item.id === panelId,
         );
         if (activeItem) {
           set({ activeItem });
         } else {
-          throw Error('Not find left sidebar item');
+          throw Error('Not find right sidebar item');
         }
       },
     })),
-    { name: 'left-sidebar-store' },
+    { name: 'right-sidebar-store' },
   ),
 );
