@@ -13,8 +13,6 @@ export const RightSidebar = () => {
 
   return (
     <div className="flex">
-      {isOpen && <RightSidebarPanel />}
-
       <div className="w-8 bg-sidebar border-l flex flex-col items-center py-2 space-y-3">
         {rightSidebarItems.map((item) => {
           const Icon = item.icon;

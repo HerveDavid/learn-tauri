@@ -1,5 +1,4 @@
 import { leftSidebarItems } from '@/config/layout';
-import { LeftSidebarPanel } from './left-sidebar-panel';
 import { useLeftSidebarStore } from '../stores/left-sidebar.store';
 
 export const LeftSidebar = () => {
@@ -41,8 +40,6 @@ export const LeftSidebar = () => {
           );
         })}
       </div>
-
-      {isOpen && <LeftSidebarPanel />}
     </div>
   );
 };
