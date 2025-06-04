@@ -5,13 +5,18 @@ import { EventsLog } from '@/features/events-log';
 import Terminal from '@/features/terminal';
 import Widgets from '@/features/widgets';
 import { SidebarItem } from '@/types/sidebar-item';
-import ChartComponent from '@/features/chart';
 
 export const leftSidebarItems: SidebarItem[] = [
   {
     id: 'equipment-explorer',
     icon: Folder,
     label: 'Explorer',
+    content: EquipmentExplorer,
+  },
+  {
+    id: 'equipment-explorer2',
+    icon: Folder,
+    label: 'Explorer2',
     content: EquipmentExplorer,
   },
 ] as const;
