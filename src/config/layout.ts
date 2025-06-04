@@ -5,6 +5,7 @@ import { EventsLog } from '@/features/events-log';
 import Terminal from '@/features/terminal';
 import Widgets from '@/features/widgets';
 import { SidebarItem } from '@/types/sidebar-item';
+import ChartComponent from '@/features/chart';
 
 export const leftSidebarItems: SidebarItem[] = [
   {

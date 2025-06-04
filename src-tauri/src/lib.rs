@@ -1,4 +1,5 @@
 mod commands;
+mod settings;
 mod utils;
 
 use tauri::Manager;
@@ -21,6 +22,11 @@ pub fn run() {
             tauri::async_runtime::block_on(async move {
                 app.manage(utils::channels::state::Channels::default());
                 app.manage(utils::tasks::state::Tasks::default());
+
+                let settings_db = settings::DatabaseState::new(&app.handle())
+                    .await
+                    .expect("Failed to initialize settings db");
+                app.manage(settings_db);
             });
             Ok(())
         })

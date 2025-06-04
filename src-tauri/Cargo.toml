@@ -20,15 +20,23 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-store = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-http = "2"
+tauri-plugin-log = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tauri-plugin-log = "2"
 tokio = { version = "1.45.0", features = ["full"] }
 tokio-util = "0.7.15"
-derive_more = { version = "2.0.1", features = ["from"] }
 thiserror = "2.0.12"
 log = "0.4.27"
 chrono = { version = "0.4.41", features = ["serde"] }
 duckdb = { version = "1.2.2" }
+sqlx = { version = "0.8.6", features = ["runtime-tokio", "sqlite", "chrono"] }
+uuid = "1.17.0"
 rand = "0.9.1"
-
+zeromq = "0.4.1"
+async-nats = "0.41.0"
+base64 = "0.22.1"
