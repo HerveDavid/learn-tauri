@@ -1,5 +1,4 @@
 import { rightSidebarItems } from '@/config/layout';
-import { RightSidebarPanel } from './right-sidebar-panel';
 import { useRightSidebarStore } from '../stores/right-sidebar.store';
 
 export const RightSidebar = () => {

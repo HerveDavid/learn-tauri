@@ -7,10 +7,12 @@ import { SidebarItem } from '@/types/sidebar-item';
 interface RightSidebarStore {
   isOpen: boolean;
   activeItem: SidebarItem;
+  size: number;
 
   closePanel: () => void;
   openPanel: () => void;
   setActiveItem: (panelId: string) => void;
+  setSize: (size: number) => void;
 }
 
 export const useRightSidebarStore = create<RightSidebarStore>()(
@@ -18,6 +20,8 @@ export const useRightSidebarStore = create<RightSidebarStore>()(
     subscribeWithSelector((set) => ({
       isOpen: false,
       activeItem: rightSidebarItems[0],
+      size: 15,
+
       closePanel: () => set({ isOpen: false }),
       openPanel: () => set({ isOpen: true }),
       setActiveItem: (panelId) => {
@@ -30,6 +34,7 @@ export const useRightSidebarStore = create<RightSidebarStore>()(
           throw Error('Not find right sidebar item');
         }
       },
+      setSize: (size) => set({ size }),
     })),
     { name: 'right-sidebar-store' },
   ),

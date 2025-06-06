@@ -21,8 +21,37 @@ import { Tools } from './tools';
 export const StateView: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { isOpen: isLeftOpen } = useLeftSidebarStore();
-  const { isOpen: isRightOpen } = useRightSidebarStore();
+  const {
+    isOpen: isLeftOpen,
+    size: leftSize,
+    setSize: setLeftSize,
+  } = useLeftSidebarStore();
+  const {
+    isOpen: isRightOpen,
+    size: rightSize,
+    setSize: setRightSize,
+  } = useRightSidebarStore();
+
+  const handlePanelsResize = (sizes: number[]) => {
+    let leftIndex = -1;
+    let rightIndex = -1;
+
+    if (isLeftOpen && isRightOpen) {
+      leftIndex = 0;
+      rightIndex = 2;
+    } else if (isLeftOpen) {
+      leftIndex = 0;
+    } else if (isRightOpen) {
+      rightIndex = 1;
+    }
+
+    if (leftIndex !== -1 && sizes[leftIndex] !== undefined) {
+      setLeftSize(sizes[leftIndex]);
+    }
+    if (rightIndex !== -1 && sizes[rightIndex] !== undefined) {
+      setRightSize(sizes[rightIndex]);
+    }
+  };
 
   // Create a ref to track layout changes and trigger Dockview resize
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -53,14 +82,18 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
           direction="vertical"
         >
           <ResizablePanel className="flex flex-1">
-            <ResizablePanelGroup direction="horizontal">
+            <ResizablePanelGroup
+              direction="horizontal"
+              onLayout={handlePanelsResize}
+            >
               {isLeftOpen && (
                 <>
                   <ResizablePanel
                     id="left-sidebar"
                     order={1}
-                    defaultSize={isRightOpen ? 25 : 30}
+                    defaultSize={leftSize}
                     minSize={15}
+                    maxSize={50}
                   >
                     <LeftSidebarPanel />
                   </ResizablePanel>
@@ -68,18 +101,7 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
                 </>
               )}
 
-              <ResizablePanel
-                id="main-content"
-                order={2}
-                defaultSize={
-                  isLeftOpen && isRightOpen
-                    ? 50
-                    : isLeftOpen || isRightOpen
-                      ? 70
-                      : 100
-                }
-                minSize={30}
-              >
+              <ResizablePanel id="main-content" order={2} minSize={30} >
                 <div ref={contentRef} className="h-full">
                   {children}
                 </div>
@@ -91,8 +113,9 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
                   <ResizablePanel
                     id="right-sidebar"
                     order={3}
-                    defaultSize={isLeftOpen ? 25 : 30}
+                    defaultSize={rightSize}
                     minSize={15}
+                    maxSize={50}
                   >
                     <RightSidebarPanel />
                   </ResizablePanel>
