@@ -11,7 +11,7 @@ export const LeftIconTools = () => {
   };
 
   return (
-    <div className="">
+    <div className="space-y-3">
       {leftSidebarTools.map((item) => {
         const Icon = item.icon;
         const isActive = activeItem.id === item.id;

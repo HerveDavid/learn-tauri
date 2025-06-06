@@ -11,7 +11,7 @@ export const LeftIconPanels = () => {
   };
 
   return (
-    <div className="">
+    <div className="space-y-3">
       {leftSidebarPanels.map((item) => {
         const Icon = item.icon;
         const isActive = activeItem.id === item.id;

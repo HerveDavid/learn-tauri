@@ -1,4 +1,9 @@
-import { Layers, Folder, Terminal as TerminalIcon } from 'lucide-react';
+import {
+  Layers,
+  Folder,
+  Terminal as TerminalIcon,
+  LogsIcon,
+} from 'lucide-react';
 
 import EquipmentExplorer from '@/features/equipment-explorer';
 import { EventsLog } from '@/features/events-log';
@@ -17,7 +22,7 @@ export const leftSidebarPanels: SidebarItem[] = [
 
 export const leftSidebarTools: SidebarItem[] = [
   { id: 'terminal', icon: TerminalIcon, label: 'Terminal', content: Terminal },
-  { id: 'log', icon: TerminalIcon, label: 'Log', content: EventsLog },
+  { id: 'log', icon: LogsIcon, label: 'Log', content: Terminal },
 ] as const;
 
 export const rightSidebarPanels: SidebarItem[] = [
@@ -27,7 +32,6 @@ export const rightSidebarPanels: SidebarItem[] = [
 export const rightSidebarTools: SidebarItem[] = [
   { id: 'log', icon: TerminalIcon, label: 'Log', content: EventsLog },
 ] as const;
-
 
 export const toolsItems: SidebarItem[] = [
   { id: 'terminal', icon: TerminalIcon, label: 'Terminal', content: Terminal },

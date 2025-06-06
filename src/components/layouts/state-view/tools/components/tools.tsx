@@ -1,59 +1,24 @@
 import { Minus } from 'lucide-react';
-import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { toolsItems } from '@/config/layouts';
-
-import { ToolsPanel } from './tools-panel';
+import { useToolsStore } from '../../stores/tools.store';
 
 export const Tools = () => {
-  const [activePanel, setActivePanel] = useState<string | null>('terminal');
-
-  const handleTabClick = (content: string) => {
-    if (activePanel === content) {
-      setActivePanel(null);
-    } else {
-      setActivePanel(content);
-    }
-  };
+  const { activeItem, closePanel } = useToolsStore();
 
   return (
     <div className="flex flex-col">
-      <div className="flex bg-sidebar border-t justify-between">
-        <div className="flex">
-          {toolsItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activePanel === item.id;
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleTabClick(item.id)}
-                className={`flex items-center gap-2 px-2 text-sm border-r hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors ${
-                  isActive
-                    ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                    : 'text-sidebar-foreground'
-                }`}
-              >
-                <Icon className="w-3 h-3" />
-                {item.label}
-              </button>
-            );
-          })}
+      <div className="flex bg-sidebar border-y justify-between">
+        <div className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground/70 ml-2">
+          {activeItem.id}
         </div>
 
-        {activePanel && (
-          <Button
-            variant="ghost"
-            className="size-1"
-            onClick={() => setActivePanel(null)}
-          >
-            <Minus />
-          </Button>
-        )}
+        <Button variant="ghost" className="size-1" onClick={closePanel}>
+          <Minus />
+        </Button>
       </div>
 
-      <ToolsPanel activePanel={activePanel} />
+      <div className="p-4 h-full">{activeItem.content()}</div>
     </div>
   );
 };
