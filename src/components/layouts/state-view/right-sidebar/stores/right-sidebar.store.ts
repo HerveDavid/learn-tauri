@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
-import { rightSidebarItems } from '@/config/layout';
+import { rightSidebarItems } from '@/config/layouts';
 import { SidebarItem } from '@/types/sidebar-item';
 
 interface RightSidebarStore {

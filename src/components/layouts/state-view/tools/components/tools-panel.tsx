@@ -1,4 +1,4 @@
-import { toolsItems } from '@/config/layout';
+import { toolsItems } from '@/config/layouts';
 
 export const ToolsPanel = ({ activePanel }: { activePanel: string | null }) => {
   if (!activePanel) return null;

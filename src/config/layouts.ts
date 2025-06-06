@@ -17,7 +17,6 @@ export const leftSidebarItems: SidebarItem[] = [
 
 export const rightSidebarItems: SidebarItem[] = [
   { id: 'widgets', icon: Layers, label: 'Widgets', content: Widgets },
-
 ] as const;
 
 export const toolsItems: SidebarItem[] = [

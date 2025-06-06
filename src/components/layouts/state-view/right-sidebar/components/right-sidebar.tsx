@@ -1,4 +1,4 @@
-import { rightSidebarItems } from '@/config/layout';
+import { rightSidebarItems } from '@/config/layouts';
 import { useRightSidebarStore } from '../stores/right-sidebar.store';
 
 export const RightSidebar = () => {
@@ -30,6 +30,9 @@ export const RightSidebar = () => {
               }`}
               title={item.label}
             >
+              {isActive && (
+                <div className="absolute -right-2 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-l"></div>
+              )}
               <Icon className="size-4" />
               <div className="absolute right-full mr-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                 {item.label}

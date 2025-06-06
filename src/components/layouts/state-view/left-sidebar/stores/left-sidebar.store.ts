@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
-import { leftSidebarItems } from '@/config/layout';
+import { leftSidebarItems } from '@/config/layouts';
 import { SidebarItem } from '@/types/sidebar-item';
 
 interface LeftSidebarStore {
