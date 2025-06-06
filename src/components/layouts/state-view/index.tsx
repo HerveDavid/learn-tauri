@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
-
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
-
 import { Footer } from './footer';
 import { Header } from './header';
 import {
@@ -48,56 +46,69 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
   return (
     <div className="h-screen w-screen bg-background text-foreground flex flex-col">
       <Header />
-
       <div className="flex flex-1">
         <LeftSidebar />
-
         <ResizablePanelGroup
           className="flex flex-1 flex-col"
           direction="vertical"
         >
-          <ResizablePanel className="flex justify-between">
+          <ResizablePanel className="flex flex-1">
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel>
-                <LeftSidebarPanel />
+              {isLeftOpen && (
+                <>
+                  <ResizablePanel
+                    id="left-sidebar"
+                    order={1}
+                    defaultSize={isRightOpen ? 25 : 30}
+                    minSize={15}
+                  >
+                    <LeftSidebarPanel />
+                  </ResizablePanel>
+                  <ResizableHandle />
+                </>
+              )}
+
+              <ResizablePanel
+                id="main-content"
+                order={2}
+                defaultSize={
+                  isLeftOpen && isRightOpen
+                    ? 50
+                    : isLeftOpen || isRightOpen
+                      ? 70
+                      : 100
+                }
+                minSize={30}
+              >
+                <div ref={contentRef} className="h-full">
+                  {children}
+                </div>
               </ResizablePanel>
 
-              <ResizableHandle />
-
-              <ResizablePanel>
-                <div>{children}</div>
-              </ResizablePanel>
-              <ResizableHandle />
-              <ResizablePanel>
-                <RightSidebarPanel />
-              </ResizablePanel>
+              {isRightOpen && (
+                <>
+                  <ResizableHandle />
+                  <ResizablePanel
+                    id="right-sidebar"
+                    order={3}
+                    defaultSize={isLeftOpen ? 25 : 30}
+                    minSize={15}
+                  >
+                    <RightSidebarPanel />
+                  </ResizablePanel>
+                </>
+              )}
             </ResizablePanelGroup>
           </ResizablePanel>
 
           <ResizableHandle />
 
-          <ResizablePanel>
+          <ResizablePanel defaultSize={30} minSize={20}>
             <Tools />
           </ResizablePanel>
         </ResizablePanelGroup>
-
-        {/* 
-        <div className="flex flex-1" ref={contentRef}>
-          <ResizablePanelGroup direction="vertical">
-            <ResizablePanel>
-              <div className="flex flex-1">
-                {isLeftOpen && <LeftSidebarPanel />}
-                <div>toto</div>
-                {isRightOpen && <RightSidebarPanel />}
-              </div>
-            </ResizablePanel>
-            
-          </ResizablePanelGroup>
-        </div> */}
-
         <RightSidebar />
       </div>
-
       <Footer />
     </div>
   );
