@@ -1,5 +1,5 @@
-import { rightSidebarItems } from '@/config/layouts';
-import { useRightSidebarStore } from '../stores/right-sidebar.store';
+import { rightSidebarPanels } from '@/config/layouts';
+import { useRightSidebarStore } from '../../stores/right-sidebar.store';
 
 export const RightSidebar = () => {
   const { activeItem, setActiveItem, isOpen, openPanel, closePanel } =
@@ -13,7 +13,7 @@ export const RightSidebar = () => {
   return (
     <div className="flex">
       <div className="w-8 bg-sidebar border-l flex flex-col items-center py-2 space-y-3">
-        {rightSidebarItems.map((item) => {
+        {rightSidebarPanels.map((item) => {
           const Icon = item.icon;
           const isActive = activeItem.id === item.id;
           const handleClick = isOpen

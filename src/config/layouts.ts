@@ -6,7 +6,7 @@ import Terminal from '@/features/terminal';
 import Widgets from '@/features/widgets';
 import { SidebarItem } from '@/types/sidebar-item';
 
-export const leftSidebarItems: SidebarItem[] = [
+export const leftSidebarPanels: SidebarItem[] = [
   {
     id: 'equipment-explorer',
     icon: Folder,
@@ -15,9 +15,19 @@ export const leftSidebarItems: SidebarItem[] = [
   },
 ] as const;
 
-export const rightSidebarItems: SidebarItem[] = [
+export const leftSidebarTools: SidebarItem[] = [
+  { id: 'terminal', icon: TerminalIcon, label: 'Terminal', content: Terminal },
+  { id: 'log', icon: TerminalIcon, label: 'Log', content: EventsLog },
+] as const;
+
+export const rightSidebarPanels: SidebarItem[] = [
   { id: 'widgets', icon: Layers, label: 'Widgets', content: Widgets },
 ] as const;
+
+export const rightSidebarTools: SidebarItem[] = [
+  { id: 'log', icon: TerminalIcon, label: 'Log', content: EventsLog },
+] as const;
+
 
 export const toolsItems: SidebarItem[] = [
   { id: 'terminal', icon: TerminalIcon, label: 'Terminal', content: Terminal },

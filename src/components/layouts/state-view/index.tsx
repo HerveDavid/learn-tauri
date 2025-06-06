@@ -17,6 +17,7 @@ import {
   useRightSidebarStore,
 } from './right-sidebar';
 import { Tools } from './tools';
+import { useToolsStore } from './stores/tools.store';
 
 export const StateView: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -31,8 +32,13 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
     size: rightSize,
     setSize: setRightSize,
   } = useRightSidebarStore();
+  const {
+    isOpen: isToolsOpen,
+    size: toolsSize,
+    setSize: setToolsSize,
+  } = useToolsStore();
 
-  const handlePanelsResize = (sizes: number[]) => {
+  const handleHorizontalPanelsResize = (sizes: number[]) => {
     let leftIndex = -1;
     let rightIndex = -1;
     if (isLeftOpen && isRightOpen) {
@@ -48,6 +54,12 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
     }
     if (rightIndex !== -1 && sizes[rightIndex] !== undefined) {
       setRightSize(sizes[rightIndex]);
+    }
+  };
+
+  const handleVerticalPanelsResize = (sizes: number[]) => {
+    if (isToolsOpen && sizes.length >= 2) {
+      setToolsSize(sizes[1]);
     }
   };
 
@@ -72,11 +84,12 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
         <ResizablePanelGroup
           className="flex flex-1 flex-col"
           direction="vertical"
+          onLayout={handleVerticalPanelsResize}
         >
-          <ResizablePanel className="flex flex-1">
+          <ResizablePanel order={1} className="flex flex-1">
             <ResizablePanelGroup
               direction="horizontal"
-              onLayout={handlePanelsResize}
+              onLayout={handleHorizontalPanelsResize}
             >
               {isLeftOpen && (
                 <>
@@ -114,9 +127,13 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
             </ResizablePanelGroup>
           </ResizablePanel>
           <ResizableHandle />
-          <ResizablePanel defaultSize={30} minSize={20}>
-            <Tools />
-          </ResizablePanel>
+          {isToolsOpen && (
+            <>
+              <ResizablePanel order={2} defaultSize={toolsSize} minSize={20}>
+                <Tools />
+              </ResizablePanel>
+            </>
+          )}
         </ResizablePanelGroup>
         <RightSidebar />
       </div>
