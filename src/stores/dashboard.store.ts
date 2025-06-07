@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { SettingsClient } from '@/services/common/settings-client';
 import { Effect } from 'effect';
 
+const KEY_DASHBOARD_SETTING = 'dashboard-layout';
+
 interface DashboardStore {
   api: DockviewApi | null;
   runtime: LiveManagedRuntime | null;
@@ -18,7 +20,27 @@ interface DashboardStore {
   removePanel: (id: string) => void;
 }
 
-const useDashboardStoreInner = create<DashboardStore>()(
+export const useDashboardStore = (runtime: LiveManagedRuntime) => {
+  const store = dashboardStore();
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!isInitialized) {
+      store.setRuntime(runtime);
+      setIsInitialized(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isInitialized) {
+      store.setRuntime(runtime);
+    }
+  }, [runtime]);
+
+  return store;
+};
+
+const dashboardStore = create<DashboardStore>()(
   devtools(
     subscribeWithSelector((set, get) => ({
       api: null,
@@ -64,7 +86,7 @@ const saveApiToSettings = async (api: DockviewApi, runtime: any) => {
   const setEffect = Effect.gen(function* () {
     const settingsClient = yield* SettingsClient;
     yield* settingsClient.setSetting<SerializedDockview>(
-      'dashboard-api',
+      KEY_DASHBOARD_SETTING,
       api.toJSON(),
     );
   });
@@ -72,7 +94,7 @@ const saveApiToSettings = async (api: DockviewApi, runtime: any) => {
   await runtime.runPromise(setEffect);
 };
 
-useDashboardStoreInner.subscribe(
+dashboardStore.subscribe(
   (state) => ({ api: state.api, runtime: state.runtime }),
   ({ api, runtime }, prev) => {
     if (api && runtime && (!prev.api || prev.api !== api)) {
@@ -94,23 +116,3 @@ useDashboardStoreInner.subscribe(
     equalityFn: (a, b) => a.api === b.api && a.runtime === b.runtime,
   },
 );
-
-export const useDashboardStore = (runtime: LiveManagedRuntime) => {
-  const store = useDashboardStoreInner();
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  useEffect(() => {
-    if (!isInitialized) {
-      store.setRuntime(runtime);
-      setIsInitialized(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isInitialized) {
-      store.setRuntime(runtime);
-    }
-  }, [runtime]);
-
-  return store;
-};
