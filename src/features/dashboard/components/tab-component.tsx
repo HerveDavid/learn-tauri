@@ -1,10 +1,18 @@
 import { IDockviewPanelProps } from 'dockview';
 import { X } from 'lucide-react';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  ContextMenuSeparator,
+} from '@/components/ui/context-menu';
 
 import { Button } from '@/components/ui/button';
 import { useDashboardStore } from '@/stores/dashboard.store';
 
 const Default = (props: IDockviewPanelProps<{ title: string }>) => {
+  
   const { removePanel } = useDashboardStore();
   const handleClose = () => {
     removePanel(props.api.id);
@@ -12,7 +20,19 @@ const Default = (props: IDockviewPanelProps<{ title: string }>) => {
 
   return (
     <div className="flex justify-between items-center space-x-3">
-      <h1>{props.api.title}</h1>
+      <ContextMenu>
+        <ContextMenuTrigger>{props.api.title}</ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuItem onClick={handleClose}>Close</ContextMenuItem>
+          <ContextMenuItem>Close Others</ContextMenuItem>
+          <ContextMenuItem>Close All</ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem>Add in Workspace</ContextMenuItem>
+          <ContextMenuSeparator />
+          <ContextMenuItem>Detach Panel</ContextMenuItem>
+          <ContextMenuItem>Detach Groups</ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
       <Button
         variant="ghost"
         className="size-1 hover:bg-destructive hover:text-destructive-foreground"
