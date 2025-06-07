@@ -6,10 +6,8 @@ import {
   DockviewTheme,
   positionToDirection,
 } from 'dockview';
-
 import 'dockview/dist/styles/dockview.css';
 import './dashboard.css';
-
 import { DashboardComponents } from '@/config/dashboard';
 import { useDashboardStore } from '@/stores/dashboard.store';
 import { DraggedItem } from '../types/dragged-item.type';
@@ -34,7 +32,7 @@ export interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
   const runtime = useRuntime();
-  const { api, setApi, addPanel } = useDashboardStore(runtime);
+  const { api, setApi, addPanel, isLayoutLoaded } = useDashboardStore(runtime);
 
   React.useEffect(() => {
     if (!api) {
@@ -49,15 +47,32 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
   }, [api]);
 
   const onReady = (event: DockviewReadyEvent) => {
+    console.log('Dockview ready, setting API');
     setApi(event.api);
-    defaultPanels?.forEach(({ id }) =>
-      event.api.addPanel({
-        id: id,
-        component: 'sld',
-        tabComponent: 'default',
-        params: { title: id },
-      }),
-    );
+
+    setTimeout(() => {
+      const hasExistingPanels = event.api.panels.length > 0;
+
+      console.log('Checking for existing panels after delay:', {
+        panelsCount: event.api.panels.length,
+        groupsCount: event.api.groups.length,
+        hasExistingPanels,
+      });
+
+      if (!hasExistingPanels && defaultPanels) {
+        console.log('No existing panels found, adding default panels');
+        defaultPanels.forEach(({ id }) =>
+          event.api.addPanel({
+            id: id,
+            component: 'sld',
+            tabComponent: 'default',
+            params: { title: id },
+          }),
+        );
+      } else {
+        console.log('Existing panels found or no default panels specified');
+      }
+    }, 300);
   };
 
   const onDidDrop = (event: DockviewDidDropEvent) => {
@@ -91,6 +106,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
     };
     addPanel(panel);
   };
+
+  if (!isLayoutLoaded) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div>Chargement du layout...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col">

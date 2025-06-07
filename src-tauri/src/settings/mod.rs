@@ -1,3 +1,1 @@
-mod database;
-
-pub use database::state::DatabaseState;
+pub mod database;
