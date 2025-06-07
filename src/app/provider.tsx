@@ -4,6 +4,7 @@ import {
 } from '@tanstack/react-query';
 import { LogLevel } from 'effect';
 import * as Duration from 'effect/Duration';
+
 // Effect imports
 import * as Layer from 'effect/Layer';
 import * as Logger from 'effect/Logger';
@@ -11,10 +12,11 @@ import * as ManagedRuntime from 'effect/ManagedRuntime';
 import React from 'react';
 
 // Project layers
+import { RuntimeProvider } from '@/services/runtime/runtime-provider';
+import { LiveManagedRuntime } from '@/services/live-layer';
 import { ChannelClient } from '@/services/common/channel-client';
 import { QueryClient } from '@/services/common/query-client';
-import { LiveManagedRuntime } from '@/services/live-layer';
-import { RuntimeProvider } from '@/services/runtime/runtime-provider';
+import { SettingsClient } from '@/services/common/settings-client';
 
 const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -43,6 +45,7 @@ const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
         Layer.mergeAll(
           QueryClient.make(queryClient),
           ChannelClient.Default,
+          SettingsClient.Default,
           Logger.minimumLogLevel(LogLevel.Debug),
         ).pipe(Layer.provide(Logger.pretty)),
       ),

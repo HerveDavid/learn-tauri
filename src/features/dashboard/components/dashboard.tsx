@@ -18,6 +18,7 @@ import { LeftHeaderActions } from './left-header-actions';
 import { RightHeaderActions } from './right-header-actions';
 import { TabComponent } from './tab-component';
 import { Watermark } from './watermark';
+import { useRuntime } from '@/services/runtime/use-runtime';
 
 const customTailwindTheme: DockviewTheme = {
   name: 'tailwind-custom',
@@ -32,7 +33,8 @@ export interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
-  const { api, setApi, addPanel } = useDashboardStore();
+  const runtime = useRuntime();
+  const { api, setApi, addPanel } = useDashboardStore(runtime);
 
   React.useEffect(() => {
     if (!api) {

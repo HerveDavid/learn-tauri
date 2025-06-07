@@ -5,7 +5,7 @@ import {
   ChannelNotFoundError,
   HandlerAlreadyExistsError,
   RegistrationError,
-} from './error';
+} from './errors';
 
 export interface ChannelStatus {
   id: string;
