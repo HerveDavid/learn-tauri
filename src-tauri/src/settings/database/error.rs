@@ -11,6 +11,15 @@ pub enum Error {
 
     #[error("Migration error: {0}")]
     Migration(#[from] sqlx::migrate::MigrateError),
+
+    #[error("JSON serialization error: {0}")]
+    JsonSerialization(#[from] serde_json::Error),
+
+    #[error("Setting not found: {0}")]
+    SettingNotFound(String),
+    
+    #[error("Invalid JSON path: {0}")]
+    InvalidPath(String),
 }
 
 impl Serialize for Error {
