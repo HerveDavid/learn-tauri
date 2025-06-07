@@ -1,13 +1,15 @@
 import React from 'react';
 
 import { useDashboardStore } from '@/stores/dashboard.store';
+import { useRuntime } from '@/services/runtime/use-runtime';
 
 interface DraggableItemProps {
   item: { name: string };
 }
 
 const DraggableItem: React.FC<DraggableItemProps> = ({ item }) => {
-  const { addPanel } = useDashboardStore();
+  const runtime = useRuntime()
+  const { addPanel } = useDashboardStore(runtime);
 
   const handleDragStart = (e: React.DragEvent<HTMLSpanElement>) => {
     e.dataTransfer.effectAllowed = 'move';
