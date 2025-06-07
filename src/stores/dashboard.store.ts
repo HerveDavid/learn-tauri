@@ -288,6 +288,10 @@ dashboardStore.subscribe(
           console.log('Panel moved, saving layout');
           saveApiToSettings(api, runtime);
         }),
+        api.onDidLayoutChange(() => {
+          console.log('Layout changed, saving layout');
+          saveApiToSettings(api, runtime);
+        })
       ];
       
       return () => {
