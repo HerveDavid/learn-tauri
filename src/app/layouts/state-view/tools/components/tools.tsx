@@ -2,7 +2,7 @@ import { Minus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { useToolsStore } from '../../stores/tools.store';
+import { useToolsStore } from '../../stores/state-view.store';
 
 export const Tools = () => {
   const { activeItem, closePanel } = useToolsStore();

@@ -11,14 +11,12 @@ import { Header } from './header';
 import {
   LeftSidebar,
   LeftSidebarPanel,
-  useLeftSidebarStore,
 } from './left-sidebar';
 import {
   RightSidebar,
   RightSidebarPanel,
-  useRightSidebarStore,
 } from './right-sidebar';
-import { useToolsStore } from './stores/tools.store';
+import { useToolsStore, useLeftSidebarStore, useRightSidebarStore } from './stores/state-view.store';
 import { Tools } from './tools';
 
 export const StateView: React.FC<{ children: React.ReactNode }> = ({

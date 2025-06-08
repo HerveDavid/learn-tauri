@@ -1,6 +1,6 @@
 import { rightSidebarPanels } from '@/config/layouts';
 
-import { useRightSidebarStore } from '../../stores/right-sidebar.store';
+import { useRightSidebarStore } from '../../stores/state-view.store';
 
 export const RightSidebar = () => {
   const { activeItem, setActiveItem, isOpen, openPanel, closePanel } =

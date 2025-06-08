@@ -2,7 +2,7 @@ import { Minus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
-import { useLeftSidebarStore } from '../../stores/left-sidebar.store';
+import { useLeftSidebarStore } from '../../stores/state-view.store';
 
 export const LeftSidebarPanel = () => {
   const { activeItem, closePanel } = useLeftSidebarStore();

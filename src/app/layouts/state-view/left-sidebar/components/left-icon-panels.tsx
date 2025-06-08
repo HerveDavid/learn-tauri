@@ -1,6 +1,6 @@
 import { leftSidebarPanels } from '@/config/layouts';
 
-import { useLeftSidebarStore } from '../../stores/left-sidebar.store';
+import { useLeftSidebarStore } from '../../stores/state-view.store';
 
 export const LeftIconPanels = () => {
   const { activeItem, setActiveItem, isOpen, openPanel, closePanel } =
