@@ -1,7 +1,4 @@
 import { IDockviewPanelProps } from 'dockview';
-import { X } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
 import {
   ContextMenu,
   ContextMenuContent,

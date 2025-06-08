@@ -1,5 +1,5 @@
 :root {
-  --dv-background-color: var(--background);
+ --dv-background-color: var(--background);
   --dv-paneview-active-outline-color: var(--primary);
   --dv-tabs-and-actions-container-font-size: 13px;
   --dv-tabs-and-actions-container-height: 24px;
@@ -13,8 +13,8 @@
   --dv-group-view-background-color: var(--card);
   --dv-tabs-and-actions-container-background-color: var(--background);
   --dv-activegroup-visiblepanel-tab-background-color: var(--card);
-  --dv-activegroup-hiddenpanel-tab-background-color: var(--background);
-  --dv-inactivegroup-visiblepanel-tab-background-color: var(--card);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--muted);
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--background);
   --dv-inactivegroup-hiddenpanel-tab-background-color: color-mix(
     in hsl,
     var(--muted) 80%,
@@ -38,7 +38,7 @@
 }
 
 .dark {
-   --dv-background-color: var(--background);
+  --dv-background-color: var(--background);
   --dv-paneview-active-outline-color: var(--primary);
   --dv-tabs-and-actions-container-font-size: 13px;
   --dv-tabs-and-actions-container-height: 24px;
@@ -52,8 +52,8 @@
   --dv-group-view-background-color: var(--card);
   --dv-tabs-and-actions-container-background-color: var(--background);
   --dv-activegroup-visiblepanel-tab-background-color: var(--card);
-  --dv-activegroup-hiddenpanel-tab-background-color: var(--background);
-  --dv-inactivegroup-visiblepanel-tab-background-color: var(--muted);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--muted);
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--background);
   --dv-inactivegroup-hiddenpanel-tab-background-color: color-mix(
     in hsl,
     var(--muted) 80%,
