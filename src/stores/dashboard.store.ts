@@ -1,11 +1,12 @@
+import * as Effect from 'effect/Effect';
 import { create } from 'zustand';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { AddPanelOptions, DockviewApi, SerializedDockview } from 'dockview';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
+
 import { paths } from '@/config/paths';
 import { LiveManagedRuntime } from '@/services/live-layer';
 import { SettingsClient } from '@/services/common/settings-client';
-import { Effect } from 'effect';
 
 const KEY_DASHBOARD_SETTING = 'dashboard-layout';
 
@@ -28,7 +29,6 @@ export const useDashboardStore = create<DashboardStore>()(
       setApi: (api) => {
         set({ api });
         
-        // Charger le layout au démarrage
         const { runtime } = get();
         if (runtime) {
           loadLayout(api, runtime);
@@ -38,7 +38,6 @@ export const useDashboardStore = create<DashboardStore>()(
       setRuntime: (runtime) => {
         set({ runtime });
         
-        // Si l'API est déjà disponible, charger le layout
         const { api } = get();
         if (api) {
           loadLayout(api, runtime);
@@ -76,7 +75,6 @@ export const useDashboardStore = create<DashboardStore>()(
   )
 );
 
-// Fonction pour charger le layout
 const loadLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
   try {
     const loadEffect = Effect.gen(function* () {
@@ -95,7 +93,6 @@ const loadLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
   }
 };
 
-// Fonction pour sauvegarder le layout
 const saveLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
   try {
     const setEffect = Effect.gen(function* () {
@@ -112,7 +109,6 @@ const saveLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
   }
 };
 
-// Auto-sauvegarde sur les changements
 useDashboardStore.subscribe(
   (state) => ({ api: state.api, runtime: state.runtime }),
   ({ api, runtime }, prev) => {

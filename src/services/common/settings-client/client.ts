@@ -1,6 +1,6 @@
 import * as Effect from 'effect/Effect';
-import { SettingsService } from './types';
 import { invoke } from '@tauri-apps/api/core';
+import { SettingsService } from './types';
 import {
   SettingNotFoundError,
   SettingUpdateError,
@@ -44,7 +44,7 @@ export class SettingsClient extends Effect.Service<SettingsClient>()(
           Effect.gen(function* () {
             return yield* Effect.tryPromise({
               try: () =>
-                invoke<T>('get_setting_with_default', { key, defaultValue }),
+                invoke<T>('get_setting_with_default', { key, default_value: defaultValue }),
               catch: (error) =>
                 new SettingNotFoundError({ key, cause: String(error) }),
             });
