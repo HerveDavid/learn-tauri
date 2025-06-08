@@ -1,5 +1,5 @@
 :root {
- --dv-background-color: var(--background);
+  --dv-background-color: var(--background);
   --dv-paneview-active-outline-color: var(--primary);
   --dv-tabs-and-actions-container-font-size: 13px;
   --dv-tabs-and-actions-container-height: 24px;

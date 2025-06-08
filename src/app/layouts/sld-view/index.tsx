@@ -16,7 +16,7 @@ export interface SldViewProps {
 export const SldView: React.FC<SldViewProps> = ({ id }) => {
   return (
     <div className="flex flex-col h-full">
-      <header className="shadow">
+      <header className="shadow-sm">
         <Breadcrumb className="mx-2 text-sm">
           <BreadcrumbList>
             <BreadcrumbItem>
