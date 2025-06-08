@@ -1,4 +1,5 @@
 import Clock from '@/features/clock';
+
 export const Footer = () => {
   return (
     <div className="w-full p-1 h-5 border-t flex items-center shrink-0">

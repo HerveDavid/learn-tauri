@@ -1,6 +1,8 @@
 import * as Data from 'effect/Data';
 
-export class SettingNotFoundError extends Data.TaggedError('SettingNotFoundError')<{
+export class SettingNotFoundError extends Data.TaggedError(
+  'SettingNotFoundError',
+)<{
   readonly key: string;
   readonly cause?: string;
 }> {
@@ -9,7 +11,9 @@ export class SettingNotFoundError extends Data.TaggedError('SettingNotFoundError
   }
 }
 
-export class SettingAlreadyExistsError extends Data.TaggedError('SettingAlreadyExistsError')<{
+export class SettingAlreadyExistsError extends Data.TaggedError(
+  'SettingAlreadyExistsError',
+)<{
   readonly key: string;
 }> {
   get message() {
@@ -35,7 +39,9 @@ export class SettingDeleteError extends Data.TaggedError('SettingDeleteError')<{
   }
 }
 
-export class SettingsInitializationError extends Data.TaggedError('SettingsInitializationError')<{
+export class SettingsInitializationError extends Data.TaggedError(
+  'SettingsInitializationError',
+)<{
   readonly cause: string;
 }> {
   get message() {
@@ -43,7 +49,9 @@ export class SettingsInitializationError extends Data.TaggedError('SettingsIniti
   }
 }
 
-export class SettingValidationError extends Data.TaggedError('SettingValidationError')<{
+export class SettingValidationError extends Data.TaggedError(
+  'SettingValidationError',
+)<{
   readonly key: string;
   readonly cause: string;
 }> {

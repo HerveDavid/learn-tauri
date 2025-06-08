@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import moment from 'moment';
+import { useState, useEffect } from 'react';
 
 const Clock = () => {
   const [time, setTime] = useState(moment());

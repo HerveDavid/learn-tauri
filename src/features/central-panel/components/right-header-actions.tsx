@@ -1,6 +1,6 @@
-import React from 'react';
 import { IDockviewHeaderActionsProps } from 'dockview';
-import { Expand, Maximize, Minimize, ScreenShare, Shrink } from 'lucide-react';
+import { Maximize, Minimize, ScreenShare } from 'lucide-react';
+import React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useDashboardStore } from '@/stores/dashboard.store';

@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   DockviewDidDropEvent,
   DockviewReact,
@@ -6,17 +5,21 @@ import {
   DockviewTheme,
   positionToDirection,
 } from 'dockview';
+import React from 'react';
+
 import 'dockview/dist/styles/dockview.css';
-import './dashboard.css';
-import { DashboardComponents } from '@/config/dashboard';
+import './central-panel.css';
+import { ComponentLayouts } from '@/config/central-panel';
+import { useRuntime } from '@/services/runtime/use-runtime';
 import { useDashboardStore } from '@/stores/dashboard.store';
+
 import { DraggedItem } from '../types/dragged-item.type';
 import { isDraggedItem } from '../utils';
+
 import { LeftHeaderActions } from './left-header-actions';
 import { RightHeaderActions } from './right-header-actions';
 import { TabComponent } from './tab-component';
 import { Watermark } from './watermark';
-import { useRuntime } from '@/services/runtime/use-runtime';
 
 const customTailwindTheme: DockviewTheme = {
   name: 'tailwind-custom',
@@ -26,11 +29,13 @@ const customTailwindTheme: DockviewTheme = {
   dndPanelOverlay: 'group',
 };
 
-export interface DashboardProps {
+export interface CentralPanelProps {
   defaultPanels?: [{ id: string }];
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
+export const CentralPanel: React.FC<CentralPanelProps> = ({
+  defaultPanels,
+}) => {
   const runtime = useRuntime();
   const { api, setApi, setRuntime, addPanel } = useDashboardStore();
 
@@ -53,19 +58,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
   }, [api]);
 
   const onReady = (event: DockviewReadyEvent) => {
-    console.log('Dockview ready, setting API');
     setApi(event.api);
 
     setTimeout(() => {
       const hasExistingPanels = event.api.panels.length > 0;
-      console.log('Checking for existing panels after delay:', {
-        panelsCount: event.api.panels.length,
-        groupsCount: event.api.groups.length,
-        hasExistingPanels,
-      });
-
       if (!hasExistingPanels && defaultPanels) {
-        console.log('No existing panels found, adding default panels');
         defaultPanels.forEach(({ id }) =>
           event.api.addPanel({
             id: id,
@@ -74,8 +71,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
             params: { title: id },
           }),
         );
-      } else {
-        console.log('Existing panels found or no default panels specified');
       }
     }, 300);
   };
@@ -84,7 +79,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
     const dragData =
       event.nativeEvent?.dataTransfer?.getData('application/json');
     if (!dragData) {
-      console.warn('No drag data found');
       return;
     }
 
@@ -119,7 +113,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
     <div className="h-full flex flex-col">
       <DockviewReact
         watermarkComponent={Watermark}
-        components={DashboardComponents}
+        components={ComponentLayouts}
         onReady={onReady}
         tabComponents={TabComponent}
         theme={customTailwindTheme}

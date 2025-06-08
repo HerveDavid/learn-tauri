@@ -1,10 +1,10 @@
-import { StateView } from '@/components/layouts/state-view';
-import { Dashboard } from '@/features/dashboard';
+import { StateView } from '@/app/layouts/state-view';
+import { CentralPanel } from '@/features/central-panel';
 
 const App = () => {
   return (
     <StateView>
-      <Dashboard />
+      <CentralPanel />
     </StateView>
   );
 };

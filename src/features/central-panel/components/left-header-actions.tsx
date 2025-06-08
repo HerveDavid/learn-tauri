@@ -1,5 +1,6 @@
 import { IDockviewHeaderActionsProps } from 'dockview';
 import { EllipsisVertical } from 'lucide-react';
+
 import {
   DropdownMenu,
   DropdownMenuContent,

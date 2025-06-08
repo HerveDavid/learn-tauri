@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
+
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
+
 import { Footer } from './footer';
 import { Header } from './header';
 import {
@@ -16,8 +18,8 @@ import {
   RightSidebarPanel,
   useRightSidebarStore,
 } from './right-sidebar';
-import { Tools } from './tools';
 import { useToolsStore } from './stores/tools.store';
+import { Tools } from './tools';
 
 export const StateView: React.FC<{ children: React.ReactNode }> = ({
   children,

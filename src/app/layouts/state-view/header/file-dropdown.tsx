@@ -20,10 +20,10 @@ const FileDropdown = () => {
         <DropdownMenuLabel>Project</DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link to={""}>Home</Link>
+            <Link to={''}>Home</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to={""}>Settings</Link>
+            <Link to={''}>Settings</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuLabel>Help</DropdownMenuLabel>

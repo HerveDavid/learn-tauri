@@ -1,4 +1,5 @@
 import { rightSidebarPanels } from '@/config/layouts';
+
 import { useRightSidebarStore } from '../../stores/right-sidebar.store';
 
 export const RightSidebar = () => {

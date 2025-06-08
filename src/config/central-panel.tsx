@@ -2,7 +2,7 @@ import { IDockviewPanelProps } from 'dockview';
 
 import { Sld } from '@/features/single-line-diagram';
 
-export const DashboardComponents = {
+export const ComponentLayouts = {
   default: ({ params: { title } }: IDockviewPanelProps<{ title: string }>) => {
     return <>Default {title}</>;
   },

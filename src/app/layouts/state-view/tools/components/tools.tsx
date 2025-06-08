@@ -1,6 +1,7 @@
 import { Minus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+
 import { useToolsStore } from '../../stores/tools.store';
 
 export const Tools = () => {

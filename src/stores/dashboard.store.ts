@@ -1,12 +1,12 @@
-import * as Effect from 'effect/Effect';
-import { create } from 'zustand';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { AddPanelOptions, DockviewApi, SerializedDockview } from 'dockview';
+import * as Effect from 'effect/Effect';
+import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
 import { paths } from '@/config/paths';
-import { LiveManagedRuntime } from '@/services/live-layer';
 import { SettingsClient } from '@/services/common/settings-client';
+import { LiveManagedRuntime } from '@/services/live-layer';
 
 const KEY_DASHBOARD_SETTING = 'dashboard-layout';
 
@@ -28,7 +28,7 @@ export const useDashboardStore = create<DashboardStore>()(
 
       setApi: (api) => {
         set({ api });
-        
+
         const { runtime } = get();
         if (runtime) {
           loadLayout(api, runtime);
@@ -37,7 +37,7 @@ export const useDashboardStore = create<DashboardStore>()(
 
       setRuntime: (runtime) => {
         set({ runtime });
-        
+
         const { api } = get();
         if (api) {
           loadLayout(api, runtime);
@@ -71,25 +71,26 @@ export const useDashboardStore = create<DashboardStore>()(
         });
       },
     })),
-    { name: 'dashboard-store' }
-  )
+    { name: 'dashboard-store' },
+  ),
 );
 
 const loadLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
   try {
     const loadEffect = Effect.gen(function* () {
       const settingsClient = yield* SettingsClient;
-      return yield* settingsClient.getSetting<SerializedDockview>(KEY_DASHBOARD_SETTING);
+      return yield* settingsClient.getSetting<SerializedDockview>(
+        KEY_DASHBOARD_SETTING,
+      );
     });
 
     const layout = await runtime.runPromise(loadEffect);
-    
+
     if (layout && Object.keys(layout).length > 0) {
       api.fromJSON(layout);
-      console.log('Layout chargé');
     }
-  } catch (error) {
-    console.info('Aucun layout sauvegardé trouvé');
+  } catch (_) {
+    return;
   }
 };
 
@@ -99,7 +100,7 @@ const saveLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
       const settingsClient = yield* SettingsClient;
       yield* settingsClient.setSetting<SerializedDockview>(
         KEY_DASHBOARD_SETTING,
-        api.toJSON()
+        api.toJSON(),
       );
     });
     await runtime.runPromise(setEffect);
@@ -117,9 +118,9 @@ useDashboardStore.subscribe(
         api.onDidAddPanel(() => saveLayout(api, runtime)),
         api.onDidRemovePanel(() => saveLayout(api, runtime)),
         api.onDidMovePanel(() => saveLayout(api, runtime)),
-        api.onDidLayoutChange(() => saveLayout(api, runtime))
+        api.onDidLayoutChange(() => saveLayout(api, runtime)),
       ];
-      
+
       return () => {
         disposables.forEach((disposable) => disposable.dispose());
       };
@@ -128,5 +129,5 @@ useDashboardStore.subscribe(
   {
     fireImmediately: false,
     equalityFn: (a, b) => a.api === b.api && a.runtime === b.runtime,
-  }
+  },
 );

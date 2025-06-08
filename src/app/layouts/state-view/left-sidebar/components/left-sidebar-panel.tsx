@@ -1,6 +1,7 @@
 import { Minus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+
 import { useLeftSidebarStore } from '../../stores/left-sidebar.store';
 
 export const LeftSidebarPanel = () => {

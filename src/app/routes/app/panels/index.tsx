@@ -1,5 +1,6 @@
-import { Dashboard } from '@/features/dashboard';
 import { useParams } from 'react-router';
+
+import { Dashboard } from '@/features/central-panel';
 
 const Panels = () => {
   const { id } = useParams();

@@ -1,9 +1,10 @@
-import { leftSidebarTools } from '@/config/layouts';
-import { useToolsStore } from '../../stores/tools.store';
+import { leftSidebarPanels } from '@/config/layouts';
 
-export const LeftIconTools = () => {
+import { useLeftSidebarStore } from '../../stores/left-sidebar.store';
+
+export const LeftIconPanels = () => {
   const { activeItem, setActiveItem, isOpen, openPanel, closePanel } =
-    useToolsStore();
+    useLeftSidebarStore();
 
   const handleIconPanelClick = (itemId: string) => {
     setActiveItem(itemId);
@@ -12,7 +13,7 @@ export const LeftIconTools = () => {
 
   return (
     <div className="space-y-3">
-      {leftSidebarTools.map((item) => {
+      {leftSidebarPanels.map((item) => {
         const Icon = item.icon;
         const isActive = activeItem.id === item.id;
         const handleClick = isOpen

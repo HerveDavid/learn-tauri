@@ -1,5 +1,7 @@
 import { IDockviewPanelProps } from 'dockview';
 import { X } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import {
   ContextMenu,
   ContextMenuContent,
@@ -7,12 +9,9 @@ import {
   ContextMenuTrigger,
   ContextMenuSeparator,
 } from '@/components/ui/context-menu';
-
-import { Button } from '@/components/ui/button';
 import { useDashboardStore } from '@/stores/dashboard.store';
 
 const Default = (props: IDockviewPanelProps<{ title: string }>) => {
-  
   const { removePanel } = useDashboardStore();
   const handleClose = () => {
     removePanel(props.api.id);
@@ -27,7 +26,7 @@ const Default = (props: IDockviewPanelProps<{ title: string }>) => {
           <ContextMenuItem>Close Others</ContextMenuItem>
           <ContextMenuItem>Close All</ContextMenuItem>
           <ContextMenuSeparator />
-          <ContextMenuItem>Add in Workspace</ContextMenuItem>
+          <ContextMenuItem>Add in Favorites</ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem>Detach Panel</ContextMenuItem>
           <ContextMenuItem>Detach Groups</ContextMenuItem>
