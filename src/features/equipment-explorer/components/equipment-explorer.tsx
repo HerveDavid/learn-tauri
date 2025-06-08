@@ -20,7 +20,7 @@ const fileStructure: FileItem[] = [
 export const EquipmentExplorer = () => {
   return (
     <div className="h-full text-card-foreground">
-      <div className="space-y-1 flex flex-col ">
+      <div className="flex flex-col ">
         {fileStructure.map((item, index) => (
           <DraggableItem key={`${item.name}-${index}`} item={item} />
         ))}

@@ -9,7 +9,7 @@ export const RightSidebarPanel = () => {
 
   return (
     <div className="h-full bg-sidebar border-l overflow-auto">
-      <div className="flex items-center justify-between border-b py-1 px-2 bg-background">
+      <div className="flex items-center justify-between border-b py-1 px-2 bg-background shadow">
         <h3 className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground">
           {activeItem.label}
         </h3>

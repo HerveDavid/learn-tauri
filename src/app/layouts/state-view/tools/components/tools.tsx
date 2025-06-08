@@ -9,7 +9,7 @@ export const Tools = () => {
 
   return (
     <div className="flex flex-col bg-sidebar h-full">
-      <div className="flex bg-background border-y justify-between">
+      <div className="flex bg-background border-y justify-between shadow">
         <div className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground ml-2">
           {activeItem.id}
         </div>
