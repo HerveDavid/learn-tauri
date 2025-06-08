@@ -3,10 +3,10 @@ import { Maximize, Minimize, ScreenShare } from 'lucide-react';
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
-import { useDashboardStore } from '@/stores/dashboard.store';
+import { useCentralPanelStore } from '@/stores/central-panel.store';
 
 export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
-  const { detachPanel } = useDashboardStore();
+  const { detachPanel } = useCentralPanelStore();
 
   const [maximized, setMaximized] = React.useState<boolean>(
     props.api.isMaximized(),

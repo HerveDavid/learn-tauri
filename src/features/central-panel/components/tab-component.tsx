@@ -9,10 +9,10 @@ import {
   ContextMenuTrigger,
   ContextMenuSeparator,
 } from '@/components/ui/context-menu';
-import { useDashboardStore } from '@/stores/dashboard.store';
+import { useCentralPanelStore } from '@/stores/central-panel.store';
 
 const Default = (props: IDockviewPanelProps<{ title: string }>) => {
-  const { removePanel } = useDashboardStore();
+  const { removePanel } = useCentralPanelStore();
   const handleClose = () => {
     removePanel(props.api.id);
   };

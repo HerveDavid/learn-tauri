@@ -11,7 +11,7 @@ import 'dockview/dist/styles/dockview.css';
 import './central-panel.css';
 import { ComponentLayouts } from '@/config/central-panel';
 import { useRuntime } from '@/services/runtime/use-runtime';
-import { useDashboardStore } from '@/stores/dashboard.store';
+import { useCentralPanelStore } from '@/stores/central-panel.store';
 
 import { DraggedItem } from '../types/dragged-item.type';
 import { isDraggedItem } from '../utils';
@@ -37,7 +37,7 @@ export const CentralPanel: React.FC<CentralPanelProps> = ({
   defaultPanels,
 }) => {
   const runtime = useRuntime();
-  const { api, setApi, setRuntime, addPanel } = useDashboardStore();
+  const { api, setApi, setRuntime, addPanel } = useCentralPanelStore();
 
   React.useEffect(() => {
     if (runtime) {

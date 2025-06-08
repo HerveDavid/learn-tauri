@@ -8,9 +8,9 @@ import { paths } from '@/config/paths';
 import { SettingsClient } from '@/services/common/settings-client';
 import { LiveManagedRuntime } from '@/services/live-layer';
 
-const KEY_DASHBOARD_SETTING = 'dashboard-layout';
+const KEY_CENTRAL_PANEL_SETTING = 'central-panel-layout';
 
-interface DashboardStore {
+interface CentralPanelStore {
   api: DockviewApi | null;
   runtime: LiveManagedRuntime | null;
   setApi: (api: DockviewApi) => void;
@@ -20,7 +20,7 @@ interface DashboardStore {
   removePanel: (id: string) => void;
 }
 
-export const useDashboardStore = create<DashboardStore>()(
+export const useCentralPanelStore = create<CentralPanelStore>()(
   devtools(
     subscribeWithSelector((set, get) => ({
       api: null,
@@ -80,7 +80,7 @@ const loadLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
     const loadEffect = Effect.gen(function* () {
       const settingsClient = yield* SettingsClient;
       return yield* settingsClient.getSetting<SerializedDockview>(
-        KEY_DASHBOARD_SETTING,
+        KEY_CENTRAL_PANEL_SETTING,
       );
     });
 
@@ -99,7 +99,7 @@ const saveLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
     const setEffect = Effect.gen(function* () {
       const settingsClient = yield* SettingsClient;
       yield* settingsClient.setSetting<SerializedDockview>(
-        KEY_DASHBOARD_SETTING,
+        KEY_CENTRAL_PANEL_SETTING,
         api.toJSON(),
       );
     });
@@ -110,7 +110,7 @@ const saveLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
   }
 };
 
-useDashboardStore.subscribe(
+useCentralPanelStore.subscribe(
   (state) => ({ api: state.api, runtime: state.runtime }),
   ({ api, runtime }, prev) => {
     if (api && runtime && (!prev.api || prev.api !== api)) {

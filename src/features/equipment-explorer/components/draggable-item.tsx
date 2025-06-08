@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { useDashboardStore } from '@/stores/dashboard.store';
+import { useCentralPanelStore } from '@/stores/central-panel.store';
 
 interface DraggableItemProps {
   item: { name: string };
 }
 
 const DraggableItem: React.FC<DraggableItemProps> = ({ item }) => {
-  const { addPanel } = useDashboardStore();
+  const { addPanel } = useCentralPanelStore();
 
   const handleDragStart = (e: React.DragEvent<HTMLSpanElement>) => {
     e.dataTransfer.effectAllowed = 'move';
