@@ -15,7 +15,7 @@ export interface SingleLineDiagram {
 
 export const Sld: React.FC<SingleLineDiagram> = ({ id }) => {
   return (
-    <div className="h-full p-2">
+    <div className="h-full">
       <Card className="h-full flex flex-col border-muted">
         <CardHeader>
           <CardTitle>

@@ -3,6 +3,8 @@ import {
   Folder,
   Terminal as TerminalIcon,
   LogsIcon,
+  ChartAreaIcon,
+  CircleGaugeIcon,
 } from 'lucide-react';
 
 import EquipmentExplorer from '@/features/equipment-explorer';
@@ -37,3 +39,18 @@ export const toolsItems: SidebarItem[] = [
   { id: 'terminal', icon: TerminalIcon, label: 'Terminal', content: Terminal },
   { id: 'log', icon: TerminalIcon, label: 'Log', content: EventsLog },
 ] as const;
+
+export const rightSidebarSlds: SidebarItem[] = [
+  {
+    id: 'charts',
+    icon: ChartAreaIcon,
+    label: 'Charts',
+    content: Terminal,
+  },
+  {
+    id: 'charts2',
+    icon: CircleGaugeIcon,
+    label: 'Charts2',
+    content: Terminal,
+  },
+];
