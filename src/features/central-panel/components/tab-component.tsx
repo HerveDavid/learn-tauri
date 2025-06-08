@@ -18,7 +18,7 @@ const Default = (props: IDockviewPanelProps<{ title: string }>) => {
   };
 
   return (
-    <div className="flex justify-between items-center space-x-3 h-[calc(100%+1px)] sh">
+    <div className="flex justify-between items-center mx-2 h-[calc(100%+1px)]">
       <ContextMenu>
         <ContextMenuTrigger>{props.api.title}</ContextMenuTrigger>
         <ContextMenuContent>
@@ -32,13 +32,6 @@ const Default = (props: IDockviewPanelProps<{ title: string }>) => {
           <ContextMenuItem>Detach Groups</ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>
-      <Button
-        variant="ghost"
-        className="size-1 hover:bg-destructive hover:text-destructive-foreground"
-        onClick={handleClose}
-      >
-        <X />
-      </Button>
     </div>
   );
 };
