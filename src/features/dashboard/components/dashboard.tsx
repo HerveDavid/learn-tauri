@@ -32,7 +32,13 @@ export interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
   const runtime = useRuntime();
-  const { api, setApi, addPanel, isLayoutLoaded } = useDashboardStore(runtime);
+  const { api, setApi, setRuntime, addPanel } = useDashboardStore();
+
+  React.useEffect(() => {
+    if (runtime) {
+      setRuntime(runtime);
+    }
+  }, [runtime, setRuntime]);
 
   React.useEffect(() => {
     if (!api) {
@@ -52,7 +58,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
 
     setTimeout(() => {
       const hasExistingPanels = event.api.panels.length > 0;
-
       console.log('Checking for existing panels after delay:', {
         panelsCount: event.api.panels.length,
         groupsCount: event.api.groups.length,
@@ -82,6 +87,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
       console.warn('No drag data found');
       return;
     }
+
     let parsedData: DraggedItem;
     try {
       parsedData = JSON.parse(dragData);
@@ -89,10 +95,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
       console.error('Error parsing drag data:', error);
       return;
     }
+
     if (!isDraggedItem(parsedData)) {
       console.warn('Invalid drag data structure:', parsedData);
       return;
     }
+
     const title = parsedData.name;
     const panel = {
       id: title,
@@ -106,14 +114,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ defaultPanels }) => {
     };
     addPanel(panel);
   };
-
-  if (!isLayoutLoaded) {
-    return (
-      <div className="h-full flex items-center justify-center">
-        <div>Chargement du layout...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="h-full flex flex-col">
