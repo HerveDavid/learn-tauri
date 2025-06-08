@@ -11,19 +11,7 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --ext ts,tsx --fix",
     "test": "vitest run --reporter verbose",
-    "test:watch": "vitest watch",
-    "test:coverage": "vitest run --reporter verbose --coverage",
-    "test:coverage:html": "vitest run --reporter verbose --coverage --reporter html",
-    "test:coverage:lcov": "vitest run --reporter verbose --coverage --reporter lcov",
-    "test:coverage:json": "vitest run --reporter verbose --coverage --reporter json",
-    "test:coverage:json-summary": "vitest run --reporter verbose --coverage --reporter json-summary",
-    "test:coverage:lcovonly": "vitest run --reporter verbose --coverage --reporter lcovonly",
-    "test:coverage:clover": "vitest run --reporter verbose --coverage --reporter clover",
-    "test:coverage:teamcity": "vitest run --reporter verbose --coverage --reporter teamcity",
-    "test:coverage:cobertura": "vitest run --reporter verbose --coverage --reporter cobertura",
-    "test:coverage:html:open": "vitest run --reporter verbose --coverage --reporter html && open coverage/html/index.html",
-    "test:coverage:lcov:open": "vitest run --reporter verbose --coverage --reporter lcov && open coverage/lcov-report/index.html",
-    "test:coverage:json:open": "vitest run --reporter verbose --coverage --reporter json && open coverage/coverage.json"
+    "test:watch": "vitest watch"
   },
   "dependencies": {
     "@effect/platform": "^0.82.8",

@@ -29,13 +29,7 @@ const customTailwindTheme: DockviewTheme = {
   dndPanelOverlay: 'group',
 };
 
-export interface CentralPanelProps {
-  defaultPanels?: [{ id: string }];
-}
-
-export const CentralPanel: React.FC<CentralPanelProps> = ({
-  defaultPanels,
-}) => {
+export const CentralPanel = () => {
   const runtime = useRuntime();
   const { api, setApi, setRuntime, addPanel } = useCentralPanelStore();
 
@@ -59,20 +53,6 @@ export const CentralPanel: React.FC<CentralPanelProps> = ({
 
   const onReady = (event: DockviewReadyEvent) => {
     setApi(event.api);
-
-    setTimeout(() => {
-      const hasExistingPanels = event.api.panels.length > 0;
-      if (!hasExistingPanels && defaultPanels) {
-        defaultPanels.forEach(({ id }) =>
-          event.api.addPanel({
-            id: id,
-            component: 'sld',
-            tabComponent: 'default',
-            params: { title: id },
-          }),
-        );
-      }
-    }, 300);
   };
 
   const onDidDrop = (event: DockviewDidDropEvent) => {
