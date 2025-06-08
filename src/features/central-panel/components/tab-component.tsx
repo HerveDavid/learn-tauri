@@ -18,7 +18,7 @@ const Default = (props: IDockviewPanelProps<{ title: string }>) => {
   };
 
   return (
-    <div className="flex justify-between items-center space-x-3 h-[calc(100%+1px)]">
+    <div className="flex justify-between items-center space-x-3 h-[calc(100%+1px)] sh">
       <ContextMenu>
         <ContextMenuTrigger>{props.api.title}</ContextMenuTrigger>
         <ContextMenuContent>

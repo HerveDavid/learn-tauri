@@ -15,8 +15,8 @@
   --accent-foreground: hsl(0 0% 100%);
   --destructive: hsl(357 92% 47%);
   --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(240 2% 64%);
-  --input: hsl(240 2% 64%);
+  --border: hsl(240, 6%, 79%);
+  --input: hsl(0, 0%, 3%);
   --ring: hsl(240 2% 64%);
   --chart-1: hsl(225 41% 47%);
   --chart-2: hsl(134 56% 32%);
@@ -36,7 +36,6 @@
   --font-mono: JetBrains Mono, monospace;
   --radius: 0.5rem;
   
-  /* Nouveau système de shadows moderne et cohérent */
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
@@ -46,10 +45,8 @@
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
   
-  /* Aliases pour compatibilité */
   --shadow-2xs: var(--shadow-xs);
   
-  /* Variables de configuration pour les shadows */
   --shadow-color: rgba(0, 0, 0, 0.1);
   --shadow-opacity: 0.1;
   --shadow-blur: 10px;
@@ -109,7 +106,7 @@
   --accent-foreground: hsl(0 0% 100%);
   --destructive: hsl(357 92% 57%);
   --destructive-foreground: hsl(0 0% 100%);
-  --border: hsl(240 2% 35%);
+  --border: hsl(0 0% 18%);
   --input: hsl(240 2% 35%);
   --ring: hsl(240 2% 45%);
   --chart-1: hsl(225 41% 57%);
@@ -130,7 +127,6 @@
   --font-mono: JetBrains Mono, monospace;
   --radius: 0.5rem;
   
-  /* Shadows adaptées pour le mode sombre */
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px -1px rgba(0, 0, 0, 0.5);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
@@ -140,10 +136,8 @@
   --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
   --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
   
-  /* Aliases pour compatibilité */
   --shadow-2xs: var(--shadow-xs);
   
-  /* Variables de configuration pour les shadows en mode sombre */
   --shadow-color: rgba(0, 0, 0, 0.5);
   --shadow-opacity: 0.5;
   --shadow-blur: 10px;

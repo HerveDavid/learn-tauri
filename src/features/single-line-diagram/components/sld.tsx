@@ -1,13 +1,13 @@
 import React from 'react';
-
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 export interface SingleLineDiagram {
   id: string;
@@ -15,23 +15,24 @@ export interface SingleLineDiagram {
 
 export const Sld: React.FC<SingleLineDiagram> = ({ id }) => {
   return (
-    <div>
-      <h1>{id}</h1>
-      <Breadcrumb className="mx-2">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink>Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink>Components</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+    <div className="h-full p-2">
+      <Card className="h-full flex flex-col border-muted">
+        <CardHeader>
+          <CardTitle>
+            <h1>{id}</h1>
+          </CardTitle>
+          <CardDescription>Card Description</CardDescription>
+          <CardAction>Card Action</CardAction>
+        </CardHeader>
+        
+        <CardContent className="flex-1 overflow-auto">
+          <p>Card Content</p>
+        </CardContent>
+        
+        <CardFooter>
+          <p>Card Footer</p>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
