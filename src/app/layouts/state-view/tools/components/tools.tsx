@@ -8,9 +8,9 @@ export const Tools = () => {
   const { activeItem, closePanel } = useToolsStore();
 
   return (
-    <div className="flex flex-col ">
-      <div className="flex bg-sidebar border-y justify-between">
-        <div className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground/70 ml-2">
+    <div className="flex flex-col bg-sidebar h-full">
+      <div className="flex bg-background border-y justify-between">
+        <div className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground ml-2">
           {activeItem.id}
         </div>
 

@@ -13,7 +13,7 @@ export const RightSidebar = () => {
 
   return (
     <div className="flex">
-      <div className="w-8 bg-sidebar border-l flex flex-col items-center py-2 space-y-3">
+      <div className="w-8 border-l flex flex-col items-center py-2 space-y-3">
         {rightSidebarPanels.map((item) => {
           const Icon = item.icon;
           const isActive = activeItem.id === item.id;
@@ -24,9 +24,9 @@ export const RightSidebar = () => {
             <button
               key={item.id}
               onClick={handleClick}
-              className={`size-5 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
+              className={`size-5 flex items-center justify-center rounded-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
                 isActive
-                  ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                  ? 'bg-background'
                   : 'text-sidebar-foreground'
               }`}
               title={item.label}

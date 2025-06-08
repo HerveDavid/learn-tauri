@@ -23,8 +23,8 @@ export const LeftIconPanels = () => {
           <button
             key={item.id}
             onClick={handleClick}
-            className={`size-5 flex items-center justify-center rounded hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
-              isActive ? 'bg-muted' : 'text-sidebar-foreground'
+            className={`size-5 flex items-center justify-center rounded-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
+              isActive ? 'bg-background' : 'text-sidebar-foreground'
             }`}
             title={item.label}
           >

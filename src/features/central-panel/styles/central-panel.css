@@ -1,6 +1,23 @@
 .dv-split-view-container.dv-vertical > .dv-sash-container > .dv-sash {
-    height: 2px;
-  }
-  .dv-split-view-container.dv-horizontal > .dv-sash-container > .dv-sash {
-    width: 2px;
-  }
+  height: 2px;
+}
+.dv-split-view-container.dv-horizontal > .dv-sash-container > .dv-sash {
+  width: 2px;
+}
+
+.dv-content-container {
+  border-top: 1px solid var(--dv-paneview-header-border-color);
+  background-color: var(--dv-activegroup-visiblepanel-tab-background-color);
+}
+
+.dv-groupview.dv-active-group > .dv-tabs-and-actions-container .dv-tabs-container > .dv-tab.dv-active-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--accent);
+}
+
+

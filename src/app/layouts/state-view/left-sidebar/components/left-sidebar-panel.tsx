@@ -9,8 +9,8 @@ export const LeftSidebarPanel = () => {
 
   return (
     <div className="h-full bg-sidebar border-r overflow-auto">
-      <div className="flex items-center justify-between border-b py-1 px-2">
-        <h3 className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground/70">
+      <div className="flex items-center justify-between border-b py-1 px-2 bg-background">
+        <h3 className="font-medium text-xs uppercase tracking-wide text-sidebar-foreground">
           {activeItem.label}
         </h3>
         <Button variant="ghost" className="size-1" onClick={closePanel}>
