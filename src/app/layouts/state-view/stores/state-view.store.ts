@@ -1,8 +1,12 @@
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
+import {
+  leftSidebarPanels,
+  leftSidebarTools,
+  rightSidebarPanels,
+} from '@/config/layouts';
 import { SidebarItem } from '@/types/sidebar-item';
-import { leftSidebarPanels, leftSidebarTools, rightSidebarPanels } from '@/config/layouts';
 
 interface SidebarConfig {
   name: string;

@@ -8,7 +8,9 @@ import {
 import React from 'react';
 
 import 'dockview/dist/styles/dockview.css';
-import './central-panel.css';
+import '../styles/central-panel.css';
+import '../styles/dockview-theme.css';
+
 import { ComponentLayouts } from '@/config/central-panel';
 import { useRuntime } from '@/services/runtime/use-runtime';
 import { useCentralPanelStore } from '@/stores/central-panel.store';

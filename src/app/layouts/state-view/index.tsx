@@ -8,15 +8,13 @@ import {
 
 import { Footer } from './footer';
 import { Header } from './header';
+import { LeftSidebar, LeftSidebarPanel } from './left-sidebar';
+import { RightSidebar, RightSidebarPanel } from './right-sidebar';
 import {
-  LeftSidebar,
-  LeftSidebarPanel,
-} from './left-sidebar';
-import {
-  RightSidebar,
-  RightSidebarPanel,
-} from './right-sidebar';
-import { useToolsStore, useLeftSidebarStore, useRightSidebarStore } from './stores/state-view.store';
+  useToolsStore,
+  useLeftSidebarStore,
+  useRightSidebarStore,
+} from './stores/state-view.store';
 import { Tools } from './tools';
 
 export const StateView: React.FC<{ children: React.ReactNode }> = ({
@@ -126,9 +124,9 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
               )}
             </ResizablePanelGroup>
           </ResizablePanel>
-          <ResizableHandle />
           {isToolsOpen && (
             <>
+              <ResizableHandle />
               <ResizablePanel order={2} defaultSize={toolsSize} minSize={20}>
                 <Tools />
               </ResizablePanel>
