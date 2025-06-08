@@ -8,12 +8,13 @@ import * as Layer from 'effect/Layer';
 import * as Logger from 'effect/Logger';
 import * as ManagedRuntime from 'effect/ManagedRuntime';
 import React from 'react';
-
 import { ChannelClient } from '@/services/common/channel-client';
 import { QueryClient } from '@/services/common/query-client';
 import { SettingsClient } from '@/services/common/settings-client';
 import { LiveManagedRuntime } from '@/services/live-layer';
 import { RuntimeProvider } from '@/services/runtime/runtime-provider';
+import { useThemeStore } from '@/features/theme';
+import { useCentralPanelStore } from '@/stores/central-panel.store';
 
 const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -48,6 +49,11 @@ const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
       ),
     [queryClient],
   );
+
+  React.useEffect(() => {
+    useThemeStore.getState().setRuntime(runtime);
+    useCentralPanelStore.getState().setRuntime(runtime);
+  }, [runtime]);
 
   return (
     <QueryClientProvider client={queryClient}>

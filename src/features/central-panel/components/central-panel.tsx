@@ -12,7 +12,6 @@ import '../styles/central-panel.css';
 import '../styles/dockview-theme.css';
 
 import { ComponentLayouts } from '@/config/central-panel';
-import { useRuntime } from '@/services/runtime/use-runtime';
 import { useCentralPanelStore } from '@/stores/central-panel.store';
 
 import { DraggedItem } from '../types/dragged-item.type';
@@ -32,14 +31,7 @@ const customTailwindTheme: DockviewTheme = {
 };
 
 export const CentralPanel = () => {
-  const runtime = useRuntime();
-  const { api, setApi, setRuntime, addPanel } = useCentralPanelStore();
-
-  React.useEffect(() => {
-    if (runtime) {
-      setRuntime(runtime);
-    }
-  }, [runtime, setRuntime]);
+  const { api, setApi, addPanel } = useCentralPanelStore();
 
   React.useEffect(() => {
     if (!api) {

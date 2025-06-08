@@ -106,7 +106,7 @@ const saveLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
     await runtime.runPromise(setEffect);
     console.log('Layout sauvegardé');
   } catch (error) {
-    console.error('Erreur lors de la sauvegarde:', error);
+    console.error('Erreur lors de la sauvegarde du panneau central:', error);
   }
 };
 
