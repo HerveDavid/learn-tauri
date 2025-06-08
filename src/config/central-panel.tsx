@@ -6,7 +6,7 @@ export const ComponentLayouts = {
   default: ({ params: { title } }: IDockviewPanelProps<{ title: string }>) => {
     return <>Default {title}</>;
   },
-  sld: ({ params: { title } }: IDockviewPanelProps<{ title: string }>) => {
-    return <SldView id={title} />;
+  sld: (props: IDockviewPanelProps<{ title: string }>) => {
+    return <SldView {...props} />;
   },
 };

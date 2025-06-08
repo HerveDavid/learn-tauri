@@ -1,5 +1,6 @@
 import { rightSidebarSlds } from '@/config/layouts';
-import { useRightSidebarStore } from '../../hooks/use-right-sidebar-store';
+import { useRightSidebarStore } from '../hooks/use-right-sidebar-store';
+import { RightSidebarPanel } from './right-sidebar-panel';
 
 export const RightSidebar = ({ id }: { id: string }) => {
   const { activeItem, setActiveItem, isOpen, openPanel, closePanel } =
@@ -11,8 +12,9 @@ export const RightSidebar = ({ id }: { id: string }) => {
   };
 
   return (
-    <div className="flex">
-      <div className="w-8 border-l flex flex-col items-center py-2 space-y-3">
+    <div className={`flex ${isOpen ? 'w-full' : ''}`}>
+      {' '}
+      <div className="w-8 border-l flex flex-col items-center pt-1 space-y-3">
         {rightSidebarSlds.map((item) => {
           const Icon = item.icon;
           const isActive = activeItem.id === item.id;
@@ -24,7 +26,7 @@ export const RightSidebar = ({ id }: { id: string }) => {
               key={item.id}
               onClick={handleClick}
               className={`size-5 flex items-center justify-center rounded-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
-                isActive ? 'bg-background' : 'text-sidebar-foreground'
+                isActive ? 'bg-sidebar' : 'text-sidebar-foreground'
               }`}
               title={item.label}
             >
@@ -39,6 +41,7 @@ export const RightSidebar = ({ id }: { id: string }) => {
           );
         })}
       </div>
+      {isOpen && <RightSidebarPanel id={id} />}
     </div>
   );
 };
