@@ -8,6 +8,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Link } from '@/components/ui/link';
 
+export const LeftMenu = () => {
+  return (
+    <div className="flex gap-3">
+      <FileDropdown />
+      <h1 className="text-sm">View</h1>
+    </div>
+  );
+};
+
 const FileDropdown = () => {
   return (
     <DropdownMenu>
@@ -33,5 +42,3 @@ const FileDropdown = () => {
     </DropdownMenu>
   );
 };
-
-export default FileDropdown;

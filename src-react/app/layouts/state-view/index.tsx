@@ -16,6 +16,7 @@ import {
   useRightSidebarStore,
 } from './stores/state-view.store';
 import { Tools } from './tools';
+import { AppHeader } from '@/features/header';
 
 export const StateView: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -75,67 +76,67 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   return (
-    <div className="h-screen w-full bg-background text-foreground flex flex-col overflow-hidden">
-      <Header />
-      <div className="flex flex-1 min-h-0">
-        <LeftSidebar />
-        <ResizablePanelGroup
-          className="flex flex-1 flex-col"
-          direction="vertical"
-          onLayout={handleVerticalPanelsResize}
-        >
-          <ResizablePanel order={1} className="flex flex-1">
-            <ResizablePanelGroup
-              direction="horizontal"
-              onLayout={handleHorizontalPanelsResize}
-            >
-              {isLeftOpen && (
-                <>
-                  <ResizablePanel
-                    id="left-sidebar"
-                    order={1}
-                    defaultSize={leftSize}
-                    minSize={15}
-                    maxSize={50}
-                  >
-                    <LeftSidebarPanel />
-                  </ResizablePanel>
-                  <ResizableHandle />
-                </>
-              )}
-              <ResizablePanel id="main-content" order={2} minSize={30}>
-                <div ref={contentRef} className="h-full">
-                  {children}
-                </div>
-              </ResizablePanel>
-              {isRightOpen && (
-                <>
-                  <ResizableHandle />
-                  <ResizablePanel
-                    id="right-sidebar"
-                    order={3}
-                    defaultSize={rightSize}
-                    minSize={15}
-                    maxSize={50}
-                  >
-                    <RightSidebarPanel />
-                  </ResizablePanel>
-                </>
-              )}
-            </ResizablePanelGroup>
-          </ResizablePanel>
-          {isToolsOpen && (
-            <>
-              <ResizableHandle />
-              <ResizablePanel order={2} defaultSize={toolsSize} minSize={20}>
-                <Tools />
-              </ResizablePanel>
-            </>
-          )}
-        </ResizablePanelGroup>
-        <RightSidebar />
+      <div className="h-screen w-full bg-background text-foreground flex flex-col overflow-hidden">
+        <Header />
+        <div className="flex flex-1 min-h-0">
+          <LeftSidebar />
+          <ResizablePanelGroup
+            className="flex flex-1 flex-col"
+            direction="vertical"
+            onLayout={handleVerticalPanelsResize}
+          >
+            <ResizablePanel order={1} className="flex flex-1">
+              <ResizablePanelGroup
+                direction="horizontal"
+                onLayout={handleHorizontalPanelsResize}
+              >
+                {isLeftOpen && (
+                  <>
+                    <ResizablePanel
+                      id="left-sidebar"
+                      order={1}
+                      defaultSize={leftSize}
+                      minSize={15}
+                      maxSize={50}
+                    >
+                      <LeftSidebarPanel />
+                    </ResizablePanel>
+                    <ResizableHandle />
+                  </>
+                )}
+                <ResizablePanel id="main-content" order={2} minSize={30}>
+                  <div ref={contentRef} className="h-full">
+                    {children}
+                  </div>
+                </ResizablePanel>
+                {isRightOpen && (
+                  <>
+                    <ResizableHandle />
+                    <ResizablePanel
+                      id="right-sidebar"
+                      order={3}
+                      defaultSize={rightSize}
+                      minSize={15}
+                      maxSize={50}
+                    >
+                      <RightSidebarPanel />
+                    </ResizablePanel>
+                  </>
+                )}
+              </ResizablePanelGroup>
+            </ResizablePanel>
+            {isToolsOpen && (
+              <>
+                <ResizableHandle />
+                <ResizablePanel order={2} defaultSize={toolsSize} minSize={20}>
+                  <Tools />
+                </ResizablePanel>
+              </>
+            )}
+          </ResizablePanelGroup>
+          <RightSidebar />
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
   );
 };

@@ -12,7 +12,11 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "channel",
+        "decorations": false,
+        "resizable": true,
+        "maximized": true,
         "width": 800,
         "height": 600
       }

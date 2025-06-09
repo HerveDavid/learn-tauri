@@ -2,7 +2,7 @@ import React from 'react';
 import { LiveManagedRuntime } from '@/services/live-layer';
 import { useRuntime } from '@/services/runtime/use-runtime';
 
-interface StoreRuntime {
+export interface StoreRuntime {
   runtime: LiveManagedRuntime | null;
   setRuntime: (runtime: LiveManagedRuntime) => void;
 }

@@ -1,5 +1,6 @@
-import { IDockviewPanelProps } from 'dockview';
 import React from 'react';
+import { IDockviewPanelProps } from 'dockview';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 
 import {
   Breadcrumb,
@@ -37,9 +38,23 @@ export const SldView: React.FC<IDockviewPanelProps<SldViewProps>> = ({
       setRightSize(sizes[1]);
     }
   };
+  const handleSldClick = async () => {
+    try {
+        const window = getCurrentWindow();
+        console.log('Label de la fenêtre:', window.label);
+        console.log('Titre avant:', await window.title());
+        
+        await window.setTitle(String(id)); // Assurez-vous que c'est une string
+        
+        console.log('Titre après:', await window.title());
+        console.log('Valeur de id:', id);
+    } catch (error) {
+        console.error('Erreur lors du changement de titre:', error);
+    }
+};
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" onClick={handleSldClick}>
       <header className={`shadow-sm border-b bg-sidebar`}>
         <Breadcrumb className="mx-2 py-2 text-sm">
           <BreadcrumbList>
