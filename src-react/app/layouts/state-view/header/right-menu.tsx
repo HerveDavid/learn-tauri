@@ -57,7 +57,7 @@ export const RightMenu = () => {
   };
 
   return (
-    <div className="flex items-center gap-x-4 mr-1">
+    <div className="flex items-center gap-x-4 mr-2">
       <Clock />
       <Button
         variant="ghost"

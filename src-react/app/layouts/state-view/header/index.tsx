@@ -71,7 +71,7 @@ export const Header = () => {
 
   return (
     <div
-      className="w-full p-1 h-8 flex items-center justify-between header-glass"
+      className="w-full h-8 flex items-center justify-between header-glass"
       onMouseDown={handleDragStart}
     >
       <div className="relative z-10" onMouseDown={stopPropagation}>

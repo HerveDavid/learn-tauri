@@ -1,44 +1,62 @@
+import { Avatar } from '@/components/ui/avatar';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Link } from '@/components/ui/link';
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from '@/components/ui/menubar';
+import { AvatarFallback } from '@radix-ui/react-avatar';
+import { ChevronDown, MenuIcon } from 'lucide-react';
 
 export const LeftMenu = () => {
   return (
-    <div className="flex gap-3">
-      <FileDropdown />
-      <h1 className="text-sm">View</h1>
+    <div className="">
+      <MenuDropdown />
     </div>
   );
 };
 
-const FileDropdown = () => {
+const MenuDropdown = () => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className="text-sm text-foreground hover:text-foreground-hover">
-          File
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Project</DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Link to={''}>Home</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link to={''}>Settings</Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuLabel>Help</DropdownMenuLabel>
-        <DropdownMenuItem>GitHub</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Menubar className="bg-transparent border-0 shadow-none text-xs p-0">
+      <MenubarMenu>
+        <MenubarTrigger className="bg-transparent" title="Menu">
+          <MenuIcon className="size-4" />
+        </MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>
+            Open Project <MenubarShortcut>⌘O</MenubarShortcut>
+          </MenubarItem>
+          <MenubarSeparator />
+
+          <MenubarItem>
+            New Project <MenubarShortcut>⌘T</MenubarShortcut>
+          </MenubarItem>
+          <MenubarItem>New Window</MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem>Settings</MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem>Exit</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+
+      <MenubarMenu>
+        <MenubarTrigger>
+          <div className='flex gap-x-2'>
+            <Avatar className='size-4 bg-green-600'>
+              <AvatarFallback>SFJ</AvatarFallback>
+            </Avatar>
+            <p>Scenario for june</p>
+            <ChevronDown className="size-4" />
+          </div>
+        </MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>Open Project...</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
   );
 };
