@@ -24,7 +24,7 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
         variant="ghost"
         size="sm"
         onClick={handleDetachPanel}
-        className="size-5 p-0 hover:bg-accent"
+        className="size-5 p-0 hover:bg-accent text-muted-foreground"
         title={'Detach group'}
       >
         <ScreenShare className="size-4" />
@@ -34,7 +34,7 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
           <Button
             variant="ghost"
             size="sm"
-            className="size-5 p-0 hover:bg-accent"
+            className="size-5 p-0 hover:bg-accent text-muted-foreground"
             title="View in fullscreen"
           >
             <Maximize className="size-4" />

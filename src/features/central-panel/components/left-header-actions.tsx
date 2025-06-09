@@ -13,7 +13,7 @@ export const LeftHeaderActions = (_props: IDockviewHeaderActionsProps) => {
   return (
     <div className="h-full flex items-center px-2">
       <DropdownMenu>
-        <DropdownMenuTrigger className="hover:bg-accent rounded-sm hover:text-accent-foreground">
+        <DropdownMenuTrigger className="hover:bg-accent rounded-sm hover:text-accent-foreground text-muted-foreground">
           <EllipsisVertical className="size-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
