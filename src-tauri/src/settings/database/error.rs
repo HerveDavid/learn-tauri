@@ -17,7 +17,7 @@ pub enum Error {
 
     #[error("Setting not found: {0}")]
     SettingNotFound(String),
-    
+
     #[error("Invalid JSON path: {0}")]
     InvalidPath(String),
 }

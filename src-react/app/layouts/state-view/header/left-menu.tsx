@@ -8,6 +8,7 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from '@/components/ui/menubar';
+import { ProjectWidget } from '@/features/projects';
 import { AvatarFallback } from '@radix-ui/react-avatar';
 import { ChevronDown, MenuIcon } from 'lucide-react';
 
@@ -43,20 +44,7 @@ const MenuDropdown = () => {
         </MenubarContent>
       </MenubarMenu>
 
-      <MenubarMenu>
-        <MenubarTrigger>
-          <div className='flex gap-x-2'>
-            <Avatar className='size-4 bg-green-600'>
-              <AvatarFallback>SFJ</AvatarFallback>
-            </Avatar>
-            <p>Scenario for june</p>
-            <ChevronDown className="size-4" />
-          </div>
-        </MenubarTrigger>
-        <MenubarContent>
-          <MenubarItem>Open Project...</MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
+      <ProjectWidget />
     </Menubar>
   );
 };

@@ -72,10 +72,7 @@ pub async fn get_nested_setting(
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub async fn delete_setting(
-    state: State<'_, Mutex<DatabaseState>>,
-    key: String,
-) -> Result<bool> {
+pub async fn delete_setting(state: State<'_, Mutex<DatabaseState>>, key: String) -> Result<bool> {
     let db = state.lock().await;
     db.delete_setting(&key).await
 }
@@ -89,10 +86,7 @@ pub async fn list_all_settings(
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub async fn setting_exists(
-    state: State<'_, Mutex<DatabaseState>>,
-    key: String,
-) -> Result<bool> {
+pub async fn setting_exists(state: State<'_, Mutex<DatabaseState>>, key: String) -> Result<bool> {
     let db = state.lock().await;
     match db.get_setting::<Value>(&key).await? {
         Some(_) => Ok(true),
@@ -101,9 +95,7 @@ pub async fn setting_exists(
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub async fn clear_all_settings(
-    state: State<'_, Mutex<DatabaseState>>,
-) -> Result<u64> {
+pub async fn clear_all_settings(state: State<'_, Mutex<DatabaseState>>) -> Result<u64> {
     let db = state.lock().await;
     let result = sqlx::query("DELETE FROM settings")
         .execute(&db.pool)
@@ -112,9 +104,7 @@ pub async fn clear_all_settings(
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub async fn count_settings(
-    state: State<'_, Mutex<DatabaseState>>,
-) -> Result<i64> {
+pub async fn count_settings(state: State<'_, Mutex<DatabaseState>>) -> Result<i64> {
     let db = state.lock().await;
     let row = sqlx::query("SELECT COUNT(*) as count FROM settings")
         .fetch_one(&db.pool)
