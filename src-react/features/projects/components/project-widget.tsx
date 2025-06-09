@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, Clock, X, FileIcon, Plus } from 'lucide-react';
+import { ChevronDown, Clock, X, FileIcon, Plus, Edit } from 'lucide-react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -11,10 +11,12 @@ import {
 } from '@/components/ui/menubar';
 import { useProjectsStore } from '@/features/projects';
 import { Project } from '@/types/project';
-import { ProjectDialog } from './project-dialog';
+import { ProjectCreate } from './project-create';
+import { ProjectEdit } from './project-edit';
 
 export const ProjectWidget = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   const {
     currentProject,
@@ -47,6 +49,11 @@ export const ProjectWidget = () => {
     clearRecentProjects();
   };
 
+  const handleEditCurrentProject = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowEditDialog(true);
+  };
+
   const sortedRecentProjects = getRecentProjectsSorted().filter(
     (project) => project.path !== currentProjectPath,
   );
@@ -76,7 +83,7 @@ export const ProjectWidget = () => {
               <div className="px-2 py-1.5 text-xs text-muted-foreground">
                 Current Project
               </div>
-              <MenubarItem className="flex items-center gap-2">
+              <MenubarItem className="flex items-center gap-2 group">
                 <Avatar className="size-6 bg-blue-600">
                   <AvatarFallback className="text-xs font-medium text-white bg-blue-600">
                     {initials}
@@ -103,6 +110,13 @@ export const ProjectWidget = () => {
                     )}
                   </div>
                 </div>
+                <button
+                  onClick={handleEditCurrentProject}
+                  className="opacity-0 group-hover:opacity-100 p-1 hover:bg-accent rounded text-accent-foreground"
+                  title="Edit project"
+                >
+                  <Edit className="size-3" />
+                </button>
               </MenubarItem>
               <MenubarSeparator />
             </>
@@ -218,9 +232,14 @@ export const ProjectWidget = () => {
         </MenubarContent>
       </MenubarMenu>
 
-      <ProjectDialog
+      <ProjectCreate
         open={showCreateDialog}
         onOpenChange={setShowCreateDialog}
+      />
+
+      <ProjectEdit
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
       />
     </>
   );
