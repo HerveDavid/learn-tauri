@@ -126,25 +126,25 @@ const config: Linter.Config[] = [
         {
           zones: [
             // disables cross-feature imports:
-            // eg. src/features/discussions should not import from src/features/comments, etc.
+            // eg. ./src-react/features/discussions should not import from ./src-react/features/comments, etc.
 
-            // e.g. src/app can import from src/features but not the other way around
+            // e.g. ./src-react/app can import from ./src-react/features but not the other way around
             {
-              target: './src/features',
-              from: './src/app',
+              target: '././src-react/features',
+              from: '././src-react/app',
             },
 
-            // e.g src/features and src/app can import from these shared modules but not the other way around
+            // e.g ./src-react/features and ./src-react/app can import from these shared modules but not the other way around
             {
               target: [
-                './src/components',
-                './src/hooks',
-                './src/lib',
-                './src/services',
-                './src/types',
-                './src/utils',
+                '././src-react/components',
+                '././src-react/hooks',
+                '././src-react/lib',
+                '././src-react/services',
+                '././src-react/types',
+                '././src-react/utils',
               ],
-              from: ['./src/features', './src/app'],
+              from: ['././src-react/features', '././src-react/app'],
             },
           ],
         },
@@ -215,7 +215,7 @@ const config: Linter.Config[] = [
 
   // Folder naming convention for source files
   {
-    files: ['src/**/!(__tests__)/*'],
+    files: ['./src-react/**/!(__tests__)/*'],
     plugins: {
       'check-file': checkFile,
     },

@@ -7,12 +7,12 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    setupFiles: './src/testing/setup-tests.ts',
+    setupFiles: '././src-react/testing/setup-tests.ts',
     mockReset: true,
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, '././src-react'),
     },
   },
 });

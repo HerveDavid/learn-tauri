@@ -23,9 +23,9 @@
     /* Tailwind */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["././src-react/*"]
     }
   },
-  "include": ["src"],
+  "include": ["./src-react"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
