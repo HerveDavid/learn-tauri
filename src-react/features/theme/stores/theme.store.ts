@@ -4,6 +4,7 @@ import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
 import { SettingsClient } from '@/services/common/settings-client';
 import { LiveManagedRuntime } from '@/services/live-layer';
+import { useStoreRuntime } from '@/hooks/use-store-runtime';
 
 const KEY_THEME_SETTING = 'theme-preference';
 
@@ -17,6 +18,8 @@ interface ThemeStore {
   toggleTheme: () => void;
   setRuntime: (runtime: LiveManagedRuntime) => void;
 }
+
+export const useThemeStore = () => useStoreRuntime(useThemeStoreInner);
 
 const getSystemTheme = (): 'light' | 'dark' =>
   window.matchMedia?.('(prefers-color-scheme: dark)').matches
@@ -41,7 +44,7 @@ const getStoredTheme = (): Theme => {
 const initialTheme = getStoredTheme();
 const initialActualTheme = applyTheme(initialTheme);
 
-export const useThemeStore = create<ThemeStore>()(
+const useThemeStoreInner = create<ThemeStore>()(
   devtools(
     subscribeWithSelector((set, get) => ({
       theme: initialTheme,
@@ -71,6 +74,7 @@ export const useThemeStore = create<ThemeStore>()(
   ),
 );
 
+
 const syncWithRuntime = async (runtime: LiveManagedRuntime) => {
   const effect = Effect.gen(function* () {
     const client = yield* SettingsClient;
@@ -78,21 +82,21 @@ const syncWithRuntime = async (runtime: LiveManagedRuntime) => {
   });
 
   const savedTheme = await runtime.runPromise(effect);
-  if (savedTheme && savedTheme !== useThemeStore.getState().theme) {
-    useThemeStore.getState().setTheme(savedTheme);
+  if (savedTheme && savedTheme !== useThemeStoreInner.getState().theme) {
+    useThemeStoreInner.getState().setTheme(savedTheme);
   }
 };
 
 window
   .matchMedia?.('(prefers-color-scheme: dark)')
   .addEventListener('change', () => {
-    const { theme } = useThemeStore.getState();
+    const { theme } = useThemeStoreInner.getState();
     if (theme === 'system') {
-      useThemeStore.getState().setTheme('system');
+      useThemeStoreInner.getState().setTheme('system');
     }
   });
 
-useThemeStore.subscribe(
+useThemeStoreInner.subscribe(
   (state) => ({ theme: state.theme, runtime: state.runtime }),
   async ({ theme, runtime }) => {
     if (!runtime) return;

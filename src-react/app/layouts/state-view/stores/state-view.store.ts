@@ -10,6 +10,7 @@ import {
 import { SettingsClient } from '@/services/common/settings-client';
 import { LiveManagedRuntime } from '@/services/live-layer';
 import { SidebarItem } from '@/types/sidebar-item';
+import { useStoreRuntime } from '@/hooks/use-store-runtime';
 
 interface SidebarConfig {
   name: string;
@@ -169,27 +170,32 @@ const saveState = async (
 const getSidebarStore = (name: string): any => {
   switch (name) {
     case 'left-sidebar-store':
-      return useLeftSidebarStore;
+      return useLeftSidebarStoreInner;
     case 'right-sidebar-store':
-      return useRightSidebarStore;
+      return useRightSidebarStoreInner;
     case 'tools-store':
-      return useToolsStore;
+      return useToolsStoreInner;
     default:
       return null;
   }
 };
 
-export const useLeftSidebarStore = createSidebarStore({
+const useLeftSidebarStoreInner = createSidebarStore({
   name: 'left-sidebar-store',
   panels: leftSidebarPanels,
 });
+export const useLeftSidebarStore = () => useStoreRuntime(useLeftSidebarStoreInner)
 
-export const useRightSidebarStore = createSidebarStore({
+const useRightSidebarStoreInner = createSidebarStore({
   name: 'right-sidebar-store',
   panels: rightSidebarPanels,
 });
+export const useRightSidebarStore = () => useStoreRuntime(useRightSidebarStoreInner)
 
-export const useToolsStore = createSidebarStore({
+
+const useToolsStoreInner = createSidebarStore({
   name: 'tools-store',
   panels: leftSidebarTools,
 });
+export const useToolsStore = () => useStoreRuntime(useToolsStoreInner)
+

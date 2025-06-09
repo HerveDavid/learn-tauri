@@ -7,6 +7,7 @@ import { devtools, subscribeWithSelector } from 'zustand/middleware';
 import { paths } from '@/config/paths';
 import { SettingsClient } from '@/services/common/settings-client';
 import { LiveManagedRuntime } from '@/services/live-layer';
+import { useStoreRuntime } from '@/hooks/use-store-runtime';
 
 const KEY_CENTRAL_PANEL_SETTING = 'central-panel-layout';
 
@@ -20,7 +21,9 @@ interface CentralPanelStore {
   removePanel: (id: string) => void;
 }
 
-export const useCentralPanelStore = create<CentralPanelStore>()(
+export const useCentralPanelStore = () => useStoreRuntime(useCentralPanelStoreInner)
+
+const useCentralPanelStoreInner = create<CentralPanelStore>()(
   devtools(
     subscribeWithSelector((set, get) => ({
       api: null,
@@ -110,7 +113,7 @@ const saveLayout = async (api: DockviewApi, runtime: LiveManagedRuntime) => {
   }
 };
 
-useCentralPanelStore.subscribe(
+useCentralPanelStoreInner.subscribe(
   (state) => ({ api: state.api, runtime: state.runtime }),
   ({ api, runtime }, prev) => {
     if (api && runtime && (!prev.api || prev.api !== api)) {
