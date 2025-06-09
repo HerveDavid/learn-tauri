@@ -163,7 +163,7 @@ export const ProjectWidget = () => {
       <MenubarTrigger>
         <div className="flex items-center gap-x-2">
           <Avatar className="size-4">
-            <AvatarFallback className="text-xs font-medium bg-green-400">
+            <AvatarFallback className="text-xs font-medium bg-green-800">
               {initials}
             </AvatarFallback>
           </Avatar>
