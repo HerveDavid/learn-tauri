@@ -13,7 +13,7 @@ export const RightSidebar = ({ id }: { id: string }) => {
 
   return (
     <div className={`flex ${isOpen ? 'w-full' : ''}`}>
-      <div className="w-8 border-l flex flex-col items-center pt-1 space-y-3">
+      <div className="w-8 flex flex-col items-center pt-1 space-y-3">
         {rightSidebarSlds.map((item) => {
           const Icon = item.icon;
           const isActive = activeItem.id === item.id;

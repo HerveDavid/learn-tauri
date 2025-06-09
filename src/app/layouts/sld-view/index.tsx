@@ -31,7 +31,6 @@ export const SldView: React.FC<IDockviewPanelProps<SldViewProps>> = ({
   } = useRightSidebarStore(id);
 
   const handleHorizontalPanelsResize = (sizes: number[]) => {
-    // Le panel de droite est toujours à l'index 1 (deuxième panel)
     if (sizes[1] !== undefined) {
       setRightSize(sizes[1]);
     }
@@ -64,11 +63,11 @@ export const SldView: React.FC<IDockviewPanelProps<SldViewProps>> = ({
           className="flex flex-1 overflow-hidden"
         >
           <ResizablePanel order={0} className="flex-1 overflow-hidden">
-            <div className="h-full p-2">
+            <div className="h-full p-2 bg-gradient-to-br from-background/10 to-foreground/7">
               <Sld id={id} />
             </div>
           </ResizablePanel>
-          <ResizableHandle withHandle={true}/>
+          <ResizableHandle withHandle={true} />
           <ResizablePanel
             order={1}
             defaultSize={rightSize}
@@ -80,7 +79,7 @@ export const SldView: React.FC<IDockviewPanelProps<SldViewProps>> = ({
         </ResizablePanelGroup>
       ) : (
         <div className="flex flex-1 overflow-hidden">
-          <div className="flex-1 overflow-hidden p-2">
+          <div className="flex-1 overflow-hidden p-2 bg-gradient-to-br from-background/10 to-foreground/7">
             <Sld id={id} />
           </div>
           <RightSidebar id={id} />

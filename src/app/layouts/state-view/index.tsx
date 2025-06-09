@@ -99,7 +99,7 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
                   >
                     <LeftSidebarPanel />
                   </ResizablePanel>
-                  <ResizableHandle withHandle={true}/>
+                  <ResizableHandle/>
                 </>
               )}
               <ResizablePanel id="main-content" order={2} minSize={30}>
@@ -109,7 +109,7 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
               </ResizablePanel>
               {isRightOpen && (
                 <>
-                  <ResizableHandle withHandle={true} />
+                  <ResizableHandle />
                   <ResizablePanel
                     id="right-sidebar"
                     order={3}
@@ -125,7 +125,7 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
           </ResizablePanel>
           {isToolsOpen && (
             <>
-              <ResizableHandle withHandle={true} />
+              <ResizableHandle />
               <ResizablePanel order={2} defaultSize={toolsSize} minSize={20}>
                 <Tools />
               </ResizablePanel>
