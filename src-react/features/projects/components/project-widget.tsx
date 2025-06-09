@@ -47,7 +47,6 @@ export const ProjectWidget = () => {
     clearRecentProjects();
   };
 
-  // Filtrer les projets récents pour exclure le projet courant
   const sortedRecentProjects = getRecentProjectsSorted().filter(
     (project) => project.path !== currentProjectPath,
   );
@@ -149,7 +148,7 @@ export const ProjectWidget = () => {
                   <MenubarItem
                     key={project.path}
                     onClick={() => handleSwitchProject(project)}
-                    className="flex items-center gap-2 group cursor-pointer hover:bg-gray-50"
+                    className="flex items-center gap-2 group cursor-pointer hover:bg-sidebar-accent"
                   >
                     <Avatar className="size-6">
                       <AvatarFallback className="text-xs font-medium text-white bg-blue-500">

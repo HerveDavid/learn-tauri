@@ -1,7 +1,5 @@
-import { AvatarFallback } from '@radix-ui/react-avatar';
-import { ChevronDown, MenuIcon } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 
-import { Avatar } from '@/components/ui/avatar';
 import {
   Menubar,
   MenubarContent,
