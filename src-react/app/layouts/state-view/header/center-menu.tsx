@@ -1,5 +1,11 @@
-import Clock from '@/features/clock';
+import { useWindowHeaderStore } from '@/stores/window-header.store';
 
 export const CenterMenu = () => {
-  return <Clock />;
+  const { title } = useWindowHeaderStore();
+
+  return (
+    <div className="text-sm text-foreground ">
+      <h2>{title}</h2>
+    </div>
+  );
 };

@@ -18,6 +18,7 @@ import {
 import { Sld } from '@/features/single-line-diagram';
 
 import { RightSidebar, useRightSidebarStore } from './right-sidebar';
+import { useWindowHeaderStore } from '@/stores/window-header.store';
 
 export interface SldViewProps {
   title: string;
@@ -32,26 +33,17 @@ export const SldView: React.FC<IDockviewPanelProps<SldViewProps>> = ({
     size: rightSize,
     setSize: setRightSize,
   } = useRightSidebarStore(id);
+  const { setTitle } = useWindowHeaderStore();
 
   const handleHorizontalPanelsResize = (sizes: number[]) => {
     if (sizes[1] !== undefined) {
       setRightSize(sizes[1]);
     }
   };
-  const handleSldClick = async () => {
-    try {
-        const window = getCurrentWindow();
-        console.log('Label de la fenêtre:', window.label);
-        console.log('Titre avant:', await window.title());
-        
-        await window.setTitle(String(id)); // Assurez-vous que c'est une string
-        
-        console.log('Titre après:', await window.title());
-        console.log('Valeur de id:', id);
-    } catch (error) {
-        console.error('Erreur lors du changement de titre:', error);
-    }
-};
+
+  const handleSldClick = () => {
+    setTitle(`${id}`);
+  };
 
   return (
     <div className="flex flex-col h-full" onClick={handleSldClick}>

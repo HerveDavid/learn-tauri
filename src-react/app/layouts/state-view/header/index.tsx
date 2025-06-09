@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
-
 import { CenterMenu } from './center-menu';
 import { LeftMenu } from './left-menu';
 import { RightMenu } from './right-menu';
@@ -36,7 +35,6 @@ export const Header = () => {
     }
   };
 
-
   const handleDragStart = async (e: React.MouseEvent<HTMLDivElement>) => {
     // Check if the click comes from an interactive element
     const target = e.target as HTMLElement;
@@ -70,18 +68,16 @@ export const Header = () => {
 
   return (
     <div
-      className="w-full p-1 h-8 border-b flex items-center justify-between"
+      className="w-full p-1 h-8 border-b flex items-center justify-between luxury-glass"
       onMouseDown={handleDragStart}
     >
-      <div onMouseDown={stopPropagation}>
+      <div className="relative z-10" onMouseDown={stopPropagation}>
         <LeftMenu />
       </div>
-
-      <div onMouseDown={stopPropagation}>
+      <div className="relative z-10" onMouseDown={stopPropagation}>
         <CenterMenu />
       </div>
-
-      <div onMouseDown={stopPropagation}>
+      <div className="relative z-10" onMouseDown={stopPropagation}>
         <RightMenu />
       </div>
     </div>

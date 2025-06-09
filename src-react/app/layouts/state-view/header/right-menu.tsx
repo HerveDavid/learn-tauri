@@ -3,6 +3,7 @@ import { getCurrentWindow } from '@tauri-apps/api/window';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { Button } from '@/components/ui/button';
 import { Minus, Square, X } from 'lucide-react';
+import Clock from '@/features/clock';
 
 export const RightMenu = () => {
   const [isMaximized, setIsMaximized] = useState(false);
@@ -56,6 +57,7 @@ export const RightMenu = () => {
 
   return (
     <div className="flex items-center gap-x-4 mr-1">
+      <Clock />
       <Button
         variant="ghost"
         size="sm"
