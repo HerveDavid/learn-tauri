@@ -9,7 +9,7 @@ interface WindowHeaderStore {
 export const useWindowHeaderStore = create<WindowHeaderStore>()(
   devtools(
     subscribeWithSelector((set) => ({
-      title: 'Argus',
+      title: '',
       setTitle: (title) => set({ title }),
     })),
     { name: 'window-header-store' },

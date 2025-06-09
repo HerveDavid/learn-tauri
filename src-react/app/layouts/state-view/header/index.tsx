@@ -2,7 +2,7 @@ import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import React, { useEffect, useState } from 'react';
 
-import "./styles/gradients.css"
+import './styles/gradients.css';
 
 import { CenterMenu } from './center-menu';
 import { LeftMenu } from './left-menu';

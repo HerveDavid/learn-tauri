@@ -8,15 +8,24 @@ export interface StoreRuntime {
   setRuntime: (runtime: LiveManagedRuntime) => void;
 }
 
-export function useStoreRuntime<T extends StoreRuntime>(useStore: () => T): T {
+export function useStoreRuntime<T extends StoreRuntime>(
+  useStore: () => T,
+): Omit<T, 'runtime' | 'setRuntime'> & {
+  isReady: boolean;
+} {
   const store = useStore();
   const runtime = useRuntime();
 
   React.useEffect(() => {
-    if (runtime && !store.runtime) {
+    if (runtime && store.runtime !== runtime) {
       store.setRuntime(runtime);
     }
-  }, [runtime, store]);
+  }, [runtime, store.runtime, store.setRuntime]);
 
-  return store as T;
+  const { runtime: _, setRuntime: __, ...storeWithoutRuntime } = store;
+
+  return {
+    ...storeWithoutRuntime,
+    isReady: !!store.runtime,
+  } as any;
 }
