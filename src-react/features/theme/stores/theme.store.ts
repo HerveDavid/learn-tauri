@@ -2,15 +2,15 @@ import * as Effect from 'effect/Effect';
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
+import { useStoreRuntime } from '@/hooks/use-store-runtime';
 import { SettingsClient } from '@/services/common/settings-client';
 import { LiveManagedRuntime } from '@/services/live-layer';
-import { useStoreRuntime } from '@/hooks/use-store-runtime';
 
 const KEY_THEME_SETTING = 'theme-preference';
 
 type Theme = 'light' | 'dark' | 'system';
 
-interface ThemeStore {
+export interface ThemeStore {
   theme: Theme;
   actualTheme: 'light' | 'dark';
   runtime: LiveManagedRuntime | null;
@@ -19,7 +19,8 @@ interface ThemeStore {
   setRuntime: (runtime: LiveManagedRuntime) => void;
 }
 
-export const useThemeStore = () => useStoreRuntime(useThemeStoreInner);
+export const useThemeStore = () =>
+  useStoreRuntime<ThemeStore>(useThemeStoreInner);
 
 const getSystemTheme = (): 'light' | 'dark' =>
   window.matchMedia?.('(prefers-color-scheme: dark)').matches
@@ -73,7 +74,6 @@ const useThemeStoreInner = create<ThemeStore>()(
     { name: 'theme-store' },
   ),
 );
-
 
 const syncWithRuntime = async (runtime: LiveManagedRuntime) => {
   const effect = Effect.gen(function* () {

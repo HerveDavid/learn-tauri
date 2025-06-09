@@ -7,10 +7,10 @@ import {
   leftSidebarTools,
   rightSidebarPanels,
 } from '@/config/layouts';
+import { useStoreRuntime } from '@/hooks/use-store-runtime';
 import { SettingsClient } from '@/services/common/settings-client';
 import { LiveManagedRuntime } from '@/services/live-layer';
 import { SidebarItem } from '@/types/sidebar-item';
-import { useStoreRuntime } from '@/hooks/use-store-runtime';
 
 interface SidebarConfig {
   name: string;
@@ -18,7 +18,7 @@ interface SidebarConfig {
   defaultSize?: number;
 }
 
-interface SidebarStore {
+export interface SidebarStore {
   isOpen: boolean;
   activeItem: SidebarItem;
   size: number;
@@ -184,18 +184,19 @@ const useLeftSidebarStoreInner = createSidebarStore({
   name: 'left-sidebar-store',
   panels: leftSidebarPanels,
 });
-export const useLeftSidebarStore = () => useStoreRuntime(useLeftSidebarStoreInner)
+export const useLeftSidebarStore = () =>
+  useStoreRuntime<SidebarStore>(useLeftSidebarStoreInner);
 
 const useRightSidebarStoreInner = createSidebarStore({
   name: 'right-sidebar-store',
   panels: rightSidebarPanels,
 });
-export const useRightSidebarStore = () => useStoreRuntime(useRightSidebarStoreInner)
-
+export const useRightSidebarStore = () =>
+  useStoreRuntime<SidebarStore>(useRightSidebarStoreInner);
 
 const useToolsStoreInner = createSidebarStore({
   name: 'tools-store',
   panels: leftSidebarTools,
 });
-export const useToolsStore = () => useStoreRuntime(useToolsStoreInner)
-
+export const useToolsStore = () =>
+  useStoreRuntime<SidebarStore>(useToolsStoreInner);

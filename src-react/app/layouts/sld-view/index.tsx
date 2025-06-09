@@ -1,6 +1,5 @@
-import React from 'react';
 import { IDockviewPanelProps } from 'dockview';
-import { getCurrentWindow } from '@tauri-apps/api/window';
+import React from 'react';
 
 import {
   Breadcrumb,
@@ -16,9 +15,9 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { Sld } from '@/features/single-line-diagram';
+import { useWindowHeaderStore } from '@/stores/window-header.store';
 
 import { RightSidebar, useRightSidebarStore } from './right-sidebar';
-import { useWindowHeaderStore } from '@/stores/window-header.store';
 
 export interface SldViewProps {
   title: string;

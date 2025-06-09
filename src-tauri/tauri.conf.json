@@ -14,10 +14,9 @@
       {
         "label": "main",
         "title": "channel",
-        "decorations": false,
+        "decorations": true,
+        "titleBarStyle": "Overlay",
         "resizable": true,
-        "maximized": true,
-        "transparent": true,
         "width": 800,
         "height": 600
       }

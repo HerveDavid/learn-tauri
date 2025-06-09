@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { getCurrentWindow } from '@tauri-apps/api/window';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import React, { useEffect, useState } from 'react';
+
+import "./styles/gradients.css"
+
 import { CenterMenu } from './center-menu';
 import { LeftMenu } from './left-menu';
 import { RightMenu } from './right-menu';
@@ -16,7 +19,7 @@ export const Header = () => {
       try {
         const maximized = await window.isMaximized();
         setIsMaximized(maximized);
-      } catch (error) {
+      } catch (_error) {
         // Handle error silently
       }
     };
@@ -29,7 +32,7 @@ export const Header = () => {
         await appWindow.toggleMaximize();
         const maximized = await appWindow.isMaximized();
         setIsMaximized(maximized);
-      } catch (error) {
+      } catch (_error) {
         // Handle error silently
       }
     }
@@ -56,7 +59,7 @@ export const Header = () => {
         } else {
           await appWindow.startDragging();
         }
-      } catch (error) {
+      } catch (_error) {
         // Handle error silently
       }
     }
@@ -68,7 +71,7 @@ export const Header = () => {
 
   return (
     <div
-      className="w-full p-1 h-8 border-b flex items-center justify-between luxury-glass"
+      className="w-full p-1 h-8 flex items-center justify-between header-glass"
       onMouseDown={handleDragStart}
     >
       <div className="relative z-10" onMouseDown={stopPropagation}>

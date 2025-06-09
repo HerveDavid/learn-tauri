@@ -1,5 +1,5 @@
-import React from 'react';
 import { Sun, Moon } from 'lucide-react';
+import React from 'react';
 
 import { Switch } from '@/components/ui/switch';
 import { useThemeStore } from '@/features/theme';

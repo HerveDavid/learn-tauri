@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { LiveManagedRuntime } from '@/services/live-layer';
 import { useRuntime } from '@/services/runtime/use-runtime';
 
@@ -7,17 +8,15 @@ export interface StoreRuntime {
   setRuntime: (runtime: LiveManagedRuntime) => void;
 }
 
-export function useStoreRuntime<T extends StoreRuntime>(
-    useStore: () => T
-): T {
-    const store = useStore();
-    const runtime = useRuntime();
+export function useStoreRuntime<T extends StoreRuntime>(useStore: () => T): T {
+  const store = useStore();
+  const runtime = useRuntime();
 
-    React.useEffect(() => {
-        if (runtime && !store.runtime) {
-            store.setRuntime(runtime)
-        }
-    }, [runtime, store])
+  React.useEffect(() => {
+    if (runtime && !store.runtime) {
+      store.setRuntime(runtime);
+    }
+  }, [runtime, store]);
 
-    return store
+  return store as T;
 }

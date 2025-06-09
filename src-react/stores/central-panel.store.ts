@@ -5,9 +5,9 @@ import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
 
 import { paths } from '@/config/paths';
+import { useStoreRuntime } from '@/hooks/use-store-runtime';
 import { SettingsClient } from '@/services/common/settings-client';
 import { LiveManagedRuntime } from '@/services/live-layer';
-import { useStoreRuntime } from '@/hooks/use-store-runtime';
 
 const KEY_CENTRAL_PANEL_SETTING = 'central-panel-layout';
 
@@ -21,7 +21,8 @@ interface CentralPanelStore {
   removePanel: (id: string) => void;
 }
 
-export const useCentralPanelStore = () => useStoreRuntime(useCentralPanelStoreInner)
+export const useCentralPanelStore = () =>
+  useStoreRuntime<CentralPanelStore>(useCentralPanelStoreInner);
 
 const useCentralPanelStoreInner = create<CentralPanelStore>()(
   devtools(

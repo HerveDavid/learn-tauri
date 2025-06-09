@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { getCurrentWindow } from '@tauri-apps/api/window';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
-import { Button } from '@/components/ui/button';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import { Minus, Square, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+import { Button } from '@/components/ui/button';
 import Clock from '@/features/clock';
 
 export const RightMenu = () => {
@@ -16,7 +17,7 @@ export const RightMenu = () => {
       try {
         const maximized = await window.isMaximized();
         setIsMaximized(maximized);
-      } catch (error) {
+      } catch (_error) {
         // Handle error silently
       }
     };
@@ -27,7 +28,7 @@ export const RightMenu = () => {
     if (appWindow) {
       try {
         await appWindow.minimize();
-      } catch (error) {
+      } catch (_error) {
         // Handle error silently
       }
     }
@@ -39,7 +40,7 @@ export const RightMenu = () => {
         await appWindow.toggleMaximize();
         const maximized = await appWindow.isMaximized();
         setIsMaximized(maximized);
-      } catch (error) {
+      } catch (_error) {
         // Handle error silently
       }
     }
@@ -49,7 +50,7 @@ export const RightMenu = () => {
     if (appWindow) {
       try {
         await appWindow.close();
-      } catch (error) {
+      } catch (_error) {
         // Handle error silently
       }
     }
