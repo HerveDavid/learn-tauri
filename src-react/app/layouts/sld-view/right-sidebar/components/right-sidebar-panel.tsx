@@ -1,5 +1,7 @@
 import { Minus } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
+
 import { useRightSidebarStore } from '../hooks/use-right-sidebar-store';
 
 export const RightSidebarPanel = ({ id }: { id: string }) => {

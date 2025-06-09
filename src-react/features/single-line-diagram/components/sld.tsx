@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Card,
   CardAction,
@@ -24,11 +25,11 @@ export const Sld: React.FC<SingleLineDiagram> = ({ id }) => {
           <CardDescription>Card Description</CardDescription>
           <CardAction>Card Action</CardAction>
         </CardHeader>
-        
+
         <CardContent className="flex-1 overflow-auto">
           <p>Card Content</p>
         </CardContent>
-        
+
         <CardFooter>
           <p>Card Footer</p>
         </CardFooter>

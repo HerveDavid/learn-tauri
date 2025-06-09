@@ -1,5 +1,7 @@
 import { IDockviewHeaderActionsProps } from 'dockview';
 import { Maximize, ScreenShare } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,9 +9,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useCentralPanelStore } from '@/stores/central-panel.store';
 import { Sld } from '@/features/single-line-diagram';
+import { useCentralPanelStore } from '@/stores/central-panel.store';
 
 export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
   const { detachPanel } = useCentralPanelStore();
@@ -43,13 +44,13 @@ export const RightHeaderActions = (props: IDockviewHeaderActionsProps) => {
         <DialogContent className="max-w-none w-[90vw] h-[90vh] max-h-[90vh] sm:max-w-none">
           <DialogHeader>
             <DialogTitle>{props.activePanel?.id}</DialogTitle>
-              <div className="w-full h-full">
-                {props.activePanel?.id && (
-                  <div className="w-full h-full">
-                    <Sld id={props.activePanel.id} />
-                  </div>
-                )}
-              </div>
+            <div className="w-full h-full">
+              {props.activePanel?.id && (
+                <div className="w-full h-full">
+                  <Sld id={props.activePanel.id} />
+                </div>
+              )}
+            </div>
           </DialogHeader>
         </DialogContent>
       </Dialog>

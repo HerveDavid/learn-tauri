@@ -1,5 +1,7 @@
-import { Switch } from '@/components/ui/switch';
+import React from 'react';
 import { Sun, Moon } from 'lucide-react';
+
+import { Switch } from '@/components/ui/switch';
 import { useThemeStore } from '@/features/theme';
 
 export const ThemeToggle: React.FC = () => {

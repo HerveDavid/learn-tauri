@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+
 import {
   ResizableHandle,
   ResizablePanel,
@@ -99,7 +100,7 @@ export const StateView: React.FC<{ children: React.ReactNode }> = ({
                   >
                     <LeftSidebarPanel />
                   </ResizablePanel>
-                  <ResizableHandle/>
+                  <ResizableHandle />
                 </>
               )}
               <ResizablePanel id="main-content" order={2} minSize={30}>

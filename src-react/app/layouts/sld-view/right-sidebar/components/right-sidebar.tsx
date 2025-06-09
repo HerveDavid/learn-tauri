@@ -1,5 +1,7 @@
 import { rightSidebarSlds } from '@/config/layouts';
+
 import { useRightSidebarStore } from '../hooks/use-right-sidebar-store';
+
 import { RightSidebarPanel } from './right-sidebar-panel';
 
 export const RightSidebar = ({ id }: { id: string }) => {

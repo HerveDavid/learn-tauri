@@ -1,4 +1,6 @@
+import { IDockviewPanelProps } from 'dockview';
 import React from 'react';
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,8 +15,8 @@ import {
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
 import { Sld } from '@/features/single-line-diagram';
+
 import { RightSidebar, useRightSidebarStore } from './right-sidebar';
-import { IDockviewPanelProps } from 'dockview';
 
 export interface SldViewProps {
   title: string;

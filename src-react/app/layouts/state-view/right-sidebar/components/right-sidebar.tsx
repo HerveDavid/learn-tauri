@@ -25,9 +25,7 @@ export const RightSidebar = () => {
               key={item.id}
               onClick={handleClick}
               className={`size-5 flex items-center justify-center rounded-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors group relative ${
-                isActive
-                  ? 'bg-background'
-                  : 'text-sidebar-foreground'
+                isActive ? 'bg-background' : 'text-sidebar-foreground'
               }`}
               title={item.label}
             >

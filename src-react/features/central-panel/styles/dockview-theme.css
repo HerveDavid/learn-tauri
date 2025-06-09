@@ -22,7 +22,7 @@
   );
   --dv-tab-divider-color: var(--border);
   --dv-activegroup-visiblepanel-tab-color: var(--card-foreground);
-  --dv-activegroup-hiddenpanel-tab-color: var(--secondary-foreground);
+  --dv-activegroup-hiddenpanel-tab-color: var(--muted-foreground);
   --dv-inactivegroup-visiblepanel-tab-color: var(--muted-foreground);
   --dv-inactivegroup-hiddenpanel-tab-color: color-mix(
     in hsl,
@@ -61,7 +61,7 @@
   );
   --dv-tab-divider-color: var(--border);
   --dv-activegroup-visiblepanel-tab-color: var(--card-foreground);
-  --dv-activegroup-hiddenpanel-tab-color: var(--secondary-foreground);
+  --dv-activegroup-hiddenpanel-tab-color: var(--muted-foreground);
   --dv-inactivegroup-visiblepanel-tab-color: var(--muted-foreground);
   --dv-inactivegroup-hiddenpanel-tab-color: color-mix(
     in hsl,

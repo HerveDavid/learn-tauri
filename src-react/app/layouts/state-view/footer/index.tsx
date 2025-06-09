@@ -1,4 +1,5 @@
 import Clock from '@/features/clock';
+
 import { ThemeToggle } from './theme-toggle';
 
 export const Footer = () => {
@@ -9,4 +10,3 @@ export const Footer = () => {
     </div>
   );
 };
-

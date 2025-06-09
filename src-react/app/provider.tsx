@@ -8,13 +8,20 @@ import * as Layer from 'effect/Layer';
 import * as Logger from 'effect/Logger';
 import * as ManagedRuntime from 'effect/ManagedRuntime';
 import React from 'react';
+
+import { useThemeStore } from '@/features/theme';
 import { ChannelClient } from '@/services/common/channel-client';
 import { QueryClient } from '@/services/common/query-client';
 import { SettingsClient } from '@/services/common/settings-client';
 import { LiveManagedRuntime } from '@/services/live-layer';
 import { RuntimeProvider } from '@/services/runtime/runtime-provider';
-import { useThemeStore } from '@/features/theme';
 import { useCentralPanelStore } from '@/stores/central-panel.store';
+
+import {
+  useLeftSidebarStore,
+  useRightSidebarStore,
+  useToolsStore,
+} from './layouts/state-view/stores/state-view.store';
 
 const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -53,6 +60,9 @@ const InnerProviders: React.FC<{ children: React.ReactNode }> = ({
   React.useEffect(() => {
     useThemeStore.getState().setRuntime(runtime);
     useCentralPanelStore.getState().setRuntime(runtime);
+    useLeftSidebarStore.getState().setRuntime(runtime);
+    useRightSidebarStore.getState().setRuntime(runtime);
+    useToolsStore.getState().setRuntime(runtime);
   }, [runtime]);
 
   return (

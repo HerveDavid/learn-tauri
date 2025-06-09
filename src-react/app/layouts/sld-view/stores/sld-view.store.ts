@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { devtools, subscribeWithSelector } from 'zustand/middleware';
+
 import { rightSidebarSlds } from '@/config/layouts';
 import { SidebarItem } from '@/types/sidebar-item';
 
