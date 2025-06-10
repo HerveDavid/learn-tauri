@@ -5,6 +5,7 @@ import {
   LogsIcon,
   ChartAreaIcon,
   CircleGaugeIcon,
+  ClockIcon,
 } from 'lucide-react';
 
 import EquipmentExplorer from '@/features/equipment-explorer';
@@ -19,6 +20,12 @@ export const leftSidebarPanels: SidebarItem[] = [
     icon: Folder,
     label: 'Explorer',
     content: EquipmentExplorer,
+  },
+  {
+    id: 'equipment-explorer2',
+    icon: ClockIcon,
+    label: 'Franck',
+    content: Terminal,
   },
 ] as const;
 

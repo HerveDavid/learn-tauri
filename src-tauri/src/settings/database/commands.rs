@@ -41,6 +41,15 @@ pub async fn get_setting_with_default(
 }
 
 #[tauri::command(rename_all = "snake_case")]
+pub async fn get_setting_or_default(
+    state: State<'_, Mutex<DatabaseState>>,
+    key: String,
+) -> Result<Value> {
+    let db = state.lock().await;
+    db.get_setting_or_default::<Value>(&key).await
+}
+
+#[tauri::command(rename_all = "snake_case")]
 pub async fn merge_settings(
     state: State<'_, Mutex<DatabaseState>>,
     key: String,

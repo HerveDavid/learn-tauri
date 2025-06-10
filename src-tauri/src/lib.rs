@@ -4,6 +4,8 @@ mod utils;
 
 use tauri::Manager;
 
+const SIDECARS: [&str; 1] = ["powsybl"];
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -23,6 +25,7 @@ pub fn run() {
             settings::database::commands::set_setting,
             settings::database::commands::get_setting,
             settings::database::commands::get_setting_with_default,
+            settings::database::commands::get_setting_or_default,
             settings::database::commands::merge_settings,
             settings::database::commands::set_nested_setting,
             settings::database::commands::get_nested_setting,
@@ -38,15 +41,33 @@ pub fn run() {
             settings::database::commands::set_number_setting,
             settings::database::commands::get_number_setting,
         ])
+        .invoke_handler(tauri::generate_handler![
+            settings::sidecars::commands::start_sidecar,
+            settings::sidecars::commands::shutdown_sidecar,
+        ])
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
+                println!("-----------------------------------------------");
+
                 app.manage(utils::channels::state::Channels::default());
                 app.manage(utils::tasks::state::Tasks::default());
+
+                println!("-----------------------------------------------");
 
                 let settings_db = settings::database::state::DatabaseState::new(&app.handle())
                     .await
                     .expect("Failed to initialize settings db");
                 app.manage(settings_db);
+
+                println!("-----------------------------------------------");
+
+                let sidecars =
+                    settings::sidecars::state::SidecarsState::new(&app.handle(), &SIDECARS)
+                        .await
+                        .expect("Failed to initialize sidecars");
+                app.manage(sidecars);
+
+                println!("-----------------------------------------------");
             });
             Ok(())
         })

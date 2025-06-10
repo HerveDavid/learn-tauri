@@ -26,9 +26,7 @@ impl DatabaseState {
         // Set the DATABASE_URL environment variable to point to this SQLite files
         std::env::set_var("DATABASE_URL", format!("sqlite://{}", pool_path.display()));
 
-        println!("-----------------------------------------------");
         println!("Setup argus database at: {:?}", pool_path);
-        println!("-----------------------------------------------");
 
         let conn_options = sqlx::sqlite::SqliteConnectOptions::new()
             .filename(&pool_path)
