@@ -8,10 +8,21 @@ const SIDECARS: [&str; 1] = ["powsybl"];
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    std::env::set_var("SQLX_LOGGING", "false");
+    std::env::set_var("RUST_LOG", "info,sqlx=off");
+
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_log::Builder::new().build())
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .filter(|metadata| {
+                    !metadata.target().starts_with("sqlx")
+                })
+                .build()
+        )
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
             utils::channels::commands::register,
             utils::channels::commands::unregister,
@@ -47,8 +58,6 @@ pub fn run() {
         ])
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
-                println!("-----------------------------------------------");
-
                 app.manage(utils::channels::state::Channels::default());
                 app.manage(utils::tasks::state::Tasks::default());
 

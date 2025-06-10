@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "channel",
+        "title": "Argus",
         "decorations": false,
         "titleBarStyle": "Overlay",
         "resizable": true,
@@ -34,6 +34,9 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+    ],
+    "externalBin": [
+      "binaries/powsybl"
     ]
   }
 }

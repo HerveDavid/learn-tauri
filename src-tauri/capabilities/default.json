@@ -5,7 +5,32 @@
   "windows": [
     "main"
   ],
+  "app": {
+    "security": {
+      "capabilities": [
+        {
+          "identifier": "draggable-window",
+          "windows": [
+            "*"
+          ],
+          "permissions": [
+            "core:window:allow-start-dragging"
+          ]
+        }
+      ]
+    }
+  },
   "permissions": [
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "args": false,
+          "name": "binaries/powsybl",
+          "sidecar": true
+        }
+      ]
+    },
     "core:default",
     "opener:default",
     "log:default",
@@ -21,6 +46,10 @@
     "core:webview:allow-create-webview",
     "core:webview:allow-create-webview-window",
     "core:webview:allow-set-webview-focus",
-    "dialog:default"
+    "dialog:default",
+    "shell:allow-execute",
+    "shell:allow-open",
+    "shell:allow-kill",
+    "shell:allow-spawn"
   ]
 }
