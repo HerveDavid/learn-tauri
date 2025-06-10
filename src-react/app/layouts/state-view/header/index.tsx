@@ -64,31 +64,18 @@ export const Header = () => {
     }
   };
 
-  const stopPropagation = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
   return (
     <div
       className="w-full h-8 flex items-center header-glass"
       onMouseDown={handleDragStart}
     >
-      <div
-        className="relative z-10 flex-1 flex justify-start"
-        onMouseDown={stopPropagation}
-      >
+      <div className="relative z-10 flex-1 flex justify-start">
         <LeftMenu />
       </div>
-      <div
-        className="relative z-10 flex-1 flex justify-center"
-        onMouseDown={stopPropagation}
-      >
+      <div className="relative z-10 flex-1 flex justify-center">
         <CenterMenu />
       </div>
-      <div
-        className="relative z-10 flex-1 flex justify-end"
-        onMouseDown={stopPropagation}
-      >
+      <div className="relative z-10 flex-1 flex justify-end">
         <RightMenu />
       </div>
     </div>
