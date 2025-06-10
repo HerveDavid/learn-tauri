@@ -16,46 +16,14 @@ pub fn run() {
         .plugin(
             tauri_plugin_log::Builder::new()
                 .filter(|metadata| {
+                    // Filtrer explicitement les logs SQLx
                     !metadata.target().starts_with("sqlx")
                 })
-                .build()
+                .build(),
         )
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![
-            utils::channels::commands::register,
-            utils::channels::commands::unregister,
-            utils::channels::commands::start,
-            utils::channels::commands::stop,
-            utils::channels::commands::pause,
-            utils::channels::commands::get_status,
-            utils::channels::commands::list_channels,
-        ])
-        .invoke_handler(tauri::generate_handler![
-            settings::database::commands::set_setting,
-            settings::database::commands::get_setting,
-            settings::database::commands::get_setting_with_default,
-            settings::database::commands::get_setting_or_default,
-            settings::database::commands::merge_settings,
-            settings::database::commands::set_nested_setting,
-            settings::database::commands::get_nested_setting,
-            settings::database::commands::delete_setting,
-            settings::database::commands::list_all_settings,
-            settings::database::commands::setting_exists,
-            settings::database::commands::clear_all_settings,
-            settings::database::commands::count_settings,
-            settings::database::commands::set_string_setting,
-            settings::database::commands::get_string_setting,
-            settings::database::commands::set_bool_setting,
-            settings::database::commands::get_bool_setting,
-            settings::database::commands::set_number_setting,
-            settings::database::commands::get_number_setting,
-        ])
-        .invoke_handler(tauri::generate_handler![
-            settings::sidecars::commands::start_sidecar,
-            settings::sidecars::commands::shutdown_sidecar,
-        ])
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
                 app.manage(utils::channels::state::Channels::default());
@@ -80,6 +48,38 @@ pub fn run() {
             });
             Ok(())
         })
+        .invoke_handler(tauri::generate_handler![
+            // Channels
+            utils::channels::commands::register,
+            utils::channels::commands::unregister,
+            utils::channels::commands::start,
+            utils::channels::commands::stop,
+            utils::channels::commands::pause,
+            utils::channels::commands::get_status,
+            utils::channels::commands::list_channels,
+            // Database
+            settings::database::commands::set_setting,
+            settings::database::commands::get_setting,
+            settings::database::commands::get_setting_with_default,
+            settings::database::commands::get_setting_or_default,
+            settings::database::commands::merge_settings,
+            settings::database::commands::set_nested_setting,
+            settings::database::commands::get_nested_setting,
+            settings::database::commands::delete_setting,
+            settings::database::commands::list_all_settings,
+            settings::database::commands::setting_exists,
+            settings::database::commands::clear_all_settings,
+            settings::database::commands::count_settings,
+            settings::database::commands::set_string_setting,
+            settings::database::commands::get_string_setting,
+            settings::database::commands::set_bool_setting,
+            settings::database::commands::get_bool_setting,
+            settings::database::commands::set_number_setting,
+            settings::database::commands::get_number_setting,
+            // Sidecars
+            settings::sidecars::commands::start_sidecar,
+            settings::sidecars::commands::shutdown_sidecar,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

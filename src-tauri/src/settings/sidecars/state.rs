@@ -27,11 +27,11 @@ impl SidecarsState {
 
         // Spawn defaults
         if !default_sidecars.is_empty() {
-            println!("Setup default sidecars");
+            println!("Setup default sidecars:");
         }
         for sidecar in default_sidecars {
             state.spawn_sidecar(sidecar)?;
-            println!("Sidecar '{}' is successfully launched", sidecar);
+            println!("\t - sidecar '{}' is successfully launched", sidecar);
         }
 
         Ok(tokio::sync::Mutex::new(state))
