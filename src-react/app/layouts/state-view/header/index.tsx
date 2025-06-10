@@ -1,6 +1,7 @@
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import React, { useEffect, useState } from 'react';
+
 import './styles/gradients.css';
 import { CenterMenu } from './center-menu';
 import { LeftMenu } from './left-menu';
@@ -72,13 +73,22 @@ export const Header = () => {
       className="w-full h-8 flex items-center header-glass"
       onMouseDown={handleDragStart}
     >
-      <div className="relative z-10 flex-1 flex justify-start" onMouseDown={stopPropagation}>
+      <div
+        className="relative z-10 flex-1 flex justify-start"
+        onMouseDown={stopPropagation}
+      >
         <LeftMenu />
       </div>
-      <div className="relative z-10 flex-1 flex justify-center" onMouseDown={stopPropagation}>
+      <div
+        className="relative z-10 flex-1 flex justify-center"
+        onMouseDown={stopPropagation}
+      >
         <CenterMenu />
       </div>
-      <div className="relative z-10 flex-1 flex justify-end" onMouseDown={stopPropagation}>
+      <div
+        className="relative z-10 flex-1 flex justify-end"
+        onMouseDown={stopPropagation}
+      >
         <RightMenu />
       </div>
     </div>

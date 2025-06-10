@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
 import { FileIcon } from 'lucide-react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,10 +20,7 @@ interface ProjectCreateProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const ProjectCreate = ({
-  open,
-  onOpenChange,
-}: ProjectCreateProps) => {
+export const ProjectCreate = ({ open, onOpenChange }: ProjectCreateProps) => {
   const [projectName, setProjectName] = useState('');
   const [configPath, setConfigPath] = useState('');
   const [isCreating, setIsCreating] = useState(false);
@@ -165,7 +162,6 @@ export const ProjectCreate = ({
               </p>
             )}
           </div>
-
         </div>
 
         <DialogFooter>

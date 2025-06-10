@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
 import { FileIcon } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,10 +20,7 @@ interface ProjectEditProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const ProjectEdit = ({
-  open,
-  onOpenChange,
-}: ProjectEditProps) => {
+export const ProjectEdit = ({ open, onOpenChange }: ProjectEditProps) => {
   const [projectName, setProjectName] = useState('');
   const [configPath, setConfigPath] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
@@ -102,9 +99,9 @@ export const ProjectEdit = ({
   };
 
   const isValid = projectName.trim().length > 0;
-  const hasChanges = 
+  const hasChanges =
     projectName.trim() !== (currentProject || '') ||
-    configPath !== (currentConfigPath || '')
+    configPath !== (currentConfigPath || '');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
