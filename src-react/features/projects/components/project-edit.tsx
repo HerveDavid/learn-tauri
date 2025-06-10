@@ -26,17 +26,14 @@ export const ProjectEdit = ({
 }: ProjectEditProps) => {
   const [projectName, setProjectName] = useState('');
   const [configPath, setConfigPath] = useState('');
-  const [iidmPath, setIidmPath] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
   const {
     currentProject,
     currentProjectPath,
     currentConfigPath,
-    currentIidmPath,
     setCurrentProject,
     setCurrentConfigPath,
-    setCurrentIidmPath,
     addRecentProject,
   } = useProjectsStore();
 
@@ -45,9 +42,8 @@ export const ProjectEdit = ({
     if (open) {
       setProjectName(currentProject || '');
       setConfigPath(currentConfigPath || '');
-      setIidmPath(currentIidmPath || '');
     }
-  }, [open, currentProject, currentConfigPath, currentIidmPath]);
+  }, [open, currentProject, currentConfigPath]);
 
   const handleSelectConfigFile = async () => {
     try {
@@ -70,27 +66,6 @@ export const ProjectEdit = ({
     }
   };
 
-  const handleSelectIidmFile = async () => {
-    try {
-      const selectedPath = await openDialog({
-        directory: false,
-        multiple: false,
-        filters: [
-          {
-            name: 'IIDM',
-            extensions: ['xiidm', 'iidm'],
-          },
-        ],
-      });
-
-      if (selectedPath) {
-        setIidmPath(selectedPath.toString());
-      }
-    } catch (err) {
-      console.error('Error selecting IIDM file:', err);
-    }
-  };
-
   const handleUpdateProject = async () => {
     if (!projectName.trim()) {
       return;
@@ -102,14 +77,12 @@ export const ProjectEdit = ({
       // Update current project state
       setCurrentProject(projectName.trim());
       setCurrentConfigPath(configPath || '');
-      setCurrentIidmPath(iidmPath || '');
 
       // Update recent projects with the new data
       addRecentProject({
         name: projectName.trim(),
         path: currentProjectPath,
         configPath: configPath || '',
-        iidmPath: iidmPath || '',
       });
 
       // Close dialog
@@ -125,15 +98,13 @@ export const ProjectEdit = ({
     // Reset form to original values
     setProjectName(currentProject || '');
     setConfigPath(currentConfigPath || '');
-    setIidmPath(currentIidmPath || '');
     onOpenChange(false);
   };
 
   const isValid = projectName.trim().length > 0;
   const hasChanges = 
     projectName.trim() !== (currentProject || '') ||
-    configPath !== (currentConfigPath || '') ||
-    iidmPath !== (currentIidmPath || '');
+    configPath !== (currentConfigPath || '')
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -193,34 +164,6 @@ export const ProjectEdit = ({
             {configPath && (
               <p className="text-xs text-muted-foreground truncate">
                 {configPath}
-              </p>
-            )}
-          </div>
-
-          {/* IIDM File */}
-          <div className="grid gap-2">
-            <Label htmlFor="edit-iidm-file">IIDM File</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                id="edit-iidm-file"
-                placeholder="No file selected"
-                value={iidmPath ? iidmPath.split('/').pop() : ''}
-                readOnly
-                className="flex-1 bg-muted"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleSelectIidmFile}
-                className="flex items-center gap-2"
-              >
-                <FileIcon className="size-4" />
-                Browse
-              </Button>
-            </div>
-            {iidmPath && (
-              <p className="text-xs text-muted-foreground truncate">
-                {iidmPath}
               </p>
             )}
           </div>

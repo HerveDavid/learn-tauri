@@ -22,7 +22,6 @@ export const ProjectWidget = () => {
     currentProject,
     currentProjectPath,
     currentConfigPath,
-    currentIidmPath,
     switchToProject,
     removeRecentProject,
     clearRecentProjects,
@@ -77,7 +76,6 @@ export const ProjectWidget = () => {
         </MenubarTrigger>
 
         <MenubarContent className="w-80">
-          {/* Current Project */}
           {currentProject && (
             <>
               <div className="px-2 py-1.5 text-xs text-muted-foreground">
@@ -94,18 +92,11 @@ export const ProjectWidget = () => {
                   <div className="text-xs text-muted-foreground truncate">
                     {currentProjectPath}
                   </div>
-                  {/* Associated Files */}
                   <div className="flex gap-2 mt-1">
                     {currentConfigPath && (
                       <div className="flex items-center gap-1 text-xs text-chart-2">
                         <FileIcon className="size-3" />
                         TOML
-                      </div>
-                    )}
-                    {currentIidmPath && (
-                      <div className="flex items-center gap-1 text-xs text-chart-4">
-                        <FileIcon className="size-3" />
-                        IIDM
                       </div>
                     )}
                   </div>
@@ -122,7 +113,6 @@ export const ProjectWidget = () => {
             </>
           )}
 
-          {/* Create New Project */}
           <div className="px-2 py-1.5 text-xs text-muted-foreground">
             Actions
           </div>
@@ -135,7 +125,6 @@ export const ProjectWidget = () => {
             <span>Create New Project...</span>
           </MenubarItem>
 
-          {/* Recent Projects */}
           {sortedRecentProjects.length > 0 && (
             <>
               <MenubarSeparator />

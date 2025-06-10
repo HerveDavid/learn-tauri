@@ -26,14 +26,12 @@ export const ProjectCreate = ({
 }: ProjectCreateProps) => {
   const [projectName, setProjectName] = useState('');
   const [configPath, setConfigPath] = useState('');
-  const [iidmPath, setIidmPath] = useState('');
   const [isCreating, setIsCreating] = useState(false);
 
   const {
     setCurrentProject,
     setCurrentProjectPath,
     setCurrentConfigPath,
-    setCurrentIidmPath,
     addRecentProject,
   } = useProjectsStore();
 
@@ -66,27 +64,6 @@ export const ProjectCreate = ({
     }
   };
 
-  const handleSelectIidmFile = async () => {
-    try {
-      const selectedPath = await openDialog({
-        directory: false,
-        multiple: false,
-        filters: [
-          {
-            name: 'IIDM',
-            extensions: ['xiidm', 'iidm'],
-          },
-        ],
-      });
-
-      if (selectedPath) {
-        setIidmPath(selectedPath.toString());
-      }
-    } catch (err) {
-      console.error('Error selecting IIDM file:', err);
-    }
-  };
-
   const handleProject = async () => {
     if (!projectName.trim()) {
       return;
@@ -109,14 +86,12 @@ export const ProjectCreate = ({
         name: projectName.trim(),
         path: projectDir,
         configPath: configPath || '',
-        iidmPath: iidmPath || '',
       });
 
       // Then update current project state
       setCurrentProject(projectName.trim());
       setCurrentProjectPath(projectDir);
       setCurrentConfigPath(configPath || '');
-      setCurrentIidmPath(iidmPath || '');
 
       // Reset form and close dialog
       resetForm();
@@ -131,7 +106,6 @@ export const ProjectCreate = ({
   const resetForm = () => {
     setProjectName('');
     setConfigPath('');
-    setIidmPath('');
   };
 
   const handleCancel = () => {
@@ -147,8 +121,7 @@ export const ProjectCreate = ({
         <DialogHeader>
           <DialogTitle>Create New Project</DialogTitle>
           <DialogDescription>
-            Create a new project by providing a name and optionally selecting
-            configuration and IIDM files.
+            Create a new project by providing a name and config file
           </DialogDescription>
         </DialogHeader>
 
@@ -193,33 +166,6 @@ export const ProjectCreate = ({
             )}
           </div>
 
-          {/* IIDM File */}
-          <div className="grid gap-2">
-            <Label htmlFor="iidm-file">IIDM File</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                id="iidm-file"
-                placeholder="No file selected"
-                value={iidmPath ? iidmPath.split('/').pop() : ''}
-                readOnly
-                className="flex-1 bg-muted"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleSelectIidmFile}
-                className="flex items-center gap-2"
-              >
-                <FileIcon className="size-4" />
-                Browse
-              </Button>
-            </div>
-            {iidmPath && (
-              <p className="text-xs text-muted-foreground truncate">
-                {iidmPath}
-              </p>
-            )}
-          </div>
         </div>
 
         <DialogFooter>
